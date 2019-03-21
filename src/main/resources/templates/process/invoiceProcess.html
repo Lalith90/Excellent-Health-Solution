@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>EHSL</title>
+    <!--front-awesome-->
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/font-awesome.min.css}"
+          href="../../static/css/font-awesome.min.css"/>
+    <!--google fornt-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!--table pagination-->
+    <!--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.css"/>-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/dataTables.bootstrap.min.css}"
+          href="../../static/css/dataTables.bootstrap.min.css"/>
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/myCss.css}" href="../../static/css/myCss.css"/>
+
+    <!-- Bootstrap core CSS Downloaded file add-->
+    <link href="../../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../../static/css/bootstrap-theme.min.css" th:href="@{/css/bootstrap-theme.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="fragments/header :: header" style="margin-bottom: 60px"></nav>
+
+<div class="container-fluid" style="margin-top: 60px">
+    <div class="panel panel-info">
+        <div class="panel-heading text-center"><h4>Invoice Processing</h4></div>
+        <div class="panel panel-body">
+            <div class="alert  alert-dismissable fade in" th:classappend="${alertStatus==true?'alert-info':'disabled'}">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><span th:text="${message}"></span></strong>
+            </div>
+            <div class="container-fluid">
+                <div class="col-sm-offset-4">
+                    <ul class=" nav-pills pager">
+                        <li class="active"><a data-toggle="pill" href="#labTest">Lab Test</a></li>
+                        <li><a data-toggle="pill" href="#medicalPackageDetail">Medical Package</a></li>
+                        <li><a data-toggle="pill" href="#information"
+                               th:if="${!#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">Information</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--Invoice Processing  Details - start -->
+                <div class="row">
+                    <form class="form-horizontal" th:action="@{invoiceProcess/add}" th:object="${invoiceProcess}"
+                          th:method="POST">
+                        <div class="tab-content">
+                            <!-- lab test finder - start  -->
+                            <div id="labTest" class="tab-pane fade in active">
+                                <div class="container-fluid">
+                                    <div class="col-sm-7">
+                                        <table class="table table-striped table-condensed" id="myTable">
+                                            <thead>
+                                            <tr>
+                                                <th>Index</th>
+                                                <th>Code</th>
+                                                <th>Test Name</th>
+                                                <th th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">
+                                                    Department
+                                                </th>
+                                                <th th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">
+                                                    Sample Collecting Tube
+                                                </th>
+                                                <th> Price (Rs.)</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="labTest: ${labTests}">
+                                                <th th:text="${labTest.id}"></th>
+                                                <th th:text="${labTest.code}" th:name="code"></th>
+                                                <th th:text="${labTest.name}" th:name="name"></th>
+                                                <th th:text="${labTest.department.department}"
+                                                    th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"></th>
+                                                <th th:text="${labTest.sampleCollectingTube}"
+                                                    th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"></th>
+                                                <th th:text="${labTest.price}" th:name="price"></th>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!--th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"-->
+                                    <div class="col-sm-5">
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                <div class="row">
+                                                    <div class="col-sm-6"><h5>Selected Lab Test</h5></div>
+                                                    <div class="col-sm-6"><h5 id="totalPrice1"></h5></div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-body">
+                                                <div class="container-fluid" id="myDynamicTable">
+                                                    <table id="myTableData" class="table table-striped table-condensed">
+                                                        <tr>
+                                                            <th>Test id</th>
+                                                            <th>Test Code</th>
+                                                            <th>Test Name</th>
+                                                            <th>Price (Rs)</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- lab test finder - end  -->
+                            <!-- Medical Package area - start -->
+                            <div id="medicalPackageDetail" class="tab-pane fade">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" th:for="medicalPackage">Medical
+                                        Package</label>
+                                    <div class="col-md-4">
+                                        <select th:filed="*{medicalPackage}" name="medicalPackage" class="form-control">
+                                            <option th:each="medicalPackage : ${medicalPackages}"
+                                                    th:text="${medicalPackage.name}+${' '}+${{medicalPackage.price}}"
+                                                    th:value="${medicalPackage.id}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Medical Package area - end -->
+                            <!-- information area - start -->
+                            <div id="information" class="tab-pane fade"
+                                 th:if="${!#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3" for="patient">Patient Name</label>
+                                        <div class="col-sm-1">
+                                            <a th:href="@{patient/add}" target="_blank">
+                                                <button type="button" class="btn btn-info">New <i
+                                                        class="fa fa-wheelchair"></i></button>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <select id="patient" th:filed="*{patient}" name="patient"
+                                                    class="form-control">
+                                                <option class="text-center" th:each="patient : ${patients}"
+                                                        th:text="${patient.number} + ${'  -  '} + ${patient.name} + ${'  -  '} + ${patient.nic} + ${'  -  '} + ${patient.dateOfBirth}+ ${'  -  '} +${patient.email}"
+                                                        th:value="${patient.id}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3" for="doctor">Doctor Name</label>
+                                        <div class="col-sm-1">
+                                            <a th:href="@{doctor/add}" target="_blank">
+                                                <button type="button" class="btn btn-info">New <i
+                                                        class="fa fa-user-md"></i></button>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <select id="doctor" name="doctor" th:filed="*{doctor}" class="form-control">
+                                                <option th:each="doctor : ${doctors}"
+                                                        th:text="${doctor.name} + ${'  -  '} + ${doctor.slmcNumber} + ${'  -  '} + ${doctor.mobile}+ ${'  -  '} + ${doctor.getConsultation().name}"
+                                                        th:value="${doctor.id}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3" th:for="collectingCenter">Collecting
+                                            Center</label>
+                                        <div class="col-sm-1"></div>
+                                        <div class="col-md-7">
+                                            <select name="collectingCenter" th:filed="*{collectingCenter}"
+                                                    class="form-control">
+                                                <option th:each="collectingCenters : ${collectingCenters}"
+                                                        th:text="${collectingCenters.name} + ${' '} + ${collectingCenters.mobile} + ${' '} + ${collectingCenters.establishedDate}"
+                                                        th:value="${collectingCenters.id}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label class="control-label col-sm-6" for="totalPrice">Total Price</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" id="totalPrice" placeholder="Enter Full Here"
+                                                   class="form-control" name="totalprice" th:filed="*{totalprice}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label class="control-label col-sm-6" th:for="discountRatio">Discount
+                                            Ratio</label>
+                                        <div class="col-sm-6">
+                                            <select th:filed="*{discountRatio}" name="discountRatio" id="discountRatio"
+                                                    class="form-control" onchange="">
+                                                <option th:each="discountRatio : ${discountRatios}"
+                                                        th:text="${discountRatio.amount}"
+                                                        th:value="${discountRatio.id}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label class="control-label col-sm-6" for="amount">Amount</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" id="amount" placeholder="Enter Full Here"
+                                                   class="form-control" name="amount" th:field="*{amount}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label class="control-label col-sm-6" th:for="paymentMethod">Payment
+                                            Method:</label>
+                                        <div class="col-sm-6">
+                                            <select th:filed="*{paymentMethod}" name="paymentMethod" id="paymentMethod"
+                                                    class="form-control">
+                                                <option th:each="paymentMethod : ${paymentMethods}"
+                                                        th:text="${paymentMethod.paymentMethod}"
+                                                        th:value="${paymentMethod}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label class="control-label col-md-6" for="amountTendered">Amount Tendered
+                                            (Rs.):</label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="amountTendered" placeholder="Enter Amount Here"
+                                                   class="form-control"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label class="control-label col-md-6" for="balance">Balance (Rs.): <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="balance" placeholder="Enter Amount Here"
+                                                   class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="card">
+                                    <div class="form-group col-sm-6">
+                                        <label class="control-label col-sm-6" for="bankName">Bank: <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" id="bankName" placeholder="Enter Bank Name Here"
+                                                   class="form-control" name="bankName"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label class="control-label col-sm-6" for="cardNumber">Number: <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" id="cardNumber" class="form-control" name="cardNumber"
+                                                   placeholder="Cheque Number"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-offset-1 col-sm-3"
+                                               for="remarks">Remarks: </label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="remarks" placeholder="Enter Anything Special"
+                                                   class="form-control" name="remarks" th:filed="*{remarks}"/>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-success" type="submit"><span
+                                                class="glyphicon glyphicon-print"></span>&nbsp; &nbsp;Print
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- information area - end -->
+                        </div>
+                        <div class="container-fluid">
+                            <label th:if="${#fields.hasErrors('*')}" th:text="'Errors: '">Errors: </label>
+                            <ul>
+                                <li th:each="err: ${#fields.errors('*')}" th:text="${err}" class="error"></li>
+                            </ul>
+                        </div>
+                    </form>
+                </div>
+                <!--Invoice Processing Details - end -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script th:replace="fragments/script"></script>
+
+</body>
+</html>

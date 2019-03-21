@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:replace="fragments/style"></th:block>
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
+<div class="container-fluid" style="margin-top: 60px">
+    <div class="panel panel-primary">
+        <div class="panel panel-heading">
+            <h4><b>Lab Test Parameter Management</b></h4>
+        </div>
+        <div class="panel panel-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <a th:href="${'/labTestParameter/add'}" class="btn btn-success"><span class="glyphicon glyphicon-paperclip"></span> &nbsp;New Lab Test Parameter </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="container" style="margin-top: 5px;">
+                <div class="table-responsive">
+                    <table class="table table-condensed text-center" id="myTable">
+                        <thead>
+                            <tr>
+                                <th>Index</th>
+                                <th>Lab Test Parameter Name</th>
+                                <th> Unit </th>
+                                <th> Reference Range </th>
+                                <th class="text-center">Modify</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="labTestParameter, rowCount : ${labTestParameters}">
+                                <th th:text="${rowCount.count}"></th>
+                                <th th:text="${labTestParameter.name}"></th>
+                                <th th:text="${labTestParameter.unit}"></th>
+                                <th> <span th:text="${labTestParameter.min}"></span>&nbsp;- &nbsp;<span th:text="${labTestParameter.max}"></span></th>
+                                <th><a th:href="${'/labTestParameter/' + labTestParameter.id}" class="btn btn-success"><i class="fa fa-folder-open"></i>&nbsp;View</a>
+                                    <a th:href="${'/labTestParameter/edit/' + labTestParameter.id}" class="btn btn-primary"><i class="fa fa-edit"></i>&nbsp;Edit</a>
+                                    <a th:href="${'/labTestParameter/remove/' + labTestParameter.id}" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i>
+                                        Delete</a></th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<th:block th:replace="fragments/script"></th:block>
+</body>
+</html>

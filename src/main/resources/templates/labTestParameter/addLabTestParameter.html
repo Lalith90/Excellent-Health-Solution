@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+        <title th:text="${addStatus?'EHSL - Create Lab Test Paramter Page': 'EHSL - Update Lab Test Paramter Page'}"></title>
+            <style th:replace="fragments/style"></style>
+</head>
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+<div class="container-fluid" style="margin-top: 50px">
+    <div class="panel panel-primary">
+        <div class="panel panel-heading">
+            <h4><b><span th:text="${addStatus==true?'New Lab Test Paramter Add':'Update Lab Test Paramter'}"></span></b></h4>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-4 ">
+                    <a class="btn btn-primary" href="/home"> Return Home</a>
+                </div>
+                <div style="text-align: center;" class="col-sm-4">
+                    <h4 class="text-info"></h4>
+                </div>
+                <div class="col-sm-4 text-right">
+                    <a href="/labTestParameter"><button class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-list">&nbsp; View List </span></button> </a>
+                </div>
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="container-fluid">
+                    <form class="form-horizontal"  th:action="${addStatus==true?'/labTestParameter/add':'/labTestParameter/update'}" th:object="${labTestParameter}" th:method="POST">
+                        <label th:if="${#fields.hasErrors('*')}" th:text="'Errors: '">Errors: </label>
+                        <ul>
+                            <li th:each="err: ${#fields.errors('*')}" th:text="${err}" class="error"></li>
+                        </ul>
+                        <div class="col-sm-6 text-center">
+                            <div class="form-group" th:if="${addStatus==false}">
+                                <label class="control-label col-md-4" for="id">ID :</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="id" placeholder="Enter ID Here" class="form-control" name="id" th:field="*{id}"/>
+                                    <span class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}">Error Number</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="code">Code </label>
+                                <div class="col-md-8">
+                                    <input th:if="${addStatus==true}" type="text" id="code" placeholder="Enter Number Here" class="form-control" name="code" th:field="*{code}" required/>
+                                    <input th:if="${addStatus==false}" type="text"  class="form-control" name="code" th:field="*{code}" required/>
+                                    <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{code}">Error Code</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="name">Parameter Name </label>
+                                <div class="col-md-8">
+                                    <input type="text" id="name" placeholder="Enter Name Here" class="form-control" name="name" th:field="*{name}" required/>
+                                    <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error Parameter Name</span>
+                                </div>
+                            </div>
+                            <div  class="form-group">
+                                <label class="control-label col-md-4" th:for="header">Field Header</label>
+                                <div class="col-md-4">
+                                    <select th:field="*{parameterHeader}" class="form-control">
+                                        <option th:each="parameterHeaders : ${parameterHeader}"
+                                                th:text="${parameterHeaders.parameterHeader}"
+                                                th:value="${parameterHeaders}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="result">Result</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="result" placeholder="Enter Result Here" class="form-control" name="unit" th:field="*{result}" />
+                                    <span class="error" th:if="${#fields.hasErrors('result')}" th:errors="*{result}">Error result</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="unit">Unit</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="unit" placeholder="Enter Unit Here" class="form-control" name="unit" th:field="*{unit}" />
+                                    <span class="error" th:if="${#fields.hasErrors('unit')}" th:errors="*{unit}">Error Unit</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="min">Min   </label>
+                                <div class="col-md-8">
+                                    <input type="text" id="min" placeholder="Enter Min Reference Range Here" class="form-control" name="min" th:field="*{min}" />
+                                    <span class="error" th:if="${#fields.hasErrors('min')}" th:errors="*{min}">Error Unit</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="max">Max</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="max" placeholder="Enter Max Reference Range Here" class="form-control" name="max" th:field="*{max}" >
+                                    <span class="error" th:if="${#fields.hasErrors('max')}" th:errors="*{max}">Error Max Reference Range</span>
+                                </div>
+                            </div>
+                            <div class="text-center row" >
+                                <button class="btn btn-success" type="submit" > <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp; &nbsp;<span th:text="${addStatus==true?'Save': 'Update'}" ></span></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<script th:replace="fragments/script"></script>
+
+</body>
+</html>

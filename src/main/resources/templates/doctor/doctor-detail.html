@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<title th:text="${doctorDetail.name}">EHSL</title>
+<style th:replace="fragments/style"></style>
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
+<div class="container-fluid" style="margin-top: 60px">
+    <div class="panel panel-primary" th:object="${doctorDetail}">
+        <div class="panel panel-heading ">
+           <h4> <span th:text="${doctorDetail.title.title}"></span> &nbsp; <span th:text="${doctorDetail.name}"></span></h4>
+        </div>
+        <div class="panel-body">
+            <!--lefet side-->
+            <div class="col-sm-6">
+                <div class="row">
+                        <div class="container-fluid">
+                            <h3>Name :   <span th:text="${doctorDetail.title.title}"></span> &nbsp; <span th:text="${doctorDetail.name}"></span>
+                            </h3>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="container-fluid">
+                            <h3>
+                                Consultation :   <span th:text="${doctorDetail.consultation.name}"></span>
+                            </h3>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="container-fluid">
+                            <h3>
+                                SLMC Number :   <span th:text="${doctorDetail.slmcNumber}"></span>
+                            </h3>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="container-fluid">
+                            <h3>
+                                Email :   <span th:text="${doctorDetail.email}"></span>
+                            </h3>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="container-fluid">
+                            <h3>
+                                Mobile :   <span th:text="${doctorDetail.mobile}"></span>
+                            </h3>
+                    </div>
+                </div>
+            </div>
+            <!-- right side -->
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Land :   <span th:text="${doctorDetail.land}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                            <h3>
+                                Discription :   <span th:text="${doctorDetail.description}"></span>
+                            </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <a href="/doctor">
+                    <button class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span>&nbsp; Back</button>
+                    <!-- /.btn -->
+                </a>
+            </div>
+            <!-- /.class -->
+        </div>
+    </div>
+</div>
+    <footer class="page-footer" th:replace="fragments/footer"></footer>
+    <script th:replace="fragments/script"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<title th:text="${addStatus?'EHSL - Create Doctor Page': 'EHSL - Update Doctor Page'}">- Add Doctor</title>
+<style th:replace="fragments/style"></style>
+</head>
+<body>
+<nav th:replace="fragments/header :: header"></nav>
+<div class="container-fluid" style="margin-top: 50px">
+    <div class="panel panel-primary">
+        <div class="panel panel-heading">
+            <h4><b><span th:text="${addStatus==true?'New Doctor Add':'Update Doctor'}"></span></b></h4>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-4 ">
+                    <a class="btn btn-primary" href="/home"> Return Home</a>
+                </div>
+                <div style="text-align: center;" class="col-sm-4">
+                    <h4 class="text-info"></h4>
+                </div>
+                <div class="col-sm-4 text-right">
+                    <a href="/doctor"><button class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-list">&nbsp; View List </span></button> </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <form class="form-horizontal"  th:action="${addStatus==true?'/doctor/add':'/doctor/update'}" th:object="${doctor}" th:method="POST">
+                        <div class="col-sm-6 text-center">
+                            <div class="form-group" th:if="${addStatus==false}">
+                                <label class="control-label col-md-4" for="id">ID </label>
+                                <div class="col-md-8">
+                                    <input type="text" id="id" placeholder="Enter ID Here" class="form-control" name="id" th:field="*{id}"/>
+                                    <span class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}">Error Number</span>
+                                </div>
+                            </div>
+                            <div  class="form-group">
+                                <label class="control-label col-md-4" th:for="title">Title</label>
+                                <div class="col-md-4">
+                                    <select th:field="*{title}" class="form-control">
+                                        <option th:each="titles : ${title}"
+                                                th:text="${titles.title}"
+                                                th:value="${titles}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="txtFullName">Name</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="txtFullname" placeholder="Enter Full Here" class="form-control" name="name" th:field="*{name}" required/>
+                                    <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error Name</span>
+                                </div>
+                            </div>
+                            <div  class="form-group">
+                                <label class="control-label col-md-4"  for="gender">Gender</label>
+                                <div class="col-md-4">
+                                    <select id="gender" th:field="*{gender}" class="form-control">
+                                        <option th:each="genders : ${gender}"
+                                                th:text="${genders.gender}"
+                                                th:value="${genders}"></option>
+                                    </select>
+                                    <span class="error" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}">Error Gender</span>
+                                </div>
+                            </div>
+                            <div  class="form-group">
+                                <label class="control-label col-md-4" th:for="doctorConsultation">Consultation</label>
+                                <div class="col-md-8">
+                                    <select th:field="*{consultation}" name="consultation" class="form-control">
+                                        <option th:each="consultation : ${consultations}"
+                                                th:text="${consultation.name}"
+                                                th:value="${consultation.id}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="slmcNumber">SLMC Number</label>
+                                <div class="col-md-8">
+                                    <input id="slmcNumber" class="form-control" name="slmcNumber" th:field="*{slmcNumber}"/>
+                                    <span class="error" th:if="${#fields.hasErrors('slmcNumber')}" th:errors="*{slmcNumber}">Error Address</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 text-center">
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="mobile">Email</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="email" placeholder="Enter email Here" class="form-control" name="email" th:field="*{email}"/>
+                                    <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Error Email</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="mobile">Mobile Number</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="mobile" placeholder="Enter Mobile Here" class="form-control" name="mobile" th:field="*{mobile}" required/>
+                                    <span class="error" th:if="${#fields.hasErrors('mobile')}" th:errors="*{mobile}">Error Mobile Number</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="land">Land Number</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="land" placeholder="Enter Land Here" class="form-control" name="land" th:field="*{land}"/>
+                                    <span class="error" th:if="${#fields.hasErrors('land')}" th:errors="*{land}">Error Land Number</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="description">Description</label>
+                                <div class="col-md-8">
+                                    <textarea id="description" class="form-control" name="description" th:field="*{description}"></textarea>
+                                    <span class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Error Description </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm12">
+                            <div class="container text-center">
+                                <button class="btn btn-success text-center" type="submit" > <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp; &nbsp;<span th:text="${addStatus==true?'Save': 'Update'}" ></span></button>
+                            </div>
+                        </div>
+                        <label th:if="${#fields.hasErrors('*')}" th:text="'Errors: '">Errors: </label>
+                        <ul>
+                            <li th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<script th:replace="fragments/script"></script>
+</body>
+</html>

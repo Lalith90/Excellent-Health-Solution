@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8"/>
+<title th:text="${laboratoryTestHasUserDetail.name}">EHSL</title>
+<th:block th:replace="fragments/style"></th:block>
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
+<div class="container-fluid" style="margin-top: 60px">
+    <div class="panel panel-primary" th:object="${laboratoryTestHasUserDetail}">
+        <div class="panel panel-heading ">
+            <h4> Laboratory Test Has User Details </h4>
+        </div>
+        <div class="panel-body">
+            <!--lefet side-->
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>Id :   <span th:text="${laboratoryTestHasUserDetail.id}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Status :   <span th:text="${laboratoryTestHasUserDetail.status.status}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Laboratory Test Id :   <span th:text="${laboratoryTestHasUserDetail.labTest.labTest.id}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            User Id :   <span th:text="${laboratoryTestHasUserDetail.user.user.id}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Status Changed Time :   <span th:text="${laboratoryTestHasUserDetail.enteredUpdatedAuthorizedTime}"></span>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <a href="/labTestHasUser">
+                    <button class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span>&nbsp; Back</button>
+                    <!-- /.btn -->
+                </a>
+            </div>
+            <!-- /.class -->
+        </div>
+    </div>
+</div>
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<th:block th:replace="fragments/script"></th:block>
+</body>
+</html>

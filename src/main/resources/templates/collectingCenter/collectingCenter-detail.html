@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<title th:text="${collectingCenter.name}">EHSL</title>
+<style th:replace="fragments/style"></style>
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
+<div class="container-fluid" style="margin-top: 60px">
+    <div class="panel panel-primary">
+        <div class="panel panel-heading ">
+           <h4>  <span th:text="${collectingCenter.name}"></span>  </h4>
+        </div>
+        <div class="panel-body">
+            <!--lefet side-->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>Id :   <span th:text="${collectingCenter.id}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                          <h3>Name :   <span th:text="${collectingCenter.name}"></span>
+                          </h3>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="container-fluid">
+                            <h3>
+                                Owner Name :   <span th:text="${collectingCenter.owner}"></span>
+                            </h3>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="container-fluid">
+                            <h3>
+                               Mobile Number :   <span th:text="${collectingCenter.mobile}"></span>
+                            </h3>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="container-fluid">
+                            <h3>
+                                Land Number :   <span th:text="${collectingCenter.land}"></span>
+                            </h3>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="container-fluid">
+                            <h3>
+                                Email :   <span th:text="${collectingCenter.email}"></span>
+                            </h3>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="container-fluid">
+                            <h3>
+                                Address :   <span th:text="${collectingCenter.address}"></span>
+                            </h3>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="container-fluid">
+                            <h3>
+                                Collecting Center Status :   <span th:text="${collectingCenter.collectingCenterStatus.name()}"></span>
+                            </h3>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="container-fluid">
+                            <h3>
+                                Established Date :   <span th:text="${collectingCenter.establishedDate}" ></span>
+                            </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="/collectingCenter">
+                    <button class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span>&nbsp; Back</button>
+                    <!-- /.btn -->
+                </a>
+            </div>
+            <!-- /.class -->
+        </div>
+    </div>
+</div>
+    <footer class="page-footer" th:replace="fragments/footer"></footer>
+    <script th:replace="fragments/script"></script>
+</body>
+</html>
