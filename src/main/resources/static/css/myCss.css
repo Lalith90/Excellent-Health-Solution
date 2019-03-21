@@ -246,3 +246,9 @@ a:hover{
 	border-radius:3px !important;
 }
 /*all button same size according to boostrap btn-sm  - end*/
+
+/*remove lab test from selected table - start*/
+.removeLabTest{
+	background-color: #f0ad4e;
+}
+/*remove lab test from selected table - end*/

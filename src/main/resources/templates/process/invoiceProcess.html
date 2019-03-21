@@ -28,17 +28,14 @@
     <div class="panel panel-info">
         <div class="panel-heading text-center"><h4>Invoice Processing</h4></div>
         <div class="panel panel-body">
-            <div class="alert  alert-dismissable fade in" th:classappend="${alertStatus==true?'alert-info':'disabled'}">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong><span th:text="${message}"></span></strong>
-            </div>
             <div class="container-fluid">
                 <div class="col-sm-offset-4">
                     <ul class=" nav-pills pager">
-                        <li class="active"><a data-toggle="pill" href="#labTest">Lab Test</a></li>
-                        <li><a data-toggle="pill" href="#medicalPackageDetail">Medical Package</a></li>
+                        <li class="active"><a data-toggle="pill" href="#labTest"><h4>Lab Test</h4></a></li>
+                        <li><a data-toggle="pill" href="#medicalPackageDetail"><h4>Medical Package</h4></a></li>
                         <li><a data-toggle="pill" href="#information"
-                               th:if="${!#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">Information</a>
+                               th:if="${!#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"><h4>
+                            Information</h4></a></a>
                         </li>
                     </ul>
                 </div>
@@ -85,12 +82,14 @@
                                         <div class="panel panel-primary">
                                             <div class="panel-heading">
                                                 <div class="row">
-                                                    <div class="col-sm-6"><h5>Selected Lab Test</h5></div>
-                                                    <div class="col-sm-6"><h5 id="totalPrice1"></h5></div>
+                                                    <div class="col-sm-6 text-left text-capitalize"><span
+                                                            id="selectedLabTestCount"></span></div>
+                                                    <div class="col-sm-6 text-right text-capitalize"><span
+                                                            id="totalPrice1"></span></div>
                                                 </div>
                                             </div>
                                             <div class="panel panel-body">
-                                                <div class="container-fluid" id="myDynamicTable">
+                                                <div class="container-fluid">
                                                     <table id="myTableData" class="table table-striped table-condensed">
                                                         <tr>
                                                             <th>Test id</th>
@@ -109,16 +108,26 @@
                             <!-- lab test finder - end  -->
                             <!-- Medical Package area - start -->
                             <div id="medicalPackageDetail" class="tab-pane fade">
-                                <div class="form-group">
-                                    <label class="control-label col-md-4" th:for="medicalPackage">Medical
-                                        Package</label>
-                                    <div class="col-md-4">
-                                        <select th:filed="*{medicalPackage}" name="medicalPackage" class="form-control">
-                                            <option th:each="medicalPackage : ${medicalPackages}"
-                                                    th:text="${medicalPackage.name}+${' '}+${{medicalPackage.price}}"
-                                                    th:value="${medicalPackage.id}"></option>
-                                        </select>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4" th:for="medicalPackage">Medical
+                                                Package</label>
+                                            <div class="col-md-4">
+                                                <select th:filed="*{medicalPackage}" name="medicalPackage"
+                                                        class="form-control">
+                                                    <option th:each="medicalPackage : ${medicalPackages}"
+                                                            th:text="${medicalPackage.name}+${' '}+${{medicalPackage.price}}"
+                                                            th:value="${medicalPackage.id}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
+                                <div class="col-sm-6">
+                                  <div id="medicalPackageDetails">
+
+                                  </div>
                                 </div>
                             </div>
                             <!-- Medical Package area - end -->

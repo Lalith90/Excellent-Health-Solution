@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    // set current year to the footer
+    document.getElementById("currentYear").innerHTML = new Date().getFullYear();
+
     /*//Nav bar properties - start//*/
     $('ul.nav li.dropdown').hover(function () {
         $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(10);
@@ -18,7 +21,7 @@ $(document).ready(function () {
         "ordering": false,
         stateSave: true,
     });
-    /!* Checked filed value  - end*!*/
+    /!* Checked filed value  - end*!*/;
     /* Patient and employee Nic Validation - start*/
     $("#nic").bind('keyup', function () {
         let nic = $(this).val();
@@ -208,11 +211,6 @@ function calculateGender(nic) {
 
 /*// Create new table selected lab test table - start//*/
 class LabTest {
-    id;
-    code;
-    name;
-    price;
-
     constructor(id, code, name, price) {
         this._id = id;
         this._code = code;
@@ -277,25 +275,33 @@ function rowDataToLabTest(rowDetails) {
 
 //create lab test array
 let selectedLabTestArray = [];
-var mySet = new Set(selectedLabTestArray);
-function checkLabTestInArrayOrNot(rowDetails) {
 
+function checkLabTestInArrayOrNot(rowDetails) {
+    let existOrNot;
     //take lab test which was selected
     let labTest = rowDataToLabTest(rowDetails);
     // no lab test in Array
-    // if (selectedLabTestArray.length === 0) {
-    //     selectedLabTestArray.push(labTest);
-    // }
-
-    selectedLabTestArray.push(labTest);
-
-    alert(isInArray(labTest, selectedLabTestArray)+"  "+ mySet.has(labTest));
+    if (selectedLabTestArray.length === 0) {
+        selectedLabTestArray.push(labTest);
+        addRow(labTest);
+    } else {
+        for (let i = 0; i < selectedLabTestArray.length; i++) {
+            if (selectedLabTestArray[i]._id === labTest.id) {
+                existOrNot = true;
+                break;
+            }
+        }
+        if (existOrNot) {
+            swal({
+                title: "Already selected one ",
+                icon: "warning",
+            });
+        } else {
+            selectedLabTestArray.push(labTest);
+            addRow(labTest);
+        }
+    }
 }
-
-function isInArray(value, array) {
-    return array.indexOf(value) > -1;
-}
-
 
 function addRow(labTest) {
     let table = document.getElementById("myTableData");
@@ -310,61 +316,55 @@ function addRow(labTest) {
     row.insertCell(2).innerHTML = labTest.name;
     row.insertCell(3).innerHTML = labTest.price;
 
-    row.insertCell(4).innerHTML = '<input type="button" value = "Remove" onClick="Javacsript:deleteRow(this)" class="btn btn-danger">';
+    row.insertCell(4).innerHTML = '<input type="button" value = "Remove" onClick="deleteRow(this)" class="btn btn-danger">';
 
 }
 
-function updateTotalPrice(labTestPrice) {
-   // arrayChech();
-    totalLabTestPrice = 0;
-    // let s = new Set()
-    // for (let i = 0; i < labTestPriceArray.length; i++){
-    //            s.add(labTestPriceArray[1]);
-    //          }
-    //
 
-    // let totalLabTestPrice => function () {
-    //
-    // }(){
-    //     let totalPrice = 0;
-    //     for (let i = 0; i < labTestPriceArray.length; i++){
-    //         totalPrice += labTestPriceArray[1];
-    //     }
-    // };
-    //labTestPrice;
-
-    document.getElementById("totalPrice1").innerText = "Total Price = " + totalLabTestPrice;
-    document.getElementById("totalPrice").innerText = totalLabTestPrice;
-
-
-}
 
 function deleteRow(obj) {
     //console.log(Array.isArray(obj));
     let index = obj.parentNode.parentNode.rowIndex;
     let table = document.getElementById("myTableData");
+    // GET THE CELLS COLLECTION OF THE CURRENT ROW.
+    let objCells = myTableData.rows.item(index).cells;
+    //REMOVE DELETED LAB TEST FORM selectedLabTestArray
+    let removedLabTest;
+    for (let i = 0; i < selectedLabTestArray.length; i++) {
+        if (selectedLabTestArray[i]._id === rowDataToLabTest(Object.values(objCells)).id) {
+            removedLabTest = selectedLabTestArray[i];
+            {
+                selectedLabTestArray.splice(i, 1);
+                break;
+            }
+        }
+    }
+    // remove colour form original lab test array
+    let mainTable = document.getElementById("myTable");
+    for (let i = 0; i < mainTable.rows.length; i++){
+        let removedLabTestFromArray = rowDataToLabTest(mainTable.rows.item(i).cells);
+        console.log(removedLabTestFromArray);
+        if (removedLabTestFromArray.id === removedLabTest._id) {
+                mainTable.rows[i].setAttribute("class","alert alert-danger removeLabTest")
+            alert("wede goda");
+        }
+    }
+    updateTotalPrice();
     table.deleteRow(index);
-
-
-/*    // GET THE CELLS COLLECTION OF THE CURRENT ROW.
-    var objCells = myTab.rows.item(i).cells;
-
-    // LOOP THROUGH EACH CELL OF THE CURENT ROW TO READ CELL VALUES.
-    for (var j = 0; j < objCells.length; j++) {
-        info.innerHTML = info.innerHTML + ' ' + objCells.item(j).innerHTML;
-    }*/
 }
 
+function updateTotalPrice() {
+      let totalLabTestPrice = 0;
+selectedLabTestArray.forEach(function (element) {
+    totalLabTestPrice += parseFloat(element.price);
+});
+    document.getElementById("selectedLabTestCount").innerText = "Selected Lab Test Count = " + selectedLabTestArray.length;
+    document.getElementById("totalPrice1").innerText = "Total Price = " + totalLabTestPrice;
+    document.getElementById("totalPrice").value = totalLabTestPrice;
 
+
+}
 /*// Create new table selected lab test table - end//*/
 
-function arrayChech(){
-    let s = new Set()
-    s.add("hello").add("goodbye").add("hello")
-    s.size === 2
-    s.has("hello") === true
-    console.log(s.has("goodbye"));
-    for (let key of s.values())   // insertion order
-        console.log(key)
-}
+
 
