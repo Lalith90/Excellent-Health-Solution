@@ -8,11 +8,14 @@ import lk.solution.health.excellent.common.service.FileHandelService;
 import lk.solution.health.excellent.general.service.InvoiceHasLabTestService;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.lab.service.LabTestService;
+import lk.solution.health.excellent.resource.entity.MedicalPackage;
+import lk.solution.health.excellent.resource.entity.Patient;
 import lk.solution.health.excellent.resource.service.*;
 import lk.solution.health.excellent.transaction.service.DiscountRatioService;
 import lk.solution.health.excellent.transaction.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletContext;
@@ -21,6 +24,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
+@RequestMapping("/invoiceProcess")
 public class InvoiceProcessRestController {
 
     private final InvoiceService invoiceService;
@@ -37,10 +41,10 @@ public class InvoiceProcessRestController {
     private final ServletContext context;
 
     @Autowired
-    public InvoiceProcessRestController (InvoiceService invoiceService, UserService userService,PatientService patientService,
-                                         DoctorService doctorService, LabTestService labTestService,DateTimeAgeService dateTimeAgeService,
-                                         CollectingCenterService collectingCenterService,DiscountRatioService discountRatioService,
-                                         MedicalPackageService medicalPackageService,InvoiceHasLabTestService invoiceHasLabTestService, FileHandelService fileHandelService, ServletContext context) {
+    public InvoiceProcessRestController(InvoiceService invoiceService, UserService userService, PatientService patientService,
+                                        DoctorService doctorService, LabTestService labTestService, DateTimeAgeService dateTimeAgeService,
+                                        CollectingCenterService collectingCenterService, DiscountRatioService discountRatioService,
+                                        MedicalPackageService medicalPackageService, InvoiceHasLabTestService invoiceHasLabTestService, FileHandelService fileHandelService, ServletContext context) {
         this.invoiceService = invoiceService;
         this.userService = userService;
         this.patientService = patientService;
@@ -55,80 +59,108 @@ public class InvoiceProcessRestController {
         this.context = context;
     }
 
+    // using spring boot filtering service most required variable send to the front end
+    private void filterParameter(MappingJacksonValue mappingJacksonValue, FilterProvider filters) {
+        mappingJacksonValue.setFilters(filters);
+    }
+
+    // medical package lab test send to font end
+    @GetMapping("/medicalPackageLabTestGet/{id}")
+    public MappingJacksonValue getLabTestByMedicalPackageId(@PathVariable Integer id) {
+        List<LabTest> labTests = medicalPackageService.findById(id).getLabTests();
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(labTests);
+        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("code", "name", "labtestDoneHere");
+        FilterProvider filters = new SimpleFilterProvider().addFilter("LabTest", simpleBeanPropertyFilter);
+        filterParameter(mappingJacksonValue, filters);
+        return mappingJacksonValue;
+    }
+    // medical package send to font end
+    @GetMapping("/medicalPackageGet/{id}")
+    public MappingJacksonValue getMedicalPackageById(@PathVariable Integer id) {
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(medicalPackageService.findById(id));
+        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "price");
+        FilterProvider filters = new SimpleFilterProvider().addFilter("MedicalPackage", simpleBeanPropertyFilter);
+        filterParameter(mappingJacksonValue, filters);
+        return mappingJacksonValue;
+    }
+    //send patient details  send to font end
+    @GetMapping("/patientFind")
+    public MappingJacksonValue getPatient(@PathParam("Patient")Patient patient) {
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(patientService.search(patient));
+        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "number", "title", "name", "nic", "mobile");
+        FilterProvider filters = new SimpleFilterProvider().addFilter("Patient", simpleBeanPropertyFilter);
+        filterParameter(mappingJacksonValue, filters);
+        return mappingJacksonValue;
+    }
+
 
 
     //if need to add entity variable to url add @PathParam to class
     @GetMapping(value = "/searchLabTest1")
-    public MappingJacksonValue search1(@PathParam("LabTest") LabTest labTest){
+    public MappingJacksonValue search1(@PathParam("LabTest") LabTest labTest) {
         //LabTest labTest2 = new LabTest();
         //labTest2.setName("lipid");
-       System.out.println("im here lab test one");
-        MappingJacksonValue mappingJacksonValue =  new MappingJacksonValue(labTestService.search(labTest));
-        SimpleBeanPropertyFilter simpleBeanPropertyFilter =  SimpleBeanPropertyFilter.filterOutAllExcept("id","name");
+        System.out.println("im here lab test one");
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(labTestService.search(labTest));
+        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "name");
         FilterProvider filters = new SimpleFilterProvider().addFilter("LabTest", simpleBeanPropertyFilter);
-        filterParameter(mappingJacksonValue,filters);
+        filterParameter(mappingJacksonValue, filters);
         return mappingJacksonValue;
     }
 
 
-
-
-     //@RequestMapping(value = "/search", method = RequestMethod.GET)
+    //@RequestMapping(value = "/search", method = RequestMethod.GET)
     @GetMapping("/labTest1/{id}")
-    public MappingJacksonValue searchLabTest(@PathVariable Integer id){
+    public MappingJacksonValue searchLabTest(@PathVariable Integer id) {
         LabTest labTest = new LabTest();
         //labTest.setName("aa");
         labTest.setId(id);
-    List<LabTest> labTests = labTestService.search(labTest);
-    MappingJacksonValue mappingJacksonValue =  new MappingJacksonValue(labTests);
-        for (LabTest lab: labTests
-             ) {
-        System.out.println(lab.getId());
+        List<LabTest> labTests = labTestService.search(labTest);
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(labTests);
+        for (LabTest lab : labTests
+        ) {
+            System.out.println(lab.getId());
 
-            SimpleBeanPropertyFilter simpleBeanPropertyFilter =  SimpleBeanPropertyFilter.filterOutAllExcept("id","name","labtestDoneHere");
+            SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "labtestDoneHere");
             FilterProvider filters = new SimpleFilterProvider().addFilter("LabTest", simpleBeanPropertyFilter);
 
-            filterParameter(mappingJacksonValue,filters);
-    }
+            filterParameter(mappingJacksonValue, filters);
+        }
 
         return mappingJacksonValue;
-}
-
-
-// using spring boot filtering service most required variable send to the front end
-    private void  filterParameter(MappingJacksonValue mappingJacksonValue, FilterProvider filters) {
-        mappingJacksonValue.setFilters(filters);
     }
 
-
-
-/*
-    @ResponseBody
-    public MappingJacksonValue getOne(@PathVariable Integer id){
-
-
-            MappingJacksonValue mappingJacksonValue =  new MappingJacksonValue(labTestService.findById(id));
-            SimpleBeanPropertyFilter simpleBeanPropertyFilter =  SimpleBeanPropertyFilter.filterOutAllExcept("id","name","price","labtestDoneHere");
-            FilterProvider filters = new SimpleFilterProvider().addFilter("LabTest", simpleBeanPropertyFilter);
-
-            filterParameter(mappingJacksonValue,filters);
-        System.out.println(mappingJacksonValue.toString().chars());
-
-        return mappingJacksonValue;
-
-
+    @GetMapping("/labTest11/{id}")
+    public LabTest searchTest(@PathVariable Integer id) {
+        return labTestService.findById(id);
     }
-    @GetMapping("/labTest1")*/
-    public MappingJacksonValue getAll(){
-        MappingJacksonValue mappingJacksonValue =  new MappingJacksonValue(labTestService.findAll());
-        SimpleBeanPropertyFilter simpleBeanPropertyFilter =  SimpleBeanPropertyFilter.filterOutAllExcept("id","name","description","labtestDoneHere");
+
+    /*
+        @ResponseBody
+        public MappingJacksonValue getOne(@PathVariable Integer id){
+
+
+                MappingJacksonValue mappingJacksonValue =  new MappingJacksonValue(labTestService.findById(id));
+                SimpleBeanPropertyFilter simpleBeanPropertyFilter =  SimpleBeanPropertyFilter.filterOutAllExcept("id","name","price","labtestDoneHere");
+                FilterProvider filters = new SimpleFilterProvider().addFilter("LabTest", simpleBeanPropertyFilter);
+
+                filterParameter(mappingJacksonValue,filters);
+            System.out.println(mappingJacksonValue.toString().chars());
+
+            return mappingJacksonValue;
+
+
+        }
+        @GetMapping("/labTest1")*/
+    public MappingJacksonValue getAll() {
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(labTestService.findAll());
+        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "description", "labtestDoneHere");
         FilterProvider filters = new SimpleFilterProvider().addFilter("LabTest", simpleBeanPropertyFilter);
         filterParameter(mappingJacksonValue, filters);
 
 
         return mappingJacksonValue;
     }
-
 
 
 //    @RequestMapping(value="/pat", method = RequestMethod.GET)
@@ -141,8 +173,6 @@ public class InvoiceProcessRestController {
 //        System.out.println("all user");
 //        return patientService.findAll();
 //    }
-
-
 
 
 //        @GetMapping("/labTest1/{id}")

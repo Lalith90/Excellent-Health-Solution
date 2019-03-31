@@ -1,5 +1,6 @@
 package lk.solution.health.excellent.resource.entity;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lk.solution.health.excellent.general.entity.Enum.Gender;
 import lk.solution.health.excellent.general.entity.Enum.Title;
@@ -20,6 +21,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"},allowGetters = true)
+@JsonFilter("Patient")
 public class Patient {
     @Id
     @Column(name = "id", nullable = false)

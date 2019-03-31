@@ -1,25 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8"/>
     <title>EHSL</title>
-    <!--front-awesome-->
-    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
-    <link rel="stylesheet" type="text/css" th:href="@{/css/font-awesome.min.css}"
-          href="../../static/css/font-awesome.min.css"/>
-    <!--google fornt-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <!--table pagination-->
-    <!--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.css"/>-->
-    <link rel="stylesheet" type="text/css" th:href="@{/css/dataTables.bootstrap.min.css}"
-          href="../../static/css/dataTables.bootstrap.min.css"/>
-    <!-- Custom styles for this template -->
-    <link rel="stylesheet" type="text/css" th:href="@{/css/myCss.css}" href="../../static/css/myCss.css"/>
-
-    <!-- Bootstrap core CSS Downloaded file add-->
-    <link href="../../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
-    <link href="../../static/css/bootstrap-theme.min.css" th:href="@{/css/bootstrap-theme.min.css}" rel="stylesheet"/>
+    <style th:replace="fragments/style"></style>
 </head>
 <body>
 <nav class="navbar navbar-default" th:replace="fragments/header :: header" style="margin-bottom: 60px"></nav>
@@ -33,70 +18,113 @@
                     <ul class=" nav-pills pager">
                         <li class="active"><a data-toggle="pill" href="#labTest"><h4>Lab Test</h4></a></li>
                         <li><a data-toggle="pill" href="#medicalPackageDetail"><h4>Medical Package</h4></a></li>
-                        <li><a data-toggle="pill" href="#information"
-                               th:if="${!#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"><h4>
-                            Information</h4></a></a>
+                        <li>
+                            <a data-toggle="pill" href="#information"
+                               th:if="${!#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"
+                               sec:authorize="!isAuthenticated()">
+                                <h4>Information</h4>
+                            </a>
                         </li>
                     </ul>
                 </div>
                 <!--Invoice Processing  Details - start -->
                 <div class="row">
-                    <form class="form-horizontal" th:action="@{invoiceProcess/add}" th:object="${invoiceProcess}"
-                          th:method="POST">
-                        <div class="tab-content">
-                            <!-- lab test finder - start  -->
-                            <div id="labTest" class="tab-pane fade in active">
-                                <div class="container-fluid">
-                                    <div class="col-sm-7">
-                                        <table class="table table-striped table-condensed" id="myTable">
-                                            <thead>
-                                            <tr>
-                                                <th>Index</th>
-                                                <th>Code</th>
-                                                <th>Test Name</th>
-                                                <th th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">
-                                                    Department
-                                                </th>
-                                                <th th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">
-                                                    Sample Collecting Tube
-                                                </th>
-                                                <th> Price (Rs.)</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr th:each="labTest: ${labTests}">
-                                                <th th:text="${labTest.id}"></th>
-                                                <th th:text="${labTest.code}" th:name="code"></th>
-                                                <th th:text="${labTest.name}" th:name="name"></th>
-                                                <th th:text="${labTest.department.department}"
-                                                    th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"></th>
-                                                <th th:text="${labTest.sampleCollectingTube}"
-                                                    th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"></th>
-                                                <th th:text="${labTest.price}" th:name="price"></th>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                    <div class="tab-content">
+                        <!-- lab test finder - start  -->
+                        <div id="labTest" class="tab-pane fade in active">
+                            <div class="container-fluid">
+                                <div class="col-sm-7">
+                                    <table class="table table-striped table-condensed" id="myTable">
+                                        <thead>
+                                        <tr>
+                                            <th>Index</th>
+                                            <th>Code</th>
+                                            <th>Test Name</th>
+                                            <th th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">
+                                                Department
+                                            </th>
+                                            <th th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">
+                                                Sample Collecting Tube
+                                            </th>
+                                            <th> Price (Rs.)</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="labTest: ${labTests}">
+                                            <th th:text="${labTest.id}"></th>
+                                            <th th:text="${labTest.code}" th:name="code"></th>
+                                            <th th:text="${labTest.name}" th:name="name"></th>
+                                            <th th:text="${labTest.department.department}"
+                                                th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"></th>
+                                            <th th:text="${labTest.sampleCollectingTube}"
+                                                th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"></th>
+                                            <th th:text="${labTest.price}" th:name="price"></th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"-->
+                                <div class="col-sm-5">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <div class="row">
+                                                <div class="col-sm-6 text-left text-capitalize"><span
+                                                        id="selectedLabTestCount"></span></div>
+                                                <div class="col-sm-6 text-right text-capitalize"><span
+                                                        id="totalPrice1"></span></div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-body">
+                                            <div class="container-fluid">
+                                                <table id="myTableData" class="table table-striped table-condensed">
+                                                    <tr>
+                                                        <th>Test id</th>
+                                                        <th>Test Code</th>
+                                                        <th>Test Name</th>
+                                                        <th>Price (Rs)</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <!--th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"-->
-                                    <div class="col-sm-5">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- lab test finder - end  -->
+                        <!-- Medical Package area - start -->
+                        <div id="medicalPackageDetail" class="tab-pane fade">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4" for="cmbMedicalPackage">Medical
+                                            Package</label>
+                                        <div class="col-md-7">
+                                            <select name="cmbMedicalPackage"
+                                                    id="cmbMedicalPackage"
+                                                    class="form-control">
+                                                <option th:each="medicalPackage : ${medicalPackages}"
+                                                        th:text="${medicalPackage.name}+${' '}+${{medicalPackage.price}}"
+                                                        th:value="${medicalPackage.id}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div id="medicalPackageDetails" class="container-fluid">
                                         <div class="panel panel-primary">
                                             <div class="panel-heading">
-                                                <div class="row">
-                                                    <div class="col-sm-6 text-left text-capitalize"><span
-                                                            id="selectedLabTestCount"></span></div>
-                                                    <div class="col-sm-6 text-right text-capitalize"><span
-                                                            id="totalPrice1"></span></div>
-                                                </div>
+                                                <h4 class="text text-center">Included Test Count&nbsp; &nbsp; <span
+                                                        id="includedLabTestCount"></span></h4>
                                             </div>
                                             <div class="panel panel-body">
                                                 <div class="container-fluid">
-                                                    <table id="myTableData" class="table table-striped table-condensed">
+                                                    <table id="myMedicalPackageData"
+                                                           class="table table-striped table-condensed text-center">
                                                         <tr>
-                                                            <th>Test id</th>
                                                             <th>Test Code</th>
                                                             <th>Test Name</th>
-                                                            <th>Price (Rs)</th>
-                                                            <th>Action</th>
+                                                            <th>Lab Test Done Here</th>
                                                         </tr>
                                                     </table>
                                                 </div>
@@ -105,193 +133,453 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- lab test finder - end  -->
-                            <!-- Medical Package area - start -->
-                            <div id="medicalPackageDetail" class="tab-pane fade">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4" th:for="medicalPackage">Medical
-                                                Package</label>
-                                            <div class="col-md-4">
-                                                <select th:filed="*{medicalPackage}" name="medicalPackage"
-                                                        class="form-control">
-                                                    <option th:each="medicalPackage : ${medicalPackages}"
-                                                            th:text="${medicalPackage.name}+${' '}+${{medicalPackage.price}}"
-                                                            th:value="${medicalPackage.id}"></option>
-                                                </select>
+                        </div>
+                        <!-- Medical Package area - end -->
+                        <!-- information area - start -->
+                        <div id="information" class="tab-pane fade"
+                             th:if="${!#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"
+                             sec:authorize="!isAuthenticated()">
+                            <form class="form-horizontal" th:action="@{invoiceProcess/add}" th:method="POST"
+                                  th:object="${invoiceProcess}">
+                                <div class="container-fluid">
+                                    <div class="panel-group" id="accordion">
+                                        <!--Patient  1 -->
+                                        <div class="panel panel-info">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title text-center">
+                                                    <a data-toggle="collapse" data-parent="#accordion"
+                                                       href="#collapse1">
+                                                        <i class="fa fa-wheelchair"></i>
+                                                        &nbsp; <b>Patient Details</b>
+                                                    </a></h3>
+                                            </div>
+                                            <div id="collapse1" class="panel-collapse collapse in">
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-8"></div>
+                                                        <div class="col-sm-4">
+                                                            <button type="button" class="btn btn-info">New <i
+                                                                    class="fa fa-wheelchair"></i></button>
+                                                        </div>
+                                                    </div>
+                                                    <div id="newPatient">
+                                                        <div class="col-sm-6 text-center">
+                                                            <div class="form-group" id="txtId">
+                                                                <label class="control-label col-md-4" for="id">ID
+                                                                    :</label>
+                                                                <div class="col-md-8">
+                                                                    <input type="text" id="id"
+                                                                           placeholder="Enter ID Here"
+                                                                           class="form-control" name="patient.id"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-4" for="number">Number<span
+                                                                        class="text-danger">*</span></label>
+                                                                <div class="col-md-3">
+                                                                    <input type="text" id="number"
+                                                                           placeholder="Enter Number"
+                                                                           th:value="${newPatient}" class="form-control"
+                                                                           name="patient.number" required/>
+                                                                </div>
+                                                                <div class="col-sm-5 text-warning">
+                                                                    <label class="control-label ">Previous Number: <span
+                                                                            th:text="${lastPatient}"></span></label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-4"
+                                                                       for="title">Title</label>
+                                                                <div class="col-md-4">
+                                                                    <select class="form-control" id="title"
+                                                                            name="patient.title">
+                                                                        <option th:each="titles : ${title}"
+                                                                                th:text="${titles.title}"
+                                                                                th:value="${titles}"></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-4" for="fullName">Full
+                                                                    Name<span class="text-danger">*</span></label>
+                                                                <div class="col-md-8">
+                                                                    <input type="text" id="fullname"
+                                                                           placeholder="Enter Full Here"
+                                                                           class="form-control" name="patient.name"
+                                                                           required/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-4"
+                                                                       for="nic">NIC</label>
+                                                                <div class="col-md-8">
+                                                                    <input type="text" id="nic"
+                                                                           placeholder="Enter NIC Here"
+                                                                           class="form-control" name="patient.nic"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.col-sm-6 -->
+                                                        <div class="col-sm-6 text-center">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-4" for="dateOfBirth">Birth
+                                                                    Date<span class="text-danger">*</span></label>
+                                                                <div class="col-md-8">
+                                                                    <input type="date" id="dateOfBirth"
+                                                                           class="form-control" name="dateOfBirth"
+                                                                           placeholder="Ex: 1990 - 01 - 20" required/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-4" for="gender">Gender</label>
+                                                                <div class="col-md-4">
+                                                                    <select id="gender" name="patient.gender"
+                                                                            class="form-control">
+                                                                        <option th:each="genders : ${gender}"
+                                                                                th:text="${genders.gender}"
+                                                                                th:value="${genders}"></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-4"
+                                                                       for="email">Email</label>
+                                                                <div class="col-md-8">
+                                                                    <input type="email" id="email"
+                                                                           placeholder="Enter email Here"
+                                                                           class="form-control" name="patient.email"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-4" for="mobile">Mobile
+                                                                    Number<span class="text-danger">*</span></label>
+                                                                <div class="col-md-8">
+                                                                    <input type="text" id="mobile"
+                                                                           placeholder="Enter Mobile Here"
+                                                                           class="form-control" name="patient.mobile"
+                                                                           required/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-4" for="land">Land
+                                                                    Number</label>
+                                                                <div class="col-md-8">
+                                                                    <input type="text" id="land"
+                                                                           placeholder="Enter Land Here"
+                                                                           class="form-control" name="patient.land"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title text-center">
+                                                    <a data-toggle="collapse" data-parent="#accordion"
+                                                       href="#collapse2">
+                                                       <b>Doctor Details</b>  &nbsp;<i class="fa fa-user-md"></i>&nbsp;
+                                                        <b>&amp;</b> &nbsp;
+                                                        <b>Collecting Center Details</b>  &nbsp; <i
+                                                            class="fa fa-hospital-o"></i>
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse2" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <!--Find doctor And New Doctor-->
+                                                        <div class="form-group">
+                                                            <div class="container-fluid">
+                                                                <div class="col-sm-3 text-center">
+                                                                    <label class="control-label" for="doctor">
+                                                                       Doctor Name</label>
+                                                                </div>
+                                                                <div class="col-sm-7 text-right">
+                                                                    <select id="doctor" name="doctor"
+                                                                            class="form-control">
+                                                                        <option th:each="doctor : ${doctors}"
+                                                                                th:text="${doctor.name} + ${'  -  '} + ${doctor.slmcNumber} + ${'  -  '} + ${doctor.mobile}+ ${'  -  '} + ${doctor.getConsultation().name}"
+                                                                                th:value="${doctor.id}"></option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-sm-offset-1">
+                                                                    <button type="button" class="btn btn-info"
+                                                                            id="newDoctorOpen">New <i
+                                                                            class="fa fa-user-md"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--New Doctor-->
+                                                    <div id="newDoctor" class="row">
+                                                        <div class="container-fluid">
+                                                            <div class="col-sm-6 text-center">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-4"
+                                                                           th:for="title">Title</label>
+                                                                    <div class="col-md-4">
+                                                                        <select name="doctor.title"
+                                                                                class="form-control">
+                                                                            <option th:each="titles : ${title}"
+                                                                                    th:text="${titles.title}"
+                                                                                    th:value="${titles}"></option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-4"
+                                                                           for="fullName">Name</label>
+                                                                    <div class="col-md-8">
+                                                                        <input type="text" id="fullname"
+                                                                               placeholder="Enter Full Here"
+                                                                               class="form-control" name="doctor.name"
+                                                                               required/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-4"
+                                                                           for="cmbGender">Gender</label>
+                                                                    <div class="col-md-4">
+                                                                        <select id="cmbGender" name="doctor.gender"
+                                                                                class="form-control">
+                                                                            <option th:each="genders : ${gender}"
+                                                                                    th:text="${genders.gender}"
+                                                                                    th:value="${genders}"></option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-4"
+                                                                           for="doctorConsultation">Consultation</label>
+                                                                    <div class="col-md-8">
+                                                                        <select id="doctorConsultation"
+                                                                                name="doctor.consultation"
+                                                                                class="form-control">
+                                                                            <option th:each="consultation : ${consultations}"
+                                                                                    th:text="${consultation.name}"
+                                                                                    th:value="${consultation.id}"></option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-4"
+                                                                           for="slmcNumber">SLMC Number</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="slmcNumber" class="form-control"
+                                                                               name="doctor.slmcNumber"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6 text-center">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-4" for="mobile">Email</label>
+                                                                    <div class="col-md-8">
+                                                                        <input type="doctor.email" id="doctor.email"
+                                                                               placeholder="Enter email Here"
+                                                                               class="form-control"
+                                                                               name="doctor.email"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-4"
+                                                                           for="doctor.mobile">Mobile
+                                                                        Number</label>
+                                                                    <div class="col-md-8">
+                                                                        <input type="text" id="doctor.mobile"
+                                                                               placeholder="Enter Mobile Here"
+                                                                               class="form-control"
+                                                                               name="doctor.mobile"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-4"
+                                                                           for="doctor.land">Land
+                                                                        Number</label>
+                                                                    <div class="col-md-8">
+                                                                        <input type="text" id="doctor.land"
+                                                                               placeholder="Enter Land Here"
+                                                                               class="form-control"
+                                                                               name="doctor.land"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-4"
+                                                                           for="description">Description</label>
+                                                                    <div class="col-md-8">
+                                                                        <textarea id="description" class="form-control"
+                                                                                  name="doctor.description"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--Collecting Center-->
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-3" th:for="collectingCenter">Collecting
+                                                            Center</label>
+                                                        <div class="col-md-7">
+                                                            <select name="collectingCenter" class="form-control">
+                                                                <option th:each="collectingCenters : ${collectingCenters}"
+                                                                        th:text="${collectingCenters.name} + ${' '} + ${collectingCenters.mobile} + ${' '} + ${collectingCenters.establishedDate}"
+                                                                        th:value="${collectingCenters.id}"></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-info">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title text-center">
+                                                    <a data-toggle="collapse" data-parent="#accordion"
+                                                       href="#collapse3">
+                                                        <b>Payment Details </b> &nbsp;<i class="fa fa-money"></i>
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse3" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="form-group col-sm-6">
+                                                            <label class="control-label col-sm-6" for="totalPrice">Total
+                                                                Price</label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" id="totalPrice"
+                                                                       placeholder="Enter Full Here"
+                                                                       class="form-control" name="totalprice"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-6">
+                                                            <label class="control-label col-sm-6"
+                                                                   th:for="discountRatio">Discount
+                                                                Ratio</label>
+                                                            <div class="col-sm-6">
+                                                                <select name="discountRatio" id="discountRatio"
+                                                                        class="form-control">
+                                                                    <option th:each="discountRatio : ${discountRatios}"
+                                                                            th:text="${discountRatio.amount}"
+                                                                            th:value="${discountRatio.id}"></option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group col-sm-6">
+                                                            <label class="control-label col-sm-6"
+                                                                   for="amount">Amount</label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" id="amount"
+                                                                       placeholder="Enter Full Here"
+                                                                       class="form-control" name="amount"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-6">
+                                                            <label class="control-label col-sm-6"
+                                                                   th:for="paymentMethod">Payment
+                                                                Method:</label>
+                                                            <div class="col-sm-6">
+                                                                <select name="paymentMethod" id="paymentMethod"
+                                                                        class="form-control">
+                                                                    <option th:each="paymentMethod : ${paymentMethods}"
+                                                                            th:text="${paymentMethod.paymentMethod}"
+                                                                            th:value="${paymentMethod}"></option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" id="cash">
+                                                        <div class="form-group col-sm-6">
+                                                            <label class="control-label col-md-6"
+                                                                   for="amountTendered">Amount
+                                                                Tendered
+                                                                (Rs.):</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" id="amountTendered"
+                                                                       placeholder="Enter Amount Here"
+                                                                       class="form-control"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-6">
+                                                            <label class="control-label col-md-6" for="balance">Balance
+                                                                (Rs.): <span
+                                                                        class="text-danger">*</span></label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" id="balance"
+                                                                       placeholder="Enter Amount Here"
+                                                                       class="form-control"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" id="card">
+                                                        <div class="form-group col-sm-6">
+                                                            <label class="control-label col-sm-6" for="bankName">Bank:
+                                                                <span
+                                                                        class="text-danger">*</span></label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" id="bankName"
+                                                                       placeholder="Enter Bank Name Here"
+                                                                       class="form-control" name="bankName"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-6">
+                                                            <label class="control-label col-sm-6" for="cardNumber">Number:
+                                                                <span
+                                                                        class="text-danger">*</span></label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" id="cardNumber"
+                                                                       class="form-control"
+                                                                       name="cardNumber"
+                                                                       placeholder="Cheque Number"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="control-label col-sm-offset-1 col-sm-3"
+                                                                   for="remarks">Remarks: </label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" id="remarks"
+                                                                       placeholder="Enter Anything Special"
+                                                                       class="form-control" name="remarks"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="text-center">
+                                                            <button class="btn btn-success" type="submit"><span
+                                                                    class="glyphicon glyphicon-print"></span>&nbsp;
+                                                                &nbsp;Print
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                  <div id="medicalPackageDetails">
-
-                                  </div>
+                                <!-- information area - end -->
+                                <div class="container-fluid">
+                                    <label th:if="${#fields.hasErrors('*')}" th:text="'Errors: '">Errors: </label>
+                                    <ul>
+                                        <li th:each="err: ${#fields.errors('*')}" th:text="${err}"
+                                            class="error"></li>
+                                    </ul>
                                 </div>
-                            </div>
-                            <!-- Medical Package area - end -->
-                            <!-- information area - start -->
-                            <div id="information" class="tab-pane fade"
-                                 th:if="${!#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">
-                                <div class="row">
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-3" for="patient">Patient Name</label>
-                                        <div class="col-sm-1">
-                                            <a th:href="@{patient/add}" target="_blank">
-                                                <button type="button" class="btn btn-info">New <i
-                                                        class="fa fa-wheelchair"></i></button>
-                                            </a>
-                                        </div>
-                                        <div class="col-md-7">
-                                            <select id="patient" th:filed="*{patient}" name="patient"
-                                                    class="form-control">
-                                                <option class="text-center" th:each="patient : ${patients}"
-                                                        th:text="${patient.number} + ${'  -  '} + ${patient.name} + ${'  -  '} + ${patient.nic} + ${'  -  '} + ${patient.dateOfBirth}+ ${'  -  '} +${patient.email}"
-                                                        th:value="${patient.id}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-3" for="doctor">Doctor Name</label>
-                                        <div class="col-sm-1">
-                                            <a th:href="@{doctor/add}" target="_blank">
-                                                <button type="button" class="btn btn-info">New <i
-                                                        class="fa fa-user-md"></i></button>
-                                            </a>
-                                        </div>
-                                        <div class="col-md-7">
-                                            <select id="doctor" name="doctor" th:filed="*{doctor}" class="form-control">
-                                                <option th:each="doctor : ${doctors}"
-                                                        th:text="${doctor.name} + ${'  -  '} + ${doctor.slmcNumber} + ${'  -  '} + ${doctor.mobile}+ ${'  -  '} + ${doctor.getConsultation().name}"
-                                                        th:value="${doctor.id}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-3" th:for="collectingCenter">Collecting
-                                            Center</label>
-                                        <div class="col-sm-1"></div>
-                                        <div class="col-md-7">
-                                            <select name="collectingCenter" th:filed="*{collectingCenter}"
-                                                    class="form-control">
-                                                <option th:each="collectingCenters : ${collectingCenters}"
-                                                        th:text="${collectingCenters.name} + ${' '} + ${collectingCenters.mobile} + ${' '} + ${collectingCenters.establishedDate}"
-                                                        th:value="${collectingCenters.id}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-sm-6">
-                                        <label class="control-label col-sm-6" for="totalPrice">Total Price</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" id="totalPrice" placeholder="Enter Full Here"
-                                                   class="form-control" name="totalprice" th:filed="*{totalprice}"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label class="control-label col-sm-6" th:for="discountRatio">Discount
-                                            Ratio</label>
-                                        <div class="col-sm-6">
-                                            <select th:filed="*{discountRatio}" name="discountRatio" id="discountRatio"
-                                                    class="form-control" onchange="">
-                                                <option th:each="discountRatio : ${discountRatios}"
-                                                        th:text="${discountRatio.amount}"
-                                                        th:value="${discountRatio.id}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-sm-6">
-                                        <label class="control-label col-sm-6" for="amount">Amount</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" id="amount" placeholder="Enter Full Here"
-                                                   class="form-control" name="amount" th:field="*{amount}"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label class="control-label col-sm-6" th:for="paymentMethod">Payment
-                                            Method:</label>
-                                        <div class="col-sm-6">
-                                            <select th:filed="*{paymentMethod}" name="paymentMethod" id="paymentMethod"
-                                                    class="form-control">
-                                                <option th:each="paymentMethod : ${paymentMethods}"
-                                                        th:text="${paymentMethod.paymentMethod}"
-                                                        th:value="${paymentMethod}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-sm-6">
-                                        <label class="control-label col-md-6" for="amountTendered">Amount Tendered
-                                            (Rs.):</label>
-                                        <div class="col-md-6">
-                                            <input type="text" id="amountTendered" placeholder="Enter Amount Here"
-                                                   class="form-control"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label class="control-label col-md-6" for="balance">Balance (Rs.): <span
-                                                class="text-danger">*</span></label>
-                                        <div class="col-md-6">
-                                            <input type="text" id="balance" placeholder="Enter Amount Here"
-                                                   class="form-control"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" id="card">
-                                    <div class="form-group col-sm-6">
-                                        <label class="control-label col-sm-6" for="bankName">Bank: <span
-                                                class="text-danger">*</span></label>
-                                        <div class="col-sm-6">
-                                            <input type="text" id="bankName" placeholder="Enter Bank Name Here"
-                                                   class="form-control" name="bankName"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label class="control-label col-sm-6" for="cardNumber">Number: <span
-                                                class="text-danger">*</span></label>
-                                        <div class="col-sm-6">
-                                            <input type="text" id="cardNumber" class="form-control" name="cardNumber"
-                                                   placeholder="Cheque Number"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-offset-1 col-sm-3"
-                                               for="remarks">Remarks: </label>
-                                        <div class="col-md-6">
-                                            <input type="text" id="remarks" placeholder="Enter Anything Special"
-                                                   class="form-control" name="remarks" th:filed="*{remarks}"/>
-                                        </div>
-                                    </div>
-                                    <div class="text-center">
-                                        <button class="btn btn-success" type="submit"><span
-                                                class="glyphicon glyphicon-print"></span>&nbsp; &nbsp;Print
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- information area - end -->
+                            </form>
                         </div>
-                        <div class="container-fluid">
-                            <label th:if="${#fields.hasErrors('*')}" th:text="'Errors: '">Errors: </label>
-                            <ul>
-                                <li th:each="err: ${#fields.errors('*')}" th:text="${err}" class="error"></li>
-                            </ul>
-                        </div>
-                    </form>
+                        <!--Invoice Processing Details - end -->
+                    </div>
                 </div>
-                <!--Invoice Processing Details - end -->
             </div>
         </div>
     </div>
 </div>
-
 <footer class="page-footer" th:replace="fragments/footer"></footer>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script th:replace="fragments/script"></script>

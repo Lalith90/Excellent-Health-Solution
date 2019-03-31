@@ -54,14 +54,10 @@ public class Invoice {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createdAt;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH,
-            CascadeType.DETACH})
+    @ManyToOne
     private Patient patient;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private CollectingCenter collectingCenter;
 
     @ManyToOne

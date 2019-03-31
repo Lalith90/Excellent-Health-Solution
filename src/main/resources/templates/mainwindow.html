@@ -1,525 +1,408 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" >
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
-    <title >EHSL - Main Window</title>
+    <title>EHSL - Main Window</title>
     <style th:replace="fragments/style"></style>
 </head>
 <body>
 <nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
 <!-- Cashier Content - start -->
 <div class="col-sm-12 container" style="margin-top: 70px;">
-<!-- /.col-sm-12 -->
-<div th:if="${#authorization.expression('hasRole(''ROLE_CHASHIER'')')}" class="col-sm-12">
-    <div class="row " >
-        <div class="container-fluid col-sm-4">
-            <div class="container-fluid row">
-                <div class="container col-sm-8">
-                    <img src="../static/img/Logo.gif" th:src="@{/img/Logo.gif}"  class="img-rounded img-responsive float-left logoProperty" alt="company logo" />
-                </div>
-                <div class="row container-fluid col-sm-10">
-                    <h3 align="center" class="mainWindowText">
-                        <i><b>&#733;Healthy happiness is our Wealth&#733;</b></i>
-                    </h3>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid col-sm-8">
-            <div class="row">
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg">
-                        <a th:href="@{/invoiceProcess}">
-                            <img src="../static/img/cashier/invoice.png" th:src="@{/img/cashier/invoice.png}" class="img-circle img-responsive" alt="invoice"/>
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">INVOICE</h4>
+    <div th:if="${#authorization.expression('hasRole(''ROLE_CHASHIER'')')}" class="col-sm-12">
+        <div class="row ">
+            <div class="container-fluid col-sm-4">
+                <div class="container-fluid row">
+                    <div class="container col-sm-8">
+                        <img src="../static/img/Logo.gif" th:src="@{/img/Logo.gif}" class="img-rounded img-responsive float-left logoProperty" alt="company logo"/>
                     </div>
-                </div>
-                <div class="container-fluid col-sm-4" >
-                    <div class="col-sm-6 mainWindImg">
-                        <a th:href="@{/labTest}" data-toggle="tooltip" title="Find Lab Test" data-placement="bottom">
-                            <img src="../static/img/cashier/lab%20test%20find.png" th:src="@{/img/cashier/lab test find.png}" class="img-circle img-responsive" alt="lab test find"/>
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">LAB TEST FIND</h4>
-                    </div>
-                </div>
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg">
-                        <a th:href="@{/patient}">
-                            <img src="../static/img/cashier/patient%20find.jpg"  th:src="@{/img/cashier/patient find.jpg}" class="img-circle img-responsive" alt="patient find"/>
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">PATIENT FIND</h4>
+                    <div class="row container-fluid col-sm-10">
+                        <h3 align="center" class="mainWindowText">
+                            <i><b>&#733;Healthy happiness is our Wealth&#733;</b></i>
+                        </h3>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="container-fluid col-sm-6" >
-                    <div class="col-sm-4 mainWindImg col-sm-push-4">
-                        <a href="/process/summary">
-                            <img src="../static/img/cashier/summary.png" th:src="@{/img/cashier/summary.png}" class="img-circle img-responsive" alt="summary"/>
-                        </a>
-                        &nbsp;
-                        <br>
-                        <h4 class="text-info mainWindowText text-center">SUMMARY</h4>
-                    </div>
-                </div>
-                <div class="container-fluid col-sm-6 ">
-                    <div class="col-sm-4 mainWindImg ">
-                        <a th:href="@{/patient/add}">
-                            <img src="../static/img/cashier/registration.png" th:src="@{/img/cashier/registration.png}" class="img-circle img-responsive" alt="registration"/>
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">PATIENT<br> REGISTRATION</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-        &nbsp;
-    </div>
-    <div class="row"  th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" >
-        <div class="col-sm-12 container-fluid">
-            <div class="row">
-                <div class="col-sm-6 align-content-center ">
-                    <div class="col-sm-3 container-fluid">
-                        <h4 class="cashier-footer text"><u>YESTERDAY</u></h4>
-                        <h4 class="text-info cashier-footer">Rs.<span id="">125558.00</span></h4>
-                        <h4 class="text-info cashier-footer">Rs.<span id="">125558.00</span></h4>
-                        <h4 class="text-info cashier-footer">Rs.<span id="">125558.00</span></h4>
-                        <h4 class="text-success cashier-footer">Rs.<span id="">125558.00</span></h4>
-                    </div>
-                    <div class="col-sm-3 container-fluid">
-                        <h4 class="cashier-footer cashier-footer"><u>CATEGORY</u></h4>
-                        <h4 class="cashier-footer">CASH</h4>
-                        <h4 class="cashier-footer">CHEQUE</h4>
-                        <h4 class="cashier-footer">CREDIT CARD</h4>
-                        <h4 class="text-success cashier-footer" >TOTAL</h4>
-                    </div>
-                    <div class="col-sm-3 container-fluid">
-                        <h4 class="cashier-footer"><u>TODAY</u></h4>
-                        <h4 class="text-info cashier-footer">Rs.<span id="">125558.00</span></h4>
-                        <h4 class="text-info cashier-footer">Rs.<span id="">125558.00</span></h4>
-                        <h4 class="text-info cashier-footer">Rs.<span id="">125558.00</span></h4>
-                        <h4 class="text-success cashier-footer">Rs.<span id="">125558.00</span></h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Cashier Content - end -->
-<!-- Lab - content MLT 1 - start -->
-<div th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')')}" class="col-sm-12 container-fluid">
-    <div class="row " >
-        <div class="container-fluid col-sm-4">
-            <div class="container-fluid row">
-                <div class="container col-sm-8">
-                    <img src="../static/img/Logo.gif" th:src="@{/img/Logo.gif}" class="img-rounded img-responsive float-left logoProperty" alt="company logo"/>
-                </div>
-                <div class="row container-fluid col-sm-10">
-                    <h3 align="center" class="mainWindowText ">
-                        <i><b>&#733;Healthy happiness is our Wealth&#733;</b></i>
-                    </h3>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid col-sm-8">
-            <div class="row">
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg">
-                        <a th:href="@{/lab/sampleCollect}">
-                            <img src="../static/img/cashier/patient%20find.jpg" th:src="@{/img/cashier/patient find.jpg}" class="img-circle img-responsive" alt="invoice"/>
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">PATIENT FIND</h4>
-                    </div>
-                </div>
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg" sec:authorize="hasRole('MLT1')">
-                        <a href="/lab/authorize/resultAuthorizeList" data-toggle="tooltip" title="Find Lab Test" data-placement="bottom">
-                            <img src="../static/img/lab/autho.jpg" th:src="@{/img/lab/autho.jpg}" class="img-circle img-responsive" alt="test-autho"/>
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">AUTHORIZE</h4>
-                    </div>
-                </div>
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg">
-                        <a href="/lab/worksheetPrinted">
-                            <img src="../static/img/lab/result%20ender%20(1).png" th:src="@{/img/lab/result ender (1).png}" class="img-circle img-responsive" alt="patient find"/>
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">RESULT ENTER</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="container-fluid col-sm-6" >
-                    <div class="col-sm-4 mainWindImg col-sm-push-4">
-                        <a href="/lab/afterResultAuthorizeList">
-                            <img src="../static/img/lab/report.jpg" th:src="@{/img/lab/report.jpg}" class="img-circle img-responsive" alt="summary"/>
-                        </a>
-                        &nbsp;
-                        <br>
-                        <h4 class="text-info mainWindowText text-center">REPORT </h4>
-                    </div>
-                </div>
-                <div class="container-fluid col-sm-6 ">
-                    <div class="col-sm-4 mainWindImg ">
-                        <a href="/process/summary">
-                            <img src="../static/img/lab/summary%20test.png" th:src="@{/img/lab/summary test.png}" class="img-circle img-responsive" alt="registration"/>
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">SUMMARY</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-        &nbsp;
-    </div>
-    <div>
-        <div class="row" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" >
-            <div class="col-sm-12 container-fluid">
+            <div class="container-fluid col-sm-8">
                 <div class="row">
-                    <div class="col-sm-6 align-content-center ">
-                        <div class="col-sm-3 container-fluid">
-                            <h4 class="cashier-footer text"><u>YESTERDAY</u></h4>
-                            <h4 class="text-info cashier-footer"><span id="">125558.00</span></h4>
-                            <h4 class="text-info cashier-footer"><span id="">125558.00</span></h4>
-                            <h4 class="text-success cashier-footer"><span id="">125558.00</span></h4>
-                        </div>
-                        <div class="col-sm-3 container-fluid">
-                            <h4 class="cashier-footer cashier-footer"><u>CATEGORY</u></h4>
-                            <h4 class="cashier-footer">IN CETNER</h4>
-                            <h4 class="cashier-footer">OUT CENTER</h4>
-                            <h4 class="text-success cashier-footer" >TOTAL</h4>
-                        </div>
-                        <div class="col-sm-3 container-fluid">
-                            <h4 class="cashier-footer"><u>TODAY</u></h4>
-                            <h4 class="text-info cashier-footer"><span id="">125558.00</span></h4>
-                            <h4 class="text-info cashier-footer"><span id="">125558.00</span></h4>
-                            <h4 class="text-success cashier-footer"><span id="">125558.00</span></h4>
+                    <div class="container-fluid col-sm-4">
+                        <div class="col-sm-6 mainWindImg">
+                            <a th:href="@{/invoiceProcess}">
+                                <img src="../static/img/cashier/invoice.png" th:src="@{/img/cashier/invoice.png}"
+                                     class="img-circle img-responsive" alt="invoice"/>
+                            </a>
+                            &nbsp;
+                            <h4 class="text-info mainWindowText text-center">INVOICE</h4>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Lab - content MLT 1 - end -->
-<!-- Lab - content MLT 2- start -->
-<div th:if="${#authorization.expression('hasRole(''ROLE_MLT2'')')}" class="col-sm-12 container-fluid">
-    <div class="row " >
-        <div class="container-fluid col-sm-4">
-            <div class="container-fluid row">
-                <div class="container col-sm-8">
-                    <img src="../static/img/Logo.gif" th:src="@{/img/Logo.gif}" class="img-rounded img-responsive float-left logoProperty" alt="company logo" />
-                </div>
-                <div class="row container-fluid col-sm-10">
-                    <h3 align="center" class="mainWindowText navbar-header-text">
-                        <i><b>&#733;Healthy happiness is our Wealth&#733;</b></i>
-                    </h3>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid col-sm-8">
-            <div class="row">
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg">
-                        <a href="/lab/sampleCollect">
-                            <img src="../static/img/cashier/patient find.jpg" th:src="@{/img/cashier/patient find.jpg}" class="img-circle img-responsive" />
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">PATIENT FIND</h4>
+                    <div class="container-fluid col-sm-4">
+                        <div class="col-sm-6 mainWindImg">
+                            <a th:href="@{/labTest}" data-toggle="tooltip" title="Find Lab Test"
+                               data-placement="bottom">
+                                <img src="../static/img/cashier/lab%20test%20find.png"
+                                     th:src="@{/img/cashier/lab test find.png}" class="img-circle img-responsive"
+                                     alt="lab test find"/>
+                            </a>
+                            &nbsp;
+                            <h4 class="text-info mainWindowText text-center">LAB TEST FIND</h4>
+                        </div>
+                    </div>
+                    <div class="container-fluid col-sm-4">
+                        <div class="col-sm-6 mainWindImg">
+                            <a th:href="@{/patient}">
+                                <img src="../static/img/cashier/patient%20find.jpg"
+                                     th:src="@{/img/cashier/patient find.jpg}" class="img-circle img-responsive"
+                                     alt="patient find"/>
+                            </a>
+                            &nbsp;
+                            <h4 class="text-info mainWindowText text-center">PATIENT FIND</h4>
+                        </div>
                     </div>
                 </div>
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg" >
-                        <a href="/lab/sampleCollect" data-toggle="tooltip" title="Find Lab Test" data-placement="bottom">
-                            <img  src="../static/img/lab/work sheet.jpg" th:src="@{/img/lab/work sheet.jpg}" class="img-circle img-responsive"/>
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">PRINT WORK SHEET</h4>
-                    </div>
-                </div>
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg">
-                        <a href="/lab/worksheetPrinted">
-                            <img  src="../static/img/lab/result ender (1).png" th:src="@{/img/lab/result ender (1).png}" class="img-circle img-responsive" />
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">RESULT ENTER</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="container-fluid col-sm-6" >
-                    <div class="col-sm-4 mainWindImg col-sm-push-4">
-                        <a href="/lab/afterResultAuthorizeList">
-                            <img  src="../static/img/lab/report.jpg" th:src="@{/img/lab/result ender (1).png}" class="img-circle img-responsive" />
-                        </a>
-                        &nbsp;
-                        <br>
-                        <h4 class="text-info mainWindowText text-center">REPORT </h4>
-                    </div>
-                </div>
-                <div class="container-fluid col-sm-6 ">
-                    <div class="col-sm-4 mainWindImg ">
-                        <a href="/process/summary">
-                            <img  src="../static/img/lab/summary test.png" th:src="@{/img/lab/summary test.png}" class="img-circle img-responsive" />
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">SUMMARY</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-        &nbsp;
-    </div>
-    <div>
-        <div class="row" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" >
-            <div class="col-sm-12 container-fluid">
                 <div class="row">
-                    <div class="col-sm-6 align-content-center ">
-                        <div class="col-sm-3 container-fluid">
-                            <h4 class="cashier-footer text"><u>YESTERDAY</u></h4>
-                            <h4 class="text-info cashier-footer"><span id="">125558.00</span></h4>
-                            <h4 class="text-info cashier-footer"><span id="">125558.00</span></h4>
-                            <h4 class="text-success cashier-footer"><span id="">125558.00</span></h4>
-                        </div>
-                        <div class="col-sm-3 container-fluid">
-                            <h4 class="cashier-footer cashier-footer"><u>CATEGORY</u></h4>
-                            <h4 class="cashier-footer">IN CETNER</h4>
-                            <h4 class="cashier-footer">OUT CENTER</h4>
-                            <h4 class="text-success cashier-footer" >TOTAL</h4>
-                        </div>
-                        <div class="col-sm-3 container-fluid">
-                            <h4 class="cashier-footer"><u>TODAY</u></h4>
-                            <h4 class="text-info cashier-footer"><span id="">125558.00</span></h4>
-                            <h4 class="text-info cashier-footer"><span id="">125558.00</span></h4>
-                            <h4 class="text-success cashier-footer"><span id="">125558.00</span></h4>
+                    <div class="container-fluid col-sm-6">
+                        <div class="col-sm-4 mainWindImg col-sm-push-4">
+                            <a href="/process/summary">
+                                <img src="../static/img/cashier/summary.png" th:src="@{/img/cashier/summary.png}"
+                                     class="img-circle img-responsive" alt="summary"/>
+                            </a>
+                            &nbsp;
+                            <br>
+                            <h4 class="text-info mainWindowText text-center">SUMMARY</h4>
                         </div>
                     </div>
+                    <div class="container-fluid col-sm-6 ">
+                        <div class="col-sm-4 mainWindImg ">
+                            <a th:href="@{/patient/add}">
+                                <img src="../static/img/cashier/registration.png"
+                                     th:src="@{/img/cashier/registration.png}" class="img-circle img-responsive"
+                                     alt="registration"/>
+                            </a>
+                            &nbsp;
+                            <h4 class="text-info mainWindowText text-center">PATIENT<br> REGISTRATION</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            &nbsp;
+        </div>
+    </div>
+    <!-- Cashier Content - end -->
+    <!-- Lab - content MLT 1 - start -->
+    <div th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')')}" class="col-sm-12 container-fluid">
+        <div class="row ">
+            <div class="container-fluid col-sm-4">
+                <div class="container-fluid row">
+                    <div class="container col-sm-8">
+                        <img src="../static/img/Logo.gif" th:src="@{/img/Logo.gif}"
+                             class="img-rounded img-responsive float-left logoProperty" alt="company logo"/>
+                    </div>
+                    <div class="row container-fluid col-sm-10">
+                        <h3 align="center" class="mainWindowText ">
+                            <i><b>&#733;Healthy happiness is our Wealth&#733;</b></i>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid col-sm-8">
+                <div class="row">
+                    <div class="container-fluid col-sm-4">
+                        <div class="col-sm-6 mainWindImg">
+                            <a th:href="@{/lab/sampleCollect}">
+                                <img src="../static/img/cashier/patient%20find.jpg"
+                                     th:src="@{/img/cashier/patient find.jpg}" class="img-circle img-responsive"
+                                     alt="invoice"/>
+                            </a>
+                            &nbsp;
+                            <h4 class="text-info mainWindowText text-center">PATIENT FIND</h4>
+                        </div>
+                    </div>
+                    <div class="container-fluid col-sm-4">
+                        <div class="col-sm-6 mainWindImg" sec:authorize="hasRole('MLT1')">
+                            <a href="/lab/authorize/resultAuthorizeList" data-toggle="tooltip" title="Find Lab Test"
+                               data-placement="bottom">
+                                <img src="../static/img/lab/autho.jpg" th:src="@{/img/lab/autho.jpg}"
+                                     class="img-circle img-responsive" alt="test-autho"/>
+                            </a>
+                            &nbsp;
+                            <h4 class="text-info mainWindowText text-center">AUTHORIZE</h4>
+                        </div>
+                    </div>
+                    <div class="container-fluid col-sm-4">
+                        <div class="col-sm-6 mainWindImg">
+                            <a href="/lab/worksheetPrinted">
+                                <img src="../static/img/lab/result%20ender%20(1).png"
+                                     th:src="@{/img/lab/result ender (1).png}" class="img-circle img-responsive"
+                                     alt="patient find"/>
+                            </a>
+                            &nbsp;
+                            <h4 class="text-info mainWindowText text-center">RESULT ENTER</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid col-sm-6">
+                        <div class="col-sm-4 mainWindImg col-sm-push-4">
+                            <a href="/lab/afterResultAuthorizeList">
+                                <img src="../static/img/lab/report.jpg" th:src="@{/img/lab/report.jpg}"
+                                     class="img-circle img-responsive" alt="summary"/>
+                            </a>
+                            &nbsp;
+                            <br>
+                            <h4 class="text-info mainWindowText text-center">REPORT </h4>
+                        </div>
+                    </div>
+                    <div class="container-fluid col-sm-6 ">
+                        <div class="col-sm-4 mainWindImg ">
+                            <a href="/process/summary">
+                                <img src="../static/img/lab/summary%20test.png" th:src="@{/img/lab/summary test.png}"
+                                     class="img-circle img-responsive" alt="registration"/>
+                            </a>
+                            &nbsp;
+                            <h4 class="text-info mainWindowText text-center">SUMMARY</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            &nbsp;
+        </div>
+        <div>
+        </div>
+    </div>
+    <!-- Lab - content MLT 1 - end -->
+    <!-- Lab - content MLT 2- start -->
+    <div th:if="${#authorization.expression('hasRole(''ROLE_MLT2'')')}" class="col-sm-12 container-fluid">
+        <div class="row ">
+            <div class="container-fluid col-sm-4">
+                <div class="container-fluid row">
+                    <div class="container col-sm-8">
+                        <img src="../static/img/Logo.gif" th:src="@{/img/Logo.gif}"
+                             class="img-rounded img-responsive float-left logoProperty" alt="company logo"/>
+                    </div>
+                    <div class="row container-fluid col-sm-10">
+                        <h3 align="center" class="mainWindowText navbar-header-text">
+                            <i><b>&#733;Healthy happiness is our Wealth&#733;</b></i>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid col-sm-8">
+                <div class="row">
+                    <div class="container-fluid col-sm-4">
+                        <div class="col-sm-6 mainWindImg">
+                            <a href="/lab/sampleCollect">
+                                <img src="../static/img/cashier/patient find.jpg"
+                                     th:src="@{/img/cashier/patient find.jpg}" class="img-circle img-responsive"/>
+                            </a>
+                            &nbsp;
+                            <h4 class="text-info mainWindowText text-center">PATIENT FIND</h4>
+                        </div>
+                    </div>
+                    <div class="container-fluid col-sm-4">
+                        <div class="col-sm-6 mainWindImg">
+                            <a href="/lab/sampleCollect" data-toggle="tooltip" title="Find Lab Test"
+                               data-placement="bottom">
+                                <img src="../static/img/lab/work sheet.jpg" th:src="@{/img/lab/work sheet.jpg}"
+                                     class="img-circle img-responsive"/>
+                            </a>
+                            &nbsp;
+                            <h4 class="text-info mainWindowText text-center">PRINT WORK SHEET</h4>
+                        </div>
+                    </div>
+                    <div class="container-fluid col-sm-4">
+                        <div class="col-sm-6 mainWindImg">
+                            <a href="/lab/worksheetPrinted">
+                                <img src="../static/img/lab/result ender (1).png"
+                                     th:src="@{/img/lab/result ender (1).png}" class="img-circle img-responsive"/>
+                            </a>
+                            &nbsp;
+                            <h4 class="text-info mainWindowText text-center">RESULT ENTER</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid col-sm-6">
+                        <div class="col-sm-4 mainWindImg col-sm-push-4">
+                            <a href="/lab/afterResultAuthorizeList">
+                                <img src="../static/img/lab/report.jpg" th:src="@{/img/lab/result ender (1).png}"
+                                     class="img-circle img-responsive"/>
+                            </a>
+                            &nbsp;
+                            <br>
+                            <h4 class="text-info mainWindowText text-center">REPORT </h4>
+                        </div>
+                    </div>
+                    <div class="container-fluid col-sm-6 ">
+                        <div class="col-sm-4 mainWindImg ">
+                            <a href="/process/summary">
+                                <img src="../static/img/lab/summary test.png" th:src="@{/img/lab/summary test.png}"
+                                     class="img-circle img-responsive"/>
+                            </a>
+                            &nbsp;
+                            <h4 class="text-info mainWindowText text-center">SUMMARY</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            &nbsp;
+        </div>
+        <div>
+        </div>
+        <!-- Lab - content MLT 2 - end -->
+        <!-- Manager conternt - Start -->
+        <div th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}" class="col-sm-12 container-fluid">
+            <div class="row ">
+                <div class="container-fluid col-sm-4">
+                    <div class="container-fluid row">
+                        <div class="container col-sm-8">
+                            <img src="../static/img/Logo.gif" th:src="@{/img/Logo.gif}"
+                                 class="img-rounded img-responsive float-left logoProperty" alt="company logo"/>
+                        </div>
+                        <div class="row container-fluid col-sm-10">
+                            <h3 align="center" class="mainWindowText navbar-header-text">
+                                <i><b>&#733;Healthy happiness is our Wealth&#733;</b></i>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid col-sm-8">
+                    <div class="row">
+                        <div class="container-fluid col-sm-4">
+                            <div class="col-sm-6 mainWindImg">
+                                <a th:href="@{/user}">
+                                    <img src="../static/img/manager/edit user.png"
+                                         th:src="@{/img/manager/edit user.png}"
+                                         class="img-circle img-responsive"/>
+                                </a>
+                                &nbsp;
+                                <h4 class="text-info mainWindowText text-center">USER LIST</h4>
+                            </div>
+                        </div>
+                        <div class="container-fluid col-sm-4">
+                            <div class="col-sm-6 mainWindImg">
+                                <a th:href="@{/patient}" data-toggle="tooltip" title="Find Lab Test"
+                                   data-placement="bottom">
+                                    <img src="../static/img/manager/edit patient.jpg"
+                                         th:src="@{/img/manager/edit patient.jpg}" class="img-circle img-responsive"/>
+                                </a>
+                                &nbsp;
+                                <h4 class="text-info mainWindowText text-center">PATIENT LIST</h4>
+                            </div>
+                        </div>
+                        <div class="container-fluid col-sm-4">
+                            <div class="col-sm-6 mainWindImg">
+                                <a th:href="@{/medicalPackage}">
+                                    <img src="../static/img/manager/medical package.png"
+                                         th:src="@{/img/manager/medical package.png}" class="img-circle img-responsive"
+                                         alt="patient find"/>
+                                </a>
+                                &nbsp;
+                                <h4 class="text-info mainWindowText text-center">MEDICAL PACKAGE</h4>
+                            </div>
+                        </div>
+                    </div>
+                    &nbsp;&nbsp;
+                    <div class="row">
+                        <div class="container-fluid col-sm-4">
+                            <div class="col-sm-6 mainWindImg">
+                                <a th:href="@{/labTest}">
+                                    <img src="../static/img/manager/test finder cash 1.png"
+                                         th:src="@{/img/manager/test finder cash 1.png}"
+                                         class="img-circle img-responsive"/>
+                                </a>
+                                &nbsp;
+                                <h4 class="text-info mainWindowText text-center">LAB TEST </h4>
+                            </div>
+                        </div>
+                        <div class="container-fluid col-sm-4">
+                            <div class="col-sm-6 mainWindImg">
+                                <a th:href="@{/doctor}" data-toggle="tooltip" title="Find Lab Test"
+                                   data-placement="bottom">
+                                    <img src="../static/img/manager/edit doctor.png"
+                                         th:src="@{/img/manager/edit doctor.png}" class="img-circle img-responsive"/>
+                                </a>
+                                &nbsp;
+                                <h4 class="text-info mainWindowText text-center">DOCTOR LIST</h4>
+                            </div>
+                        </div>
+                        <div class="container-fluid col-sm-4">
+                            <div class="col-sm-6 mainWindImg">
+                                <a href="/process/summary">
+                                    <img src="../static/img/manager/income.png" th:src="@{/img/manager/income.png}"
+                                         class="img-circle img-responsive">
+                                </a>
+                                &nbsp;
+                                <h4 class="text-info mainWindowText text-center">SUMMARY</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                &nbsp;
+            </div>
+        </div>
+        <!-- Manager Content - end  -->
+        <!--Phlebotomise content-->
+        <div th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}" class="col-sm-12 container-fluid">
+            <div class="row ">
+                <div class="container-fluid col-sm-4">
+                    <div class="container-fluid row">
+                        <div class="container col-sm-8">
+                            <img src="../static/img/Logo.gif" th:src="@{/img/Logo.gif}"
+                                 class="img-rounded img-responsive float-left logoProperty" alt="company logo"/>
+                        </div>
+                        <div class="row container-fluid col-sm-10">
+                            <h3 align="center" class="mainWindowText navbar-header-text">
+                                <i><b>&#733;Healthy happiness is our Wealth&#733;</b></i>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid col-sm-8">
+                    <div class="row">
+                        <div class="container-fluid col-sm-4">
+                            <div class="col-sm-6 mainWindImg">
+                                <a th:href="@{/phlaboto/searchForm}">
+                                    <img src="../static/img/plab/pt pab.jpg" th:src="@{/img/plab/pt pab.jpg}"
+                                         class="img-circle img-responsive"/>
+                                </a>
+                                &nbsp;
+                                <h4 class="text-info mainWindowText text-center">PATIENT FIND</h4>
+                            </div>
+                        </div>
+                        <div class="container-fluid col-sm-4">
+                            <div class="col-sm-6 mainWindImg">
+                                <a href="/phlaboto" data-toggle="tooltip" title="Find Lab Test" data-placement="bottom">
+                                    <img src="../static/img/plab/taken blood.jpg" th:src="@{/img/plab/taken blood.jpg}"
+                                         class="img-circle img-responsive"/>
+                                </a>
+                                &nbsp;
+                                <h4 class="text-info mainWindowText text-center">TAKE BLOOD</h4>
+                            </div>
+                        </div>
+                        <div class="container-fluid col-sm-4">
+                            <div class="col-sm-6 mainWindImg">
+                                <a href="/invoiceProcess">
+                                    <img src="../static/img/plab/test finder cash 1.png"
+                                         th:src="@{/img/plab/test finder cash 1.png}"
+                                         class="img-circle img-responsive"/>
+                                </a>
+                                &nbsp;
+                                <h4 class="text-info mainWindowText text-center">TEST FIND</h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Lab - content MLT 2 - end -->
-<!-- Manager conternt - Start -->
-<div th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}" class="col-sm-12 container-fluid">
-    <div class="row " >
-        <div class="container-fluid col-sm-4">
-            <div class="container-fluid row">
-                <div class="container col-sm-8">
-                    <img src="../static/img/Logo.gif" th:src="@{/img/Logo.gif}" class="img-rounded img-responsive float-left logoProperty" alt="company logo"/>
-                </div>
-                <div class="row container-fluid col-sm-10">
-                    <h3 align="center" class="mainWindowText navbar-header-text">
-                        <i><b>&#733;Healthy happiness is our Wealth&#733;</b></i>
-                    </h3>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid col-sm-8">
-            <div class="row">
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg">
-                        <a th:href="@{/user}">
-                            <img src="../static/img/manager/edit user.png" th:src="@{/img/manager/edit user.png}" class="img-circle img-responsive" />
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">USER LIST</h4>
-                    </div>
-                </div>
-                <div class="container-fluid col-sm-4" >
-                    <div class="col-sm-6 mainWindImg">
-                        <a th:href="@{/patient}" data-toggle="tooltip" title="Find Lab Test" data-placement="bottom">
-                            <img  src="../static/img/manager/edit patient.jpg" th:src="@{/img/manager/edit patient.jpg}" class="img-circle img-responsive" />
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">PATIENT LIST</h4>
-                    </div>
-                </div>
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg">
-                        <a th:href="@{/medicalPackage}">
-                            <img  src="../static/img/manager/medical package.png" th:src="@{/img/manager/medical package.png}" class="img-circle img-responsive" alt="patient find"/>
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">MEDICAL PACKAGE</h4>
-                    </div>
-                </div>
-            </div>
-            &nbsp;&nbsp;
-            <div class="row">
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg">
-                        <a th:href="@{/labTest}">
-                            <img  src="../static/img/manager/test finder cash 1.png" th:src="@{/img/manager/test finder cash 1.png}" class="img-circle img-responsive" />
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">LAB TEST </h4>
-                    </div>
-                </div>
-                <div class="container-fluid col-sm-4" >
-                    <div class="col-sm-6 mainWindImg">
-                        <a th:href="@{/doctor}" data-toggle="tooltip" title="Find Lab Test" data-placement="bottom">
-                            <img src="../static/img/manager/edit doctor.png" th:src="@{/img/manager/edit doctor.png}" class="img-circle img-responsive"/>
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">DOCTOR LIST</h4>
-                    </div>
-                </div>
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg">
-                        <a href="/process/summary">
-                            <img  src="../static/img/manager/income.png" th:src="@{/img/manager/income.png}" class="img-circle img-responsive" >
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">SUMMARY</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-        &nbsp;
-    </div>
-    <div class="row" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" >
-        <div class="col-sm-12 container-fluid">
-            <div class="col-sm-6 align-content-center border border-primary">
-                <div class="container-fluid mainWindSumReport">
-                    <div class="col-sm-4 container-fluid" >
-                        <h5><u><b>YESTERDAY</b></u></h5>
-                        <h4 ><span id="">125558.00</span></h4>
-                        <h4 ><span id="">125558.00</span></h4>
-                        <h4 ><span id="">125558.00</span></h4>
-                    </div>
-                    <div class="col-sm-4 container-fluid mainWindSumReport">
-                        <h5><u><b>CATEGORY</b></u></h5>
-                        <h5><b>OUT COLLECTION</b></h5>
-                        <h5><b>CENTERS COLLECTION</b></h5>
-                        <h4><b>TOTAL</b></h4>
-                    </div>
-                    <div class="col-sm-4 container-fluid" >
-                        <h5><u><b>TODAY</b></u></h5>
-                        <h4 ><span id="">125558.00</span></h4>
-                        <h4 ><span id="">125558.00</span></h4>
-                        <h4 ><span id="">125558.00</span></h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 align-content-center border border-primary">
-                <div class="container-fluid mainWindSumReport">
-                    <div class="col-sm-4 container-fluid">
-                        <h5><u><b>YESTERDAY</b></u></h5>
-                        <h4 ><span id="">125558.00</span></h4>
-                        <h4 ><span id="">125558.00</span></h4>
-                        <h4 ><span id="">125558.00</span></h4>
-                    </div>
-                    <div class="col-sm-4 container-fluid mainWindSumReport">
-                        <h5><u><b>CATEGORY</b></u></h5>
-                        <h5><b>IN CENTER TEST</b></h5>
-                        <h5><b>OUT CENTER TEST</b></h5>
-                        <h4><b>TOTAL</b></h4>
-                    </div>
-                    <div class="col-sm-4 container-fluid" >
-                        <h5><u><b>TODAY</b></u></h5>
-                        <h4 ><span id="">125558.00</span></h4>
-                        <h4 ><span id="">125558.00</span></h4>
-                        <h4 ><span id="">125558.00</span></h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Manager Content - end  -->
-    <!--Phlebotomise content-->
-<div th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}" class="col-sm-12 container-fluid">
-    <div class="row " >
-        <div class="container-fluid col-sm-4">
-            <div class="container-fluid row">
-                <div class="container col-sm-8">
-                    <img src="../static/img/Logo.gif" th:src="@{/img/Logo.gif}" class="img-rounded img-responsive float-left logoProperty" alt="company logo" />
-                </div>
-                <div class="row container-fluid col-sm-10">
-                    <h3 align="center" class="mainWindowText navbar-header-text">
-                        <i><b>&#733;Healthy happiness is our Wealth&#733;</b></i>
-                    </h3>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid col-sm-8">
-            <div class="row">
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg">
-                        <a th:href="@{/phlaboto/searchForm}">
-                            <img src="../static/img/plab/pt pab.jpg" th:src="@{/img/plab/pt pab.jpg}" class="img-circle img-responsive"/>
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">PATIENT FIND</h4>
-                    </div>
-                </div>
-                <div class="container-fluid col-sm-4" >
-                    <div class="col-sm-6 mainWindImg">
-                        <a href="/phlaboto" data-toggle="tooltip" title="Find Lab Test" data-placement="bottom">
-                            <img src="../static/img/plab/taken blood.jpg" th:src="@{/img/plab/taken blood.jpg}" class="img-circle img-responsive" />
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">TAKE BLOOD</h4>
-                    </div>
-                </div>
-                <div class="container-fluid col-sm-4">
-                    <div class="col-sm-6 mainWindImg">
-                        <a href="/invoiceProcess">
-                            <img  src="../static/img/plab/test finder cash 1.png" th:src="@{/img/plab/test finder cash 1.png}" class="img-circle img-responsive" />
-                        </a>
-                        &nbsp;
-                        <h4 class="text-info mainWindowText text-center">TEST FIND</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" >
-        <div class="col-sm-12 container-fluid">
-            <div class="row">
-                <div class="col-sm-7">
-                    <!-- add some thing import-->
-                </div>
-                <div class="col-sm-5 align-content-center ">
-                    <div class="col-sm-4 container-fluid">
-                        <h4 class="cashier-footer text"><u>YESTERDAY</u></h4>
-                        <h4 class="text-info cashier-footer"><span id="">125558.00</span></h4>
-                        <h4 class="text-success cashier-footer"><span id="">125558.00</span></h4>
-                        <h4 class="text-success cashier-footer"><span id="">125558.00</span></h4>
-                    </div>
-                    <div class="col-sm-4 container-fluid">
-                        <h4 class="cashier-footer cashier-footer"><u>CATEGORY</u></h4>
-                        <h4 class="cashier-footer">CENTER TEST</h4>
-                        <h4 class="cashier-footer">PATIENTS </h4>
-                        <h4 class="text-success cashier-footer" >TOTAL</h4>
-                    </div>
-                    <div class="col-sm-4 container-fluid">
-                        <h4 class="cashier-footer"><u>TODAY</u></h4>
-                        <h4 class="text-info cashier-footer"><span id="">125558.00</span></h4>
-                        <h4 class="text-success cashier-footer"><span id="">125558.00</span></h4>
-                        <h4 class="text-success cashier-footer"><span id="">125558.00</span></h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Phalabo content - end -->
+    <!-- Phalabo content - end -->
 
-<!--Footer-->
-<footer class="page-footer" th:replace="fragments/footer"></footer>
-<!--/Footer-->
+    <!--Footer-->
+    <footer class="page-footer" th:replace="fragments/footer"></footer>
+    <!--/Footer-->
 
-<script th:replace="fragments/script"></script>
+    <script th:replace="fragments/script"></script>
 
 </div>
 </body>

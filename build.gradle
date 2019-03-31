@@ -28,6 +28,12 @@ bootJar {
 repositories {
 	mavenCentral()
 }
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+}
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -48,6 +54,8 @@ dependencies {
 	compile group: 'org.apache.poi', name: 'poi', version: '3.8'
 			//================= Following jar is need to generate pdf file -https://mvnrepository.com/artifact/com.itextpdf/itextpdf =================//
 	compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.9'
+
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
 	annotationProcessor('org.projectlombok:lombok')
 	compileOnly('org.projectlombok:lombok')

@@ -4,9 +4,11 @@ import lk.solution.health.excellent.common.interfaces.AbstractService;
 import lk.solution.health.excellent.general.dao.ConsultationDao;
 import lk.solution.health.excellent.general.entity.Consultation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class ConsultationService implements AbstractService<Consultation, Intege
     }
 
 
-
+    @Cacheable(value = "Consultation")
     public List<Consultation> findAll() {
         return consultationDao.findAll();
     }
@@ -30,12 +32,12 @@ public class ConsultationService implements AbstractService<Consultation, Intege
         return consultationDao.getOne(id);
     }
 
-
+    @Transactional
     public Consultation persist(Consultation consultation) {
         return consultationDao.save(consultation);
     }
 
-
+    @Transactional
     public boolean delete(Integer id) {
         consultationDao.deleteById(id);
         return false;

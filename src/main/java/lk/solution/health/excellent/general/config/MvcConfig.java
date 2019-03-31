@@ -23,24 +23,18 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/")
-                .setViewName("forward:/index");
-        registry.addViewController("/login")
-                .setViewName("login/login");
-        registry.addViewController("/mainwindow")
-                .setViewName("mainwindow");
-            }
+        registry.addViewController("/").setViewName("forward:/index");
+        registry.addViewController("/login").setViewName("login/login");
+        registry.addViewController("/home").setViewName("mainwindow");
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //can be impliment like folowing also
-        		//registry.addResourceHandler("/resources/**").addResourceLocations("file:/resources/upload/");
-        registry.addResourceHandler("/img/**")
-                .addResourceLocations("classpath:/static/img/");
-        registry.addResourceHandler("/css/**")
-                .addResourceLocations("classpath:/static/css/");
-        registry.addResourceHandler("/js/**")
-                .addResourceLocations("classpath:/static/js/");
+        registry.addResourceHandler("/resources/**").addResourceLocations("file:/resources/upload/");
+        registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/");
+        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
+        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
 
     }
 
@@ -52,16 +46,17 @@ public class MvcConfig implements WebMvcConfigurer {
         resolver.setSuffix(".html");
         return resolver;
     }
-// password encode set
+
+    // password encode set
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        return  new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
 
-//time zone set to
+    //time zone set to
     @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer(){
-            return jacksonObjectMapperBuilder -> jacksonObjectMapperBuilder.timeZone(TimeZone.getTimeZone("Asia/Colombo"));
+    public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
+        return jacksonObjectMapperBuilder -> jacksonObjectMapperBuilder.timeZone(TimeZone.getTimeZone("Asia/Colombo"));
     }
 
 }

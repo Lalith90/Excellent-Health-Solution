@@ -9,26 +9,27 @@ $(document).ready(function () {
         $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(10);
     });
     /*//Nav bar properties - end//*/
-    /* selected field colour and add selected lab test table - start*/
 
+    /* selected field colour and add selected lab test table - start*/
     $('#myTable tbody tr').bind('click', function (e) {
         $(e.currentTarget).children('th').css('background-color', '#00FFFF');
         checkLabTestInArrayOrNot($(e.currentTarget).children('th'));
     });
     /* selected field colour and add selected lab test table - end*/
+    /*//--------------- data table short using - data table plugin ------- start //*/
     $("#myTable").DataTable({
         "lengthMenu": [[5, 10, 15, 20, -1], [5, 10, 15, 20, "All"]],
         "ordering": false,
         stateSave: true,
     });
-    /!* Checked filed value  - end*!*/;
+    /*//--------------- data table short using - data table plugin ------- start //*/
+
     /* Patient and employee Nic Validation - start*/
     $("#nic").bind('keyup', function () {
         let nic = $(this).val();
         $("#dateOfBirth").val(calculateDateOfBirth(nic));
         $("#gender").val(calculateGender(nic));
     });
-
     /* Patient and employee Nic Validation - end*/
 
 //prevent checkbox==null before submit -start
@@ -43,10 +44,18 @@ $(document).ready(function () {
     });
 //prevent checkbox==null before submit - end
 
-});
-/*//Filter table - start //*/
+    //WYSIWYG add to text area
+    let textarea =document.getElementById("description");
+    sceditor.create(textarea);
+    //     , {
+    //     format: 'bbcode',
+    //         icons: 'monocons',
+    //         style: '../minified/themes/content/default.min.css'
+    // });
 
-/*//Nic - data of birth - start//*/
+});
+
+                /*//Nic - data of birth - start//*/
 function dateLengthValidate(day) {
     if (day.toLocaleString().length === 1) {
         return day = '0' + day;
@@ -188,9 +197,9 @@ function calculateDateOfBirth(nic) {
     return dateOfBirth;
 }
 
-/*//Nic - data of birth - end//*/
+                /*//Nic - data of birth - end//*/
 
-/*//Nic - gender - start//*/
+                /*//Nic - gender - start//*/
 function calculateGender(nic) {
     let gender = null;
     if (nic.length === 10 && nic[9] === "V" || nic[9] === "v" || nic[9] === "x" || nic[9] === "X") {
@@ -207,7 +216,9 @@ function calculateGender(nic) {
     return gender;
 }
 
-/*//Nic - gender - end//*/
+                    /*//Nic - gender - end//*/
+/*----------------------------------------------------------------Invoice creation ----> start----------------------------------------------------------------*/
+
 
 /*// Create new table selected lab test table - start//*/
 class LabTest {
@@ -273,8 +284,12 @@ function rowDataToLabTest(rowDetails) {
     }
 }
 
-//create lab test array
+//SELECTED LAB TEST
 let selectedLabTestArray = [];
+//SELECTED MEDICAL PACKAGE
+let selectedMedicalPackageId;
+//SELECTED LAB TEST TOTAL PRICE
+let totalLabTestPrice;
 
 function checkLabTestInArrayOrNot(rowDetails) {
     let existOrNot;
@@ -320,10 +335,7 @@ function addRow(labTest) {
 
 }
 
-
-
 function deleteRow(obj) {
-    //console.log(Array.isArray(obj));
     let index = obj.parentNode.parentNode.rowIndex;
     let table = document.getElementById("myTableData");
     // GET THE CELLS COLLECTION OF THE CURRENT ROW.
@@ -341,12 +353,11 @@ function deleteRow(obj) {
     }
     // remove colour form original lab test array
     let mainTable = document.getElementById("myTable");
-    for (let i = 0; i < mainTable.rows.length; i++){
+    for (let i = 0; i < mainTable.rows.length; i++) {
         let removedLabTestFromArray = rowDataToLabTest(mainTable.rows.item(i).cells);
         console.log(removedLabTestFromArray);
         if (removedLabTestFromArray.id === removedLabTest._id) {
-                mainTable.rows[i].setAttribute("class","alert alert-danger removeLabTest")
-            alert("wede goda");
+            mainTable.rows[i].setAttribute("class", "removeLabTest");
         }
     }
     updateTotalPrice();
@@ -354,17 +365,83 @@ function deleteRow(obj) {
 }
 
 function updateTotalPrice() {
-      let totalLabTestPrice = 0;
-selectedLabTestArray.forEach(function (element) {
-    totalLabTestPrice += parseFloat(element.price);
-});
+    totalLabTestPrice = 0;
+    selectedLabTestArray.forEach(function (element) {
+        totalLabTestPrice += parseFloat(element.price);
+    });
     document.getElementById("selectedLabTestCount").innerText = "Selected Lab Test Count = " + selectedLabTestArray.length;
     document.getElementById("totalPrice1").innerText = "Total Price = " + totalLabTestPrice;
     document.getElementById("totalPrice").value = totalLabTestPrice;
 
-
 }
+
 /*// Create new table selected lab test table - end//*/
 
+        /*//medical package details show and manage - start //*/
+$('#cmbMedicalPackage').on("change",function cmbMedicalPackageDetailGet() {
+    // get current url
+    let currentURL = window.location.href;
+    // get selected medical package id
+    selectedMedicalPackageId = document.getElementById('cmbMedicalPackage').value;
+    // ajax response
+    let givenData = getData(`${currentURL}/medicalPackageLabTestGet/${selectedMedicalPackageId}`).then(data => givenData = data);
+
+    Promise.resolve(givenData).then(function (val) {
+        medicalPackageLabTestSet(val);
+    });
+});
+
+        //fill the medical package class details
+function medicalPackageLabTestSet(includeLabTest) {
+    removeMedicalPackageDetail();
+    document.getElementById("includedLabTestCount").innerHTML = includeLabTest.length;
+    for (let i = 0; i < includeLabTest.length; i++) {
+        fillMedicalPackageDetail(includeLabTest[i]);
+    }
+}
+
+        //access and fill medical package details table
+function fillMedicalPackageDetail(medicalPackageLabTest) {
+    let table = document.getElementById("myMedicalPackageData");
+    let rowCount = table.rows.length;
+    let row = table.insertRow(rowCount);
+
+    row.insertCell(0).innerHTML = medicalPackageLabTest.code;
+    row.insertCell(1).innerHTML = medicalPackageLabTest.name;
+    row.insertCell(2).innerHTML = medicalPackageLabTest.labtestDoneHere;
+}
+
+function removeMedicalPackageDetail() {
+    let table = document.getElementById("myMedicalPackageData");
+    let rowCount = table.rows.length;
+    for (let x = rowCount - 1; x > 0; x--) {
+        table.deleteRow(x);
+    }
+}
+
+        /*//medical package details show and manage - end //*/
+
+/*//-----------------> Information selection ------ start <----------------------------//*/
 
 
+
+
+
+/*//-----------------> Information selection ------ end <----------------------------//*/
+//AJAX FUNCTION CALL
+async function getData(url) {
+    try {
+        const result = await fetch(url);
+        return await result.json();
+    } catch (e) {
+        console.log(JSON.parse(e));
+    }
+
+}
+/*----------------------------------------------------------------Invoice creation ----> end----------------------------------------------------------------*/
+
+/*
+//FUNCTION INITIALIZE TO RELEVANT PART
+function initialize() {
+    $(cmbMedicalPackage).ready("change", cmbMedicalPackageDetailGet);
+}*/

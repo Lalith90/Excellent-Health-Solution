@@ -2,13 +2,17 @@ package lk.solution.health.excellent.processHandling.controller;
 
 import lk.solution.health.excellent.common.service.DateTimeAgeService;
 import lk.solution.health.excellent.common.service.FileHandelService;
+import lk.solution.health.excellent.general.entity.Enum.Gender;
+import lk.solution.health.excellent.general.entity.Enum.Title;
 import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
+import lk.solution.health.excellent.general.service.ConsultationService;
 import lk.solution.health.excellent.general.service.InvoiceHasLabTestService;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.lab.service.LabTestService;
 import lk.solution.health.excellent.processHandling.helpingClass.InvoiceProcess;
 import lk.solution.health.excellent.resource.entity.Enum.CollectingCenterStatus;
 import lk.solution.health.excellent.resource.entity.Enum.MedicalPackageStatus;
+import lk.solution.health.excellent.resource.entity.Patient;
 import lk.solution.health.excellent.resource.service.*;
 import lk.solution.health.excellent.transaction.entity.Enum.PaymentMethod;
 import lk.solution.health.excellent.transaction.entity.Invoice;
@@ -47,12 +51,13 @@ public class InvoiceProcessController {
     private final InvoiceHasLabTestService invoiceHasLabTestService;
     private final FileHandelService fileHandelService;
     private final ServletContext context;
+    private final ConsultationService consultationService;
 
     @Autowired
-    public InvoiceProcessController(InvoiceService invoiceService, UserService userService,PatientService patientService,
-                                    DoctorService doctorService, LabTestService labTestService,DateTimeAgeService dateTimeAgeService,
-                                    CollectingCenterService collectingCenterService,DiscountRatioService discountRatioService,
-                                    MedicalPackageService medicalPackageService,InvoiceHasLabTestService invoiceHasLabTestService, FileHandelService fileHandelService, ServletContext context) {
+    public InvoiceProcessController(InvoiceService invoiceService, UserService userService, PatientService patientService,
+                                    DoctorService doctorService, LabTestService labTestService, DateTimeAgeService dateTimeAgeService,
+                                    CollectingCenterService collectingCenterService, DiscountRatioService discountRatioService,
+                                    MedicalPackageService medicalPackageService, InvoiceHasLabTestService invoiceHasLabTestService, FileHandelService fileHandelService, ServletContext context, ConsultationService consultationService) {
         this.invoiceService = invoiceService;
         this.userService = userService;
         this.patientService = patientService;
@@ -65,24 +70,35 @@ public class InvoiceProcessController {
         this.invoiceHasLabTestService = invoiceHasLabTestService;
         this.fileHandelService = fileHandelService;
         this.context = context;
+        this.consultationService = consultationService;
     }
 
     @RequestMapping(value = "/invoiceProcess", method = RequestMethod.GET)
     public String invoiceHandle(Model model) {
         model.addAttribute("invoiceProcess", new InvoiceProcess());
         model.addAttribute("paymentMethods", PaymentMethod.values());
-        model.addAttribute("patients", patientService.findAll());
         model.addAttribute("doctors", doctorService.findAll());
         model.addAttribute("collectingCenters", collectingCenterService.openCollectingCenter(CollectingCenterStatus.OPEN));
         model.addAttribute("discountRatios", discountRatioService.findAll());
         model.addAttribute("labTests", labTestService.findAll());
         model.addAttribute("medicalPackages", medicalPackageService.openMedicalPackage(MedicalPackageStatus.OPEN));
+        String lastPatientNumber =  patientService.lastPatient().getNumber();
+        model.addAttribute("consultations", consultationService.findAll());
+        String patientNumber= lastPatientNumber.replaceAll("[^0-9]+", "");
+        Integer PatientNumber = Integer.parseInt(patientNumber);
+        int newPatientNumber = PatientNumber+1;
+        model.addAttribute("lastPatient",lastPatientNumber);
+        model.addAttribute("newPatient","EHS"+ newPatientNumber);
+        model.addAttribute("title", Title.values());
+        model.addAttribute("gender", Gender.values());
+        model.addAttribute("patient", new Patient());
 
         return "process/invoiceProcess";
     }
 
     @RequestMapping(value = "/invoiceProcess/add", method = RequestMethod.POST)
-    public String newInvoice(@Valid @ModelAttribute InvoiceProcess invoiceProcess, BindingResult result, Model model, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+    public String newInvoice(@Valid @ModelAttribute InvoiceProcess invoiceProcess, BindingResult result, Model model,
+                             HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());

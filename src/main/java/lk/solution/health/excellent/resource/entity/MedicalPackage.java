@@ -1,5 +1,6 @@
 package lk.solution.health.excellent.resource.entity;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.resource.entity.Enum.MedicalPackageStatus;
@@ -19,6 +20,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @JsonIgnoreProperties(value = "createdDate",allowGetters = true)
+@JsonFilter("MedicalPackage")
 public class MedicalPackage {
     @Id
     @Column(name = "id",updatable = false)
