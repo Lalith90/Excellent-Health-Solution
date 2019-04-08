@@ -31,24 +31,24 @@ public class CollectingCenterService implements AbstractService<CollectingCenter
         return collectingCenterDao.findAll();
     }
 
-    @Cacheable(value = "collectingCenter", key = "#id")
+    @Cacheable(value = "collectingCenter")
     public CollectingCenter findById(Integer id) {
         return collectingCenterDao.getOne(id);
     }
 
-    @CachePut(value = "collectingCenter", key = "#id")
+    @CachePut(value = "collectingCenter")
     @Transactional
     public CollectingCenter persist(CollectingCenter collectingCenter) {
         return collectingCenterDao.save(collectingCenter);
     }
 
-    @CacheEvict(value = "collectingCenter", key = "#id")
+    @CacheEvict(value = "collectingCenter")
     public boolean delete(Integer id) {
         collectingCenterDao.deleteById(id);
         return false;
     }
 
-    @CachePut(value = "collectingCenter", key = "#id")
+    @CachePut(value = "collectingCenter")
     public List<CollectingCenter> search(CollectingCenter collectingCenter) {
         ExampleMatcher matcher = ExampleMatcher
                 .matching()

@@ -31,24 +31,24 @@ public class DoctorService implements AbstractService<Doctor, Integer> {
         return doctorDao.findAll();
     }
 
-    @Cacheable(value = "doctor", key = "#id")
+    @CachePut(value = "doctor")
     public Doctor findById(Integer id) {
         return doctorDao.getOne(id);
     }
 
-    @CachePut(value = "doctor", key = "#id")
+    @CachePut(value = "doctor")
     @Transactional
     public Doctor persist(Doctor doctor) {
         return doctorDao.save(doctor);
     }
 
-    @CacheEvict(value = "doctor", key = "#id")
+    @CacheEvict(value = "doctor")
     public boolean delete(Integer id) {
         doctorDao.deleteById(id);
         return false;
     }
 
-    @CachePut(value = "doctor", key = "#id")
+    @CachePut(value = "doctor")
     public List<Doctor> search(Doctor doctor) {
         ExampleMatcher matcher = ExampleMatcher
                 .matching()

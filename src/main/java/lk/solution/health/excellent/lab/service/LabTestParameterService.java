@@ -29,24 +29,24 @@ public class LabTestParameterService implements AbstractService<LabTestParameter
         return labtestParameterDao.findAll();
     }
 
-    @Cacheable(value = "labtestParameter", key = "#id")
+    @CachePut(value = "labtestParameter")
     public LabTestParameter findById(Integer id) {
         return labtestParameterDao.getOne(id);
     }
 
-    @CachePut(value = "labtestParameter", key = "#id")
+    @CachePut(value = "labtestParameter")
     @Transactional
     public LabTestParameter persist(LabTestParameter labtestParameter) {
         return labtestParameterDao.save(labtestParameter);
     }
 
-    @CacheEvict(value = "labtestParameter", key = "#id")
+    @CacheEvict(value = "labtestParameter")
     public boolean delete(Integer id) {
         labtestParameterDao.deleteById(id);
         return false;
     }
 
-    @CachePut(value = "labtestParameter", key = "#id")
+    @CachePut(value = "labtestParameter")
     public List<LabTestParameter> search(LabTestParameter labTestParameter) {
         ExampleMatcher matcher = ExampleMatcher
                 .matching()

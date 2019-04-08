@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     // set current year to the footer
     document.getElementById("currentYear").innerHTML = new Date().getFullYear();
 
@@ -34,10 +35,10 @@ $(document).ready(function () {
 
 //prevent checkbox==null before submit -start
     $(function () {
-        $('#btnSubmit').click(function (e) {
-            var checked = $(':checkbox:checked').length;
+        $('#btnSubmit').on("click", function (e) {
+            let checked = $(':checkbox:checked').length;
             if (checked == 0) {
-                alert('Atleast One Lab Test Should Be Selected');
+                swal("Oops", "At least One Lab Test Should Be Selected!", "error");
                 e.preventDefault();
             }
         });
@@ -45,8 +46,8 @@ $(document).ready(function () {
 //prevent checkbox==null before submit - end
 
     //WYSIWYG add to text area
-    let textarea =document.getElementById("description");
-    sceditor.create(textarea);
+    //let textarea =document.getElementById("description");
+    // sceditor.create(textarea);
     //     , {
     //     format: 'bbcode',
     //         icons: 'monocons',
@@ -55,7 +56,7 @@ $(document).ready(function () {
 
 });
 
-                /*//Nic - data of birth - start//*/
+/*//Nic - data of birth - start//*/
 function dateLengthValidate(day) {
     if (day.toLocaleString().length === 1) {
         return day = '0' + day;
@@ -197,9 +198,9 @@ function calculateDateOfBirth(nic) {
     return dateOfBirth;
 }
 
-                /*//Nic - data of birth - end//*/
+/*//Nic - data of birth - end//*/
 
-                /*//Nic - gender - start//*/
+/*//Nic - gender - start//*/
 function calculateGender(nic) {
     let gender = null;
     if (nic.length === 10 && nic[9] === "V" || nic[9] === "v" || nic[9] === "x" || nic[9] === "X") {
@@ -216,229 +217,9 @@ function calculateGender(nic) {
     return gender;
 }
 
-                    /*//Nic - gender - end//*/
-/*----------------------------------------------------------------Invoice creation ----> start----------------------------------------------------------------*/
+/*//Nic - gender - end//*/
 
 
-/*// Create new table selected lab test table - start//*/
-class LabTest {
-    constructor(id, code, name, price) {
-        this._id = id;
-        this._code = code;
-        this._name = name;
-        this._price = price;
-    }
-
-    get id() {
-        return this._id;
-    }
-
-    set id(value) {
-        this._id = value;
-    }
-
-    get code() {
-        return this._code;
-    }
-
-    set code(value) {
-        this._code = value;
-    }
-
-    get name() {
-        return this._name;
-    }
-
-    set name(value) {
-        this._name = value;
-    }
-
-    get price() {
-        return this._price;
-    }
-
-    set price(value) {
-        this._price = value;
-    }
-}
-
-function rowDataToLabTest(rowDetails) {
-    const labTest = new LabTest();
-    for (let i = 0; i <= rowDetails.length; i++) {
-        switch (i) {
-            case 0:
-                labTest.id = rowDetails[i].innerHTML;
-                break;
-            case 1:
-                labTest.code = rowDetails[i].innerHTML;
-                break;
-            case 2:
-                labTest.name = rowDetails[i].innerHTML;
-                break;
-            case 3:
-                labTest.price = rowDetails[i].innerHTML;
-                break;
-            default:
-                return labTest;
-        }
-    }
-}
-
-//SELECTED LAB TEST
-let selectedLabTestArray = [];
-//SELECTED MEDICAL PACKAGE
-let selectedMedicalPackageId;
-//SELECTED LAB TEST TOTAL PRICE
-let totalLabTestPrice;
-
-function checkLabTestInArrayOrNot(rowDetails) {
-    let existOrNot;
-    //take lab test which was selected
-    let labTest = rowDataToLabTest(rowDetails);
-    // no lab test in Array
-    if (selectedLabTestArray.length === 0) {
-        selectedLabTestArray.push(labTest);
-        addRow(labTest);
-    } else {
-        for (let i = 0; i < selectedLabTestArray.length; i++) {
-            if (selectedLabTestArray[i]._id === labTest.id) {
-                existOrNot = true;
-                break;
-            }
-        }
-        if (existOrNot) {
-            swal({
-                title: "Already selected one ",
-                icon: "warning",
-            });
-        } else {
-            selectedLabTestArray.push(labTest);
-            addRow(labTest);
-        }
-    }
-}
-
-function addRow(labTest) {
-    let table = document.getElementById("myTableData");
-    let rowCount = table.rows.length;
-
-    let row = table.insertRow(rowCount);
-
-    updateTotalPrice(labTest.price);
-
-    row.insertCell(0).innerHTML = labTest.id;
-    row.insertCell(1).innerHTML = labTest.code;
-    row.insertCell(2).innerHTML = labTest.name;
-    row.insertCell(3).innerHTML = labTest.price;
-
-    row.insertCell(4).innerHTML = '<input type="button" value = "Remove" onClick="deleteRow(this)" class="btn btn-danger">';
-
-}
-
-function deleteRow(obj) {
-    let index = obj.parentNode.parentNode.rowIndex;
-    let table = document.getElementById("myTableData");
-    // GET THE CELLS COLLECTION OF THE CURRENT ROW.
-    let objCells = myTableData.rows.item(index).cells;
-    //REMOVE DELETED LAB TEST FORM selectedLabTestArray
-    let removedLabTest;
-    for (let i = 0; i < selectedLabTestArray.length; i++) {
-        if (selectedLabTestArray[i]._id === rowDataToLabTest(Object.values(objCells)).id) {
-            removedLabTest = selectedLabTestArray[i];
-            {
-                selectedLabTestArray.splice(i, 1);
-                break;
-            }
-        }
-    }
-    // remove colour form original lab test array
-    let mainTable = document.getElementById("myTable");
-    for (let i = 0; i < mainTable.rows.length; i++) {
-        let removedLabTestFromArray = rowDataToLabTest(mainTable.rows.item(i).cells);
-        console.log(removedLabTestFromArray);
-        if (removedLabTestFromArray.id === removedLabTest._id) {
-            mainTable.rows[i].setAttribute("class", "removeLabTest");
-        }
-    }
-    updateTotalPrice();
-    table.deleteRow(index);
-}
-
-function updateTotalPrice() {
-    totalLabTestPrice = 0;
-    selectedLabTestArray.forEach(function (element) {
-        totalLabTestPrice += parseFloat(element.price);
-    });
-    document.getElementById("selectedLabTestCount").innerText = "Selected Lab Test Count = " + selectedLabTestArray.length;
-    document.getElementById("totalPrice1").innerText = "Total Price = " + totalLabTestPrice;
-    document.getElementById("totalPrice").value = totalLabTestPrice;
-
-}
-
-/*// Create new table selected lab test table - end//*/
-
-        /*//medical package details show and manage - start //*/
-$('#cmbMedicalPackage').on("change",function cmbMedicalPackageDetailGet() {
-    // get current url
-    let currentURL = window.location.href;
-    // get selected medical package id
-    selectedMedicalPackageId = document.getElementById('cmbMedicalPackage').value;
-    // ajax response
-    let givenData = getData(`${currentURL}/medicalPackageLabTestGet/${selectedMedicalPackageId}`).then(data => givenData = data);
-
-    Promise.resolve(givenData).then(function (val) {
-        medicalPackageLabTestSet(val);
-    });
-});
-
-        //fill the medical package class details
-function medicalPackageLabTestSet(includeLabTest) {
-    removeMedicalPackageDetail();
-    document.getElementById("includedLabTestCount").innerHTML = includeLabTest.length;
-    for (let i = 0; i < includeLabTest.length; i++) {
-        fillMedicalPackageDetail(includeLabTest[i]);
-    }
-}
-
-        //access and fill medical package details table
-function fillMedicalPackageDetail(medicalPackageLabTest) {
-    let table = document.getElementById("myMedicalPackageData");
-    let rowCount = table.rows.length;
-    let row = table.insertRow(rowCount);
-
-    row.insertCell(0).innerHTML = medicalPackageLabTest.code;
-    row.insertCell(1).innerHTML = medicalPackageLabTest.name;
-    row.insertCell(2).innerHTML = medicalPackageLabTest.labtestDoneHere;
-}
-
-function removeMedicalPackageDetail() {
-    let table = document.getElementById("myMedicalPackageData");
-    let rowCount = table.rows.length;
-    for (let x = rowCount - 1; x > 0; x--) {
-        table.deleteRow(x);
-    }
-}
-
-        /*//medical package details show and manage - end //*/
-
-/*//-----------------> Information selection ------ start <----------------------------//*/
-
-
-
-
-
-/*//-----------------> Information selection ------ end <----------------------------//*/
-//AJAX FUNCTION CALL
-async function getData(url) {
-    try {
-        const result = await fetch(url);
-        return await result.json();
-    } catch (e) {
-        console.log(JSON.parse(e));
-    }
-
-}
-/*----------------------------------------------------------------Invoice creation ----> end----------------------------------------------------------------*/
 
 /*
 //FUNCTION INITIALIZE TO RELEVANT PART

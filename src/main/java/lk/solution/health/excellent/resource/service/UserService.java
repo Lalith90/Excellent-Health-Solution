@@ -5,6 +5,7 @@ import lk.solution.health.excellent.processHandling.helpingClass.PasswordChange;
 import lk.solution.health.excellent.resource.dao.UserDao;
 import lk.solution.health.excellent.resource.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -62,7 +63,7 @@ public class UserService implements AbstractService<User, Integer> {
         Example<User> userExample = Example.of(user, matcher);
         return userDao.findAll(userExample);
     }
-    @Cacheable(value = "user", key = "#id")
+    @CachePut(value = "user")
     public Integer findByEmployeeId(Integer id){
         return userDao.findByEmployeeId(id);
     }

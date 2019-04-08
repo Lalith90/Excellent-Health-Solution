@@ -4,6 +4,7 @@ import lk.solution.health.excellent.common.interfaces.AbstractService;
 import lk.solution.health.excellent.resource.dao.EmployeeDao;
 import lk.solution.health.excellent.resource.entity.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -21,12 +22,12 @@ public class EmployeeService implements AbstractService<Employee, Integer> {
     public EmployeeService(EmployeeDao employeeDao){
         this.employeeDao = employeeDao;
     }
-
+    @Cacheable(value = "employee")
     public List<Employee> findAll() {
         return employeeDao.findAll();
     }
 
-    @Cacheable(value = "employee", key = "#id")
+    @CachePut(value = "employee")
     public Employee findById(Integer id) {
         return employeeDao.getOne(id);
     }

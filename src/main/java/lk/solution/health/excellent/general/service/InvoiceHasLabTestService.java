@@ -33,29 +33,29 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
    @Cacheable(value = "invoiceHasLabTest")
    @Transactional
     public List<InvoiceHasLabTest> findAll() {
-       System.out.println(" Invoice hass Lab Test cache ok");
+       System.out.println(" Invoice has Lab Test cache ok");
         return invoiceHasLabTestDao.findAll();
     }
 
-    @Cacheable(value = "invoiceHasLabTest", key = "#id")
+    @CachePut(value = "invoiceHasLabTest")
     @Transactional
     public InvoiceHasLabTest findById(Integer id) {
         return invoiceHasLabTestDao.getOne(id);
     }
 
-    @CachePut(value = "invoiceHasLabTest", key = "#id")
+    @CachePut(value = "invoiceHasLabTest")
     @Transactional
     public InvoiceHasLabTest persist(InvoiceHasLabTest invoiceHasLabTest) {
         return invoiceHasLabTestDao.save(invoiceHasLabTest);
     }
 
-    @CacheEvict(value = "invoiceHasLabTest", key = "#id")
+    @CacheEvict(value = "invoiceHasLabTest")
     public boolean delete(Integer id) {
         invoiceHasLabTestDao.deleteById(id);
         return true;
     }
 
-    @CachePut(value = "invoiceHasLabTest", key = "#id")
+    @CachePut(value = "invoiceHasLabTest")
     public List<InvoiceHasLabTest> search(InvoiceHasLabTest invoiceHasLabTest) {
         ExampleMatcher matcher = ExampleMatcher
             .matching()
@@ -66,54 +66,52 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
         return invoiceHasLabTestDao.findAll(invoiceHasLabTestExample);
     }
 
-    @CachePut(value = "invoiceHasLabTest", key = "#id")
+    @CachePut(value = "invoiceHasLabTest")
     public InvoiceHasLabTest lastInvoiceHasLabTest(){
         return invoiceHasLabTestDao.findFirstByOrderByIdDesc();
     }
 
-    @CachePut(value = "invoiceHasLabTest", key = "#id")
+    @CachePut(value = "invoiceHasLabTest")
     public List<InvoiceHasLabTest> findByLabTestState(LabTestStatus nosample) {
         return invoiceHasLabTestDao.findByLabTestStatus(nosample);
     }
 
-    @CachePut(value = "invoiceHasLabTest", key = "#id")
+    @CachePut(value = "invoiceHasLabTest")
     public List<InvoiceHasLabTest> findByInvoiceAndLabTestStatus(Invoice invoice, LabTestStatus nosample) {
-        System.out.println("to check enum ");
-        System.out.println(nosample.getClass());
         return invoiceHasLabTestDao.findByInvoiceAndLabTestStatus(invoice, nosample);
     }
 
-    @CachePut(value = "invoiceHasLabTest", key = "#id")
+    @CachePut(value = "invoiceHasLabTest")
     public InvoiceHasLabTest findByInvoiceAndLabTest(Invoice invoice, LabTest labTest) {
        return invoiceHasLabTestDao.findByInvoiceAndLabTest(invoice, labTest);
     }
 
-    @CachePut(value = "invoiceHasLabTest", key = "#id")
+    @CachePut(value = "invoiceHasLabTest")
     public List<InvoiceHasLabTest> findByInvoiceAndLabTestStatusAndLabtestDoneHere(Invoice invoice, LabTestStatus nosample, LabtestDoneHere doneHere){
         return invoiceHasLabTestDao.findByInvoiceAndLabTestStatusAndLabTest_LabtestDoneHere(invoice, nosample, doneHere);
     }
 
-    @CachePut(value = "invoiceHasLabTest", key = "#id")
+    @CachePut(value = "invoiceHasLabTest")
     public List<InvoiceHasLabTest> findByInvoice(Invoice invoice) {
         return invoiceHasLabTestDao.findByInvoice(invoice);
     }
 
-    @CachePut(value = "invoiceHasLabTest", key = "#id")
+    @CachePut(value = "invoiceHasLabTest")
     public List<InvoiceHasLabTest> findByLabTestStateAndTestDonePlace(LabTestStatus worksheet, LabtestDoneHere yes) {
         return invoiceHasLabTestDao.findByLabTestStatusAndLabTest_LabtestDoneHere(worksheet, yes);
     }
 
-    @CachePut(value = "invoiceHasLabTest", key = "#id")
+    @CachePut(value = "invoiceHasLabTest")
     public Integer countByCreatedAt(LocalDate today) {
     return invoiceHasLabTestDao.countByCreatedAt(today);
     }
 
-    @CachePut(value = "invoiceHasLabTest", key = "#id")
+    @CachePut(value = "invoiceHasLabTest")
     public Integer countByCreatedAtIsBetween(LocalDate from, LocalDate to) {
         return invoiceHasLabTestDao.countByCreatedAtIsBetween(from, to);
     }
 
-    @CachePut(value = "invoiceHasLabTest", key = "#id")
+    @CachePut(value = "invoiceHasLabTest")
     public List<InvoiceHasLabTest> findByLabTest(LabTest labTest) {
       return invoiceHasLabTestDao.findByLabTest(labTest);
     }

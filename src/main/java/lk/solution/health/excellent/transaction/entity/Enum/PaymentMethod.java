@@ -3,7 +3,8 @@ package lk.solution.health.excellent.transaction.entity.Enum;
 
 public enum PaymentMethod {
     CASH("Cash"),
-    CREDICARD("Card Payment or Cheque");
+    CREDITCARD("Card Payment"),
+    CHEQUE("Cheque");
 
 private final String paymentMethod;
 

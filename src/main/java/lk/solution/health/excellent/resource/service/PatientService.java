@@ -29,24 +29,24 @@ public class PatientService implements AbstractService<Patient, Integer> {
         return patientDao.findAll();
     }
 
-    @Cacheable(value = "patient", key = "#id")
+    @CachePut(value = "patient")
     public Patient findById(Integer id) {
         return patientDao.getOne(id);
     }
 
-    @CachePut(value = "patient", key = "#id")
+    @CachePut(value = "patient")
     @Transactional
     public Patient persist(Patient patient) {
         return patientDao.save(patient);
     }
 
-    @CacheEvict(value = "patient", key = "#id")
+    @CacheEvict(value = "patient")
     public boolean delete(Integer id) {
         patientDao.deleteById(id);
         return false;
     }
 
-    @Cacheable(value = "patient")
+    @CachePut(value = "patient")
     public List<Patient> search(Patient patient) {
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
@@ -61,10 +61,17 @@ public class PatientService implements AbstractService<Patient, Integer> {
         return patientDao.findFirstByOrderByIdDesc();
     }
 
-
+    @CachePut(value = "patient")
     public Patient findByNIC(String nic) {
         return patientDao.findByNic(nic);
     }
 
-
+    @CachePut(value = "patient")
+    public Patient findByNumber(String number) {
+        return patientDao.findByNumber(number);
+    }
+    @CachePut(value = "patient")
+    public List<Patient> findByMobile(String mobile) {
+        return patientDao.findByMobile(mobile);
+    }
 }

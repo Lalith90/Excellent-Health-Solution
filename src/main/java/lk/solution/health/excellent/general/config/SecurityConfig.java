@@ -3,7 +3,6 @@ package lk.solution.health.excellent.general.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,7 +18,8 @@ import javax.sql.DataSource;
  * using this we can manage method access
  *   @PreAuthorize("hasAnyRole('ADMIN')") ..........like
  * */
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+
+
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
@@ -63,9 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/img/**",
                         "/css/**",
                         "/js/**",
-                        "/css/editor/**",
-                        "/css/editor/emoticons/**").permitAll()
-                .antMatchers("/login", "/invoiceProcess/**", "/select/**").permitAll()
+                        "/font/**").permitAll()
+                .antMatchers("/login", "/invoiceProcess", "/select/**").permitAll()
 
                 //Need to login for access those are
                 .antMatchers("/employee/**").hasRole("MANAGER")
@@ -83,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Login form
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/home")
+                .defaultSuccessUrl("/mainwindow")
                 //Username and password for validation
                 .usernameParameter("username")
                 .passwordParameter("password")
@@ -93,13 +92,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/index");
-               /* .and()
-                .exceptionHandling();
+                .logoutSuccessUrl("/index")
+                .and()
+                .exceptionHandling()
                 //Cross site disable
                 .and()
                 .csrf()
-                .disable();*/
+                .disable();
 
     }
 }

@@ -31,23 +31,23 @@ public class DiscountRatioService implements AbstractService<DiscountRatio, Inte
         return discountRatioDao.findAll();
     }
 
-    @Cacheable(value = "discountRatio", key = "#id")
+    @CachePut(value = "discountRatio")
     public DiscountRatio findById(Integer id) {
         return discountRatioDao.getOne(id);
     }
 
-    @CachePut(value = "discountRatio", key = "#id")
+    @CachePut(value = "discountRatio")
     public DiscountRatio persist(DiscountRatio discountRatio) {
         return discountRatioDao.save(discountRatio);
     }
 
-    @CacheEvict(value = "discountRatio", key = "#id")
+    @CacheEvict(value = "discountRatio")
     public boolean delete(Integer id) {
         discountRatioDao.deleteById(id);
         return false;
     }
 
-    @CachePut(value = "discountRatio", key = "#id")
+    @CachePut(value = "discountRatio")
     public List<DiscountRatio> search(DiscountRatio discountRatio) {
         ExampleMatcher matcher = ExampleMatcher
                 .matching()

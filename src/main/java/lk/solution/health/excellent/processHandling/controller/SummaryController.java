@@ -127,7 +127,7 @@ private void commonClear(){
           if (invoice.getPaymentMethod() == PaymentMethod.CASH) {
               cashAmount.add(invoice.getAmount());
           }
-          if (invoice.getPaymentMethod() == PaymentMethod.CREDICARD) {
+          if (invoice.getPaymentMethod() == PaymentMethod.CREDITCARD) {
               cardAmount.add(invoice.getAmount());
           }
           if (invoice.getMedicalPackage() != null) {

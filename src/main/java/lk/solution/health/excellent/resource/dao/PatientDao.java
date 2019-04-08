@@ -4,6 +4,8 @@ import lk.solution.health.excellent.resource.entity.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 
@@ -14,5 +16,5 @@ public interface PatientDao extends JpaRepository<Patient, Integer> {
 
     Patient findByNumber(String number);
 
-    Patient findByName(String name);
+    List<Patient> findByMobile(String mobile);
 }

@@ -20,7 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletContext;
 import javax.websocket.server.PathParam;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -86,14 +89,31 @@ public class InvoiceProcessRestController {
     //send patient details  send to font end
     @GetMapping("/patientFind")
     public MappingJacksonValue getPatient(@PathParam("Patient")Patient patient) {
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(patientService.search(patient));
-        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "number", "title", "name", "nic", "mobile");
+        //Get All Patient
+        List<Patient> patients = patientService.findAll();
+
+        List<Patient> patientList = new ArrayList<>();
+        if (patient.getNumber()!= null) {
+            patientList.add(patientService.findByNumber(patient.getNumber()));
+        }
+        if (patient.getNic()!= null) {
+            patientList.add(patientService.findByNIC(patient.getNic()));
+        }
+        if (patient.getMobile()!= null) {
+            patientList.addAll(patientService.findByMobile(patient.getMobile()));
+        }
+        if (patientList.isEmpty()){
+            System.out.println(patient.getName());
+            patientList.addAll(patientService.search(patient));
+        }
+           // patientList.forEach((e)-> System.out.println(e.getName()));
+
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(patientList);
+        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "number", "title", "name", "gender", "nic", "dateOfBirth", "email", "mobile", "land");
         FilterProvider filters = new SimpleFilterProvider().addFilter("Patient", simpleBeanPropertyFilter);
         filterParameter(mappingJacksonValue, filters);
         return mappingJacksonValue;
     }
-
-
 
     //if need to add entity variable to url add @PathParam to class
     @GetMapping(value = "/searchLabTest1")

@@ -36,19 +36,19 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
         System.out.println("Lab Test cache ok");
         return labTestDao.findAll();
     }
-    @Cacheable(value = "lab", key = "#id")
+    @CachePut(value = "lab")
     public LabTest findById(Integer id) {
         System.out.println("lat test find by id ");
         return labTestDao.getOne(id);
     }
 
-    @CachePut(value = "labTest", key = "#id")
+    @CachePut(value = "labTest")
     @Transactional
     public LabTest persist(LabTest labTest) {
         return labTestDao.save(labTest);
     }
 
-    @CacheEvict(value = "labTest", key = "#id")
+    @CacheEvict(value = "labTest")
     public boolean delete(Integer id) {
         labTestDao.deleteById(id);
         return false;
@@ -62,7 +62,7 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
         Example<LabTest> laboratoryTestExample = Example.of(labTest, matcher);
         return labTestDao.findAll(laboratoryTestExample);
     }
-
+    @CachePut(value = "labTest")
     public LabTest findByCode(String code) {
         return labTestDao.findByCode(code);
     }

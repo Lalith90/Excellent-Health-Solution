@@ -4,6 +4,7 @@ import lk.solution.health.excellent.common.interfaces.AbstractService;
 import lk.solution.health.excellent.lab.dao.ResultTableDao;
 import lk.solution.health.excellent.lab.entity.ResultTable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
@@ -29,12 +30,12 @@ public class ResultTableService implements AbstractService<ResultTable, Integer>
         return resultTableDao.findAll();
     }
 
-    @Cacheable(value = "resultTable", key = "#id")
+    @CachePut(value = "resultTable")
     public ResultTable findById(Integer id) {
         return resultTableDao.getOne(id);
     }
 
-    @CachePut(value = "resultTable", key = "#id")
+    @CachePut(value = "resultTable")
     @Transactional
     public ResultTable persist(ResultTable resultTable) {
         return resultTableDao.save(resultTable);
@@ -42,12 +43,13 @@ public class ResultTableService implements AbstractService<ResultTable, Integer>
 
 
     @Transactional
+    @CacheEvict(value = "resultTable")
     public boolean delete(Integer id) {
         resultTableDao.deleteById(id);
         return false;
     }
 
-    @CachePut(value = "resultTable", key = "#id")
+    @CachePut(value = "resultTable")
     public List<ResultTable> search(ResultTable resultTable) {
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
