@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/excellent.iml" filepath="$PROJECT_DIR$/excellent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Excellent_Health-master.iml" filepath="$PROJECT_DIR$/Excellent_Health-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/excellent.iml" filepath="$PROJECT_DIR$/excellent.iml" group="excellent" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/excellent_main.iml" filepath="$PROJECT_DIR$/.idea/modules/excellent_main.iml" group="excellent" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/excellent_test.iml" filepath="$PROJECT_DIR$/.idea/modules/excellent_test.iml" group="excellent" />
     </modules>

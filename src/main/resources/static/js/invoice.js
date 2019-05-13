@@ -1,9 +1,8 @@
-
 $(document).ready(function () {
-
-    defaultHideAreaInInvoice();
+        defaultHideAreaInInvoice();
     }
 );
+
 //Default need to hide area
 function defaultHideAreaInInvoice() {
     //data show content show and hide - start
@@ -11,7 +10,6 @@ function defaultHideAreaInInvoice() {
     contentHide(document.getElementById("labTestShowTable"));
     contentHide(document.getElementById("patientContent"));
     contentHide(document.getElementById("newDoctor"));
-    contentHide(document.getElementById("cash"));
     contentHide(document.getElementById("card"));
     contentHide(document.getElementById("patientListDisplay"));
     //data show content show and hide - end
@@ -147,10 +145,10 @@ function addRow(labTest) {
 
     updateTotalPrice(labTest.price);
 
-    row.insertCell(0).innerHTML = labTest.id;
+
+    row.insertCell(0).innerHTML = `<input type="text" name="labTest" class="form-control" value="${labTest.id}" readonly>`;
     row.insertCell(1).innerHTML = labTest.code;
     row.insertCell(2).innerHTML = labTest.name;
-
     row.insertCell(3).innerHTML = '<input type="button" value = "Remove" onClick="deleteRow(this)" class="btn btn-danger">';
 
 }
@@ -252,13 +250,20 @@ $("#btnNewPatient").on("click", function () {
     contentHide(document.getElementById("newPatientID"));
     contentShow(document.getElementById("patientContent"));
     contentShow(document.getElementById("previousNumber"));
+    //set value to new patient's number
+    let previousPatientNumber = document.getElementById("previousPatientNumber").innerHTML;
+    document.getElementById("patientNumber").value = "EHS".concat(Number(previousPatientNumber.slice(3)) + 1);
+    //set all new patient value to empty
+    $("#id,#number,#patientName,#nic,#dateOfBirth,#email,#mobile,#land").val("");
 });
+
 // language=JQuery-CSS
 $("#btnRegisteredPatient").on("click", function () {
     contentShow(document.getElementById("patientSearchContent"));
     contentHide(document.getElementById("patientContent"));
 });
 
+//when patient find combo box value change
 $("#patientFind").on("change", function () {
     document.getElementById("patientFindValue").value = '';
     document.getElementById("patientFindValue").style.setProperty('background-color', '#ffffff', 'important');
@@ -354,20 +359,16 @@ $("#btnSearchPatient").on("click", function () {
         // make patient list to empty
         patientList = [];
         //delete all row in the lab test show table
-
     }
-
-
     Promise.resolve(getData(url)).then(function (patient) {
-
         for (let i = 0; i < patient.length; i++) {
             creatNewPatientList(patient[i]);
         }
         sendDataToDetailsForm();
-
     });
 });
 
+// show search details according to patient details
 function creatNewPatientList(patient) {
     if (patient === null || patient === undefined) {
         let selectedParameter = document.getElementById("patientFind").value;
@@ -381,8 +382,6 @@ function creatNewPatientList(patient) {
         });
     }
     patientList.push(Object.values(patient));
-
-
 }
 
 function sendDataToDetailsForm() {
@@ -396,10 +395,8 @@ function sendDataToDetailsForm() {
     }
     if (1 < patientList.length) {
         if (document.getElementById("patientShowTable")) {
-
             $("#patientShowTable").remove();
         }
-
         $("#patientListDisplay").append("<table id=\"patientShowTable\" class=\" table table-striped table-condensed \">\n" +
             "<tr>\n" +
             "<th>Register Number</th>\n" +
@@ -410,13 +407,10 @@ function sendDataToDetailsForm() {
             "<th>Add</th>\n" +
             "</tr>\n" +
             "</table>");
-
-
         for (let i = 0; i < patientList.length; i++) {
             showPatientList(patientList[i]);
         }
     }
-
 }
 
 function showPatientList(patient) {
@@ -461,7 +455,7 @@ function fillPatientDetailsForm(patientInArray) {
                 $("#id").val(patientInArray[i]);
                 break;
             case 1:
-                $("#number").val(patientInArray[i]);
+                $("#patientNumber").val(patientInArray[i]);
                 break;
             case 2:
                 $("#title").val(patientInArray[i]);
@@ -552,7 +546,7 @@ $("#cardNumber").on("keyup", function () {
 $("#amountTendered").on("keyup", function () {
 
     $("#balance").val($("#amountTendered").val() - $("#amount").val());
-})
+});
 
 /*//-----------------> Information selection ------ end <----------------------------//*/
 
@@ -562,7 +556,7 @@ async function getData(url) {
         const result = await fetch(url);
         return await result.json();
     } catch (e) {
-        console.log("Error : " + JSON.parse(e));
+        console.log("Error : " + e);
     }
 
 }

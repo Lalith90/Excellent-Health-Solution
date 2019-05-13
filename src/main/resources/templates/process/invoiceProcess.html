@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8"/>
@@ -8,7 +8,7 @@
 </head>
 
 <body>
-<nav class="navbar navbar-default" th:replace="fragments/header :: header" style="margin-bottom: 60px"></nav>
+<nav class="navbar navbar-default" style="margin-bottom: 60px" th:replace="fragments/header :: header"></nav>
 
 <div class="container-fluid" style="margin-top: 60px">
     <form class="form-horizontal" th:action="@{invoiceProcess/add}" th:method="POST"
@@ -19,14 +19,14 @@
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h4 class="panel-title text-center">
-                            <a data-toggle="collapse" data-parent="#accordion"
+                            <a data-parent="#accordion" data-toggle="collapse"
                                href="#collapse1">
                                 <b>Tests &amp; Medical Package </b> &nbsp;
                                 <i class="fa fa-medkit" style="font-size:24px"></i>
                             </a>
                         </h4>
                     </div>
-                    <div id="collapse1" class="panel-collapse collapse in">
+                    <div class="panel-collapse collapse in" id="collapse1">
                         <div class="panel panel-body">
                             <!--lab Test table-->
                             <div class="col-sm-7">
@@ -69,8 +69,8 @@
                                             </div>
                                             <div class="panel panel-body">
                                                 <div class="container-fluid">
-                                                    <table id="myTableData"
-                                                           class="table table-striped table-condensed">
+                                                    <table class="table table-striped table-condensed"
+                                                           id="myTableData">
                                                         <tr>
                                                             <th>Test id</th>
                                                             <th>Test Code</th>
@@ -94,9 +94,9 @@
                                                for="cmbMedicalPackage">Medical
                                             Package</label>
                                         <div class="col-md-7">
-                                            <select name="invoice.medicalPackage"
+                                            <select class="form-control"
                                                     id="cmbMedicalPackage"
-                                                    class="form-control">
+                                                    name="invoice.medicalPackage">
                                                 <option th:each="medicalPackage : ${medicalPackages}"
                                                         th:text="${{medicalPackage.price}}+${' '}+${medicalPackage.name}"
                                                         th:value="${medicalPackage.id}"></option>
@@ -116,8 +116,8 @@
                                             </div>
                                             <div class="panel panel-body">
                                                 <div class="container-fluid">
-                                                    <table id="myMedicalPackageData"
-                                                           class="table table-striped table-condensed text-center">
+                                                    <table class="table table-striped table-condensed text-center"
+                                                           id="myMedicalPackageData">
                                                         <tr>
                                                             <th>Test Code</th>
                                                             <th>Test Name</th>
@@ -137,13 +137,13 @@
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h3 class="panel-title text-center">
-                            <a data-toggle="collapse" data-parent="#accordion"
+                            <a data-parent="#accordion" data-toggle="collapse"
                                href="#collapse2">
                                 <i class="fa fa-wheelchair"></i>
                                 &nbsp; <b>Patient Details</b>
                             </a></h3>
                     </div>
-                    <div id="collapse2" class="panel-collapse collapse ">
+                    <div class="panel-collapse collapse " id="collapse2">
                         <div class="panel-body">
                             <div class="row">
                                 <div class="container-fluid">
@@ -151,7 +151,7 @@
                                         <div class="row">
                                             <div class="col-sm-2">
                                                 <br/>
-                                                <button id="btnNewPatient" type="button" class="btn btn-info">New <i
+                                                <button class="btn btn-info" id="btnNewPatient" type="button">New <i
                                                         class="fa fa-wheelchair"></i></button>
                                             </div>
                                             <div class="col-sm-10" id="patientSearchContent">
@@ -174,21 +174,21 @@
                                                         <label class="control-label"
                                                                for="patientFindValue">Enter
                                                             Value </label>
-                                                        <input type="text" id="patientFindValue"
-                                                               class="form-control"/>
+                                                        <input class="form-control" id="patientFindValue"
+                                                               type="text"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2 text-center">
                                                     <br/>
-                                                    <button id="btnSearchPatient" class="btn btn-info">
+                                                    <button class="btn btn-info" id="btnSearchPatient">
                                                         <span class="glyphicon glyphicon-search"></span>&nbsp;Search
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row" id="patientListDisplay">
-                                            <div class="container-fluid" >
-<!--                                            code taken form here -->
+                                            <div class="container-fluid">
+                                                <!--                                            code taken form here -->
                                             </div>
                                         </div>
                                     </div>
@@ -197,7 +197,7 @@
                             <div id="patientContent">
                                 <div class="container-fluid text-left col-sm-offset-2">
                                     <br/>
-                                    <button id="btnRegisteredPatient" type="button" class="btn btn-primary">
+                                    <button class="btn btn-primary" id="btnRegisteredPatient" type="button">
                                         Registered
                                         <i class="fa fa-wheelchair"></i></button>
                                 </div>
@@ -206,23 +206,23 @@
                                         <label class="control-label col-md-4" for="id">ID
                                             :</label>
                                         <div class="col-md-8">
-                                            <input type="text" id="id"
-                                                   placeholder="Enter ID Here"
-                                                   class="form-control" name="patient.id"/>
+                                            <input class="form-control" id="id"
+                                                   name="patient.id"
+                                                   placeholder="Enter ID Here" type="text"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label col-md-4" for="number">Number<span
+                                        <label class="control-label col-md-4" for="patientNumber">Number<span
                                                 class="text-danger">*</span></label>
                                         <div class="col-md-3">
-                                            <input type="text" id="number"
+                                            <input class="form-control" id="patientNumber"
+                                                   name="patient.number"
                                                    placeholder="Enter Number"
-                                                   th:value="${newPatient}" class="form-control"
-                                                   name="patient.number" required/>
+                                                   readonly required type="text"/>
                                         </div>
                                         <div class="col-sm-5 text-warning" id="previousNumber">
-                                            <label class="control-label ">Previous Number: <span
-                                                    th:text="${lastPatient}"></span></label>
+                                            <label class="control-label">Previous Number: <span
+                                                    id="previousPatientNumber" th:text="${lastPatient}"></span></label>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -241,19 +241,19 @@
                                         <label class="control-label col-md-4" for="patientName">Full
                                             Name<span class="text-danger">*</span></label>
                                         <div class="col-md-8">
-                                            <input type="text" id="patientName"
-                                                   placeholder="Enter Full Here"
-                                                   class="form-control" name="patient.name"
-                                                   required/>
+                                            <input class="form-control" id="patientName"
+                                                   name="patient.name"
+                                                   placeholder="Enter Full Here" required
+                                                   type="text"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-4"
                                                for="nic">NIC</label>
                                         <div class="col-md-8">
-                                            <input type="text" id="nic"
-                                                   placeholder="Enter NIC Here"
-                                                   class="form-control" name="patient.nic"
+                                            <input class="form-control" id="nic"
+                                                   name="patient.nic"
+                                                   placeholder="Enter NIC Here" type="text"
                                             />
                                         </div>
                                     </div>
@@ -263,16 +263,16 @@
                                         <label class="control-label col-md-4" for="dateOfBirth">Birth
                                             Date<span class="text-danger">*</span></label>
                                         <div class="col-md-8">
-                                            <input type="date" id="dateOfBirth"
-                                                   class="form-control" name="dateOfBirth"
-                                                   placeholder="Ex: 1990 - 01 - 20" required/>
+                                            <input class="form-control" id="dateOfBirth"
+                                                   name="dateOfBirth" placeholder="Ex: 1990 - 01 - 20"
+                                                   required type="date"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-4" for="gender">Gender</label>
                                         <div class="col-md-4">
-                                            <select id="gender" name="patient.gender"
-                                                    class="form-control">
+                                            <select class="form-control" id="gender"
+                                                    name="patient.gender">
                                                 <option th:each="genders : ${gender}"
                                                         th:text="${genders.gender}"
                                                         th:value="${genders}"></option>
@@ -283,28 +283,28 @@
                                         <label class="control-label col-md-4"
                                                for="email">Email</label>
                                         <div class="col-md-8">
-                                            <input type="email" id="email"
-                                                   placeholder="Enter email Here"
-                                                   class="form-control" name="patient.email"/>
+                                            <input class="form-control" id="email"
+                                                   name="patient.email"
+                                                   placeholder="Enter email Here" type="email"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-4" for="mobile">Mobile
                                             Number<span class="text-danger">*</span></label>
                                         <div class="col-md-8">
-                                            <input type="text" id="mobile"
-                                                   placeholder="Enter Mobile Here"
-                                                   class="form-control" name="patient.mobile"
-                                                   required/>
+                                            <input class="form-control" id="mobile"
+                                                   name="patient.mobile"
+                                                   placeholder="Enter Mobile Here" required
+                                                   type="text"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-4" for="land">Land
                                             Number</label>
                                         <div class="col-md-8">
-                                            <input type="text" id="land"
-                                                   placeholder="Enter Land Here"
-                                                   class="form-control" name="patient.land"/>
+                                            <input class="form-control" id="land"
+                                                   name="patient.land"
+                                                   placeholder="Enter Land Here" type="text"/>
                                         </div>
                                     </div>
                                 </div>
@@ -316,22 +316,19 @@
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h4 class="panel-title text-center">
-                            <a data-toggle="collapse" data-parent="#accordion"
+                            <a data-parent="#accordion" data-toggle="collapse"
                                href="#collapse3">
                                 <b>Doctor Details</b> &nbsp;<i class="fa fa-user-md"></i>&nbsp;
-                                <b>&amp;</b> &nbsp;
-                                <b>Collecting Center Details</b> &nbsp; <i
-                                    class="fa fa-hospital-o"></i>
                             </a>
                         </h4>
                     </div>
-                    <div id="collapse3" class="panel-collapse collapse">
+                    <div class="panel-collapse collapse" id="collapse3">
                         <div class="panel-body">
                             <div class="row">
                                 <!--Find doctor And New Doctor-->
                                 <div class="col-sm-offset-2">
-                                    <button type="button" class="btn btn-info"
-                                            id="btnNewDoctor">New <i
+                                    <button class="btn btn-info" id="btnNewDoctor"
+                                            type="button">New <i
                                             class="fa fa-user-md"></i>
                                     </button>
                                 </div>
@@ -342,8 +339,8 @@
                                         <label class="control-label col-sm-3" for="doctor">
                                             Doctor Name</label>
                                         <div class="col-sm-7">
-                                            <select id="doctor" name="doctor"
-                                                    class="form-control">
+                                            <select class="form-control" id="doctor"
+                                                    name="doctor">
                                                 <option th:each="doctor : ${doctors}"
                                                         th:text="${doctor.name} + ${'  -  '} + ${doctor.slmcNumber} + ${'  -  '} + ${doctor.mobile}+ ${'  -  '} + ${doctor.getConsultation().name}"
                                                         th:value="${doctor.id}"></option>
@@ -353,11 +350,11 @@
                                 </div>
                             </div>
                             <!--New Doctor-->
-                            <div id="newDoctor" class="row">
+                            <div class="row" id="newDoctor">
                                 <div class="container-fluid">
                                     <div class="col-sm-offset-1">
-                                        <button type="button" class="btn btn-primary"
-                                                id="btnRegisterDoctor">Registered <i
+                                        <button class="btn btn-primary" id="btnRegisterDoctor"
+                                                type="button">Registered <i
                                                 class="fa fa-user-md"></i>
                                         </button>
                                     </div>
@@ -366,8 +363,8 @@
                                             <label class="control-label col-md-4"
                                                    th:for="title">Title</label>
                                             <div class="col-md-4">
-                                                <select name="doctor.title"
-                                                        class="form-control">
+                                                <select class="form-control"
+                                                        name="doctor.title">
                                                     <option th:each="titles : ${title}"
                                                             th:text="${titles.title}"
                                                             th:value="${titles}"></option>
@@ -378,18 +375,18 @@
                                             <label class="control-label col-md-4"
                                                    for="fullName">Name</label>
                                             <div class="col-md-8">
-                                                <input type="text" id="fullname"
-                                                       placeholder="Enter Full Here"
-                                                       class="form-control" name="doctor.name"
-                                                       required/>
+                                                <input class="form-control" id="fullname"
+                                                       name="doctor.name"
+                                                       placeholder="Enter Full Here" required
+                                                       type="text"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-4"
                                                    for="cmbGender">Gender</label>
                                             <div class="col-md-4">
-                                                <select id="cmbGender" name="doctor.gender"
-                                                        class="form-control">
+                                                <select class="form-control" id="cmbGender"
+                                                        name="doctor.gender">
                                                     <option th:each="genders : ${gender}"
                                                             th:text="${genders.gender}"
                                                             th:value="${genders}"></option>
@@ -400,9 +397,9 @@
                                             <label class="control-label col-md-4"
                                                    for="doctorConsultation">Consultation</label>
                                             <div class="col-md-8">
-                                                <select id="doctorConsultation"
-                                                        name="doctor.consultation"
-                                                        class="form-control">
+                                                <select class="form-control"
+                                                        id="doctorConsultation"
+                                                        name="doctor.consultation">
                                                     <option th:each="consultation : ${consultations}"
                                                             th:text="${consultation.name}"
                                                             th:value="${consultation.id}"></option>
@@ -413,7 +410,7 @@
                                             <label class="control-label col-md-4"
                                                    for="slmcNumber">SLMC Number</label>
                                             <div class="col-md-8">
-                                                <input id="slmcNumber" class="form-control"
+                                                <input class="form-control" id="slmcNumber"
                                                        name="doctor.slmcNumber"
                                                 />
                                             </div>
@@ -423,10 +420,10 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-4" for="doctor.email">Email</label>
                                             <div class="col-md-8">
-                                                <input type="email" id="doctor.email"
+                                                <input class="form-control" id="doctor.email"
+                                                       name="doctor.email"
                                                        placeholder="Enter email Here"
-                                                       class="form-control"
-                                                       name="doctor.email"/>
+                                                       type="email"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -434,10 +431,10 @@
                                                    for="doctor.mobile">Mobile
                                                 Number</label>
                                             <div class="col-md-8">
-                                                <input type="text" id="doctor.mobile"
-                                                       placeholder="Enter Mobile Here"
-                                                       class="form-control"
+                                                <input class="form-control" id="doctor.mobile"
                                                        name="doctor.mobile"
+                                                       placeholder="Enter Mobile Here"
+                                                       type="text"
                                                 />
                                             </div>
                                         </div>
@@ -446,33 +443,48 @@
                                                    for="doctor.land">Land
                                                 Number</label>
                                             <div class="col-md-8">
-                                                <input type="text" id="doctor.land"
+                                                <input class="form-control" id="doctor.land"
+                                                       name="doctor.land"
                                                        placeholder="Enter Land Here"
-                                                       class="form-control"
-                                                       name="doctor.land"/>
+                                                       type="text"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-4"
                                                    for="description">Description</label>
                                             <div class="col-md-8">
-                                                <textarea id="description" class="form-control"
+                                                <textarea class="form-control" id="description"
                                                           name="doctor.description"></textarea>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!--Collecting Center-->
+                        </div>
+                    </div>
+                </div>
+                <!--Collecting Center-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4 class="panel-title text-center">
+                            <a data-parent="#accordion" data-toggle="collapse"
+                               href="#collapse4">
+                                <b>Collecting Center Details</b> &nbsp; <i
+                                    class="fa fa-hospital-o"></i>
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse collapse" id="collapse4">
+                        <div class="panel-body">
                             <div class="row">
                                 <div class="form-group">
                                     <div class="container-fluid">
                                         <label class="control-label col-sm-3" for="collectingCenter">Collecting
                                             Center</label>
                                         <div class="col-md-7">
-                                            <select name="collectingCenter" id="collectingCenter" class="form-control">
+                                            <select class="form-control" id="collectingCenter" name="collectingCenter">
                                                 <option th:each="collectingCenters : ${collectingCenters}"
-                                                        th:text="${collectingCenters.name} + ${' '} + ${collectingCenters.mobile} + ${' '} + ${collectingCenters.establishedDate}"
+                                                        th:text="${collectingCenters.name} + ${' '} + ${collectingCenters.mobile} + ${' '} + ${collectingCenters.email}"
                                                         th:value="${collectingCenters.id}"></option>
                                             </select>
                                         </div>
@@ -486,21 +498,21 @@
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h4 class="panel-title text-center">
-                            <a data-toggle="collapse" data-parent="#accordion"
-                               href="#collapse4">
+                            <a data-parent="#accordion" data-toggle="collapse"
+                               href="#collapse5">
                                 <b>Payment Details </b> &nbsp;<i class="fa fa-money"></i>
                             </a>
                         </h4>
                     </div>
-                    <div id="collapse4" class="panel-collapse collapse">
+                    <div class="panel-collapse collapse" id="collapse5">
                         <div class="panel-body">
                             <div class="row">
                                 <div class="form-group col-sm-6">
                                     <label class="control-label col-sm-6" for="totalPrice">Total
                                         Price</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="totalPrice"
-                                               class="form-control" name="totalprice" readonly/>
+                                        <input class="form-control" id="totalPrice"
+                                               name="totalprice" readonly type="text"/>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-6">
@@ -508,8 +520,8 @@
                                            th:for="discountRatio">Discount
                                         Ratio</label>
                                     <div class="col-sm-6">
-                                        <select name="discountRatio" id="cmbDiscountRatio"
-                                                class="form-control">
+                                        <select class="form-control" id="cmbDiscountRatio"
+                                                name="discountRatio">
                                             <option th:each="discountRatio : ${discountRatios}"
                                                     th:text="${discountRatio.amount}"
                                                     th:value="${discountRatio.id}"></option>
@@ -522,8 +534,8 @@
                                     <label class="control-label col-sm-6"
                                            for="amount">Amount</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="amount"
-                                               class="form-control" name="amount" readonly/>
+                                        <input class="form-control" id="amount"
+                                               name="amount" readonly type="text"/>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-6">
@@ -531,8 +543,8 @@
                                            th:for="paymentMethod">Payment
                                         Method:</label>
                                     <div class="col-sm-6">
-                                        <select name="paymentMethod" id="cmbPaymentMethod"
-                                                class="form-control" >
+                                        <select class="form-control" id="cmbPaymentMethod"
+                                                name="paymentMethod">
                                             <option th:each="paymentMethod : ${paymentMethods}"
                                                     th:text="${paymentMethod.paymentMethod}"
                                                     th:value="${paymentMethod}"></option>
@@ -547,9 +559,9 @@
                                         Tendered
                                         (Rs.):</label>
                                     <div class="col-md-6">
-                                        <input type="text" id="amountTendered"
+                                        <input class="form-control" id="amountTendered"
                                                placeholder="Enter Amount Here"
-                                               class="form-control"/>
+                                               type="text"/>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-6">
@@ -557,8 +569,8 @@
                                         (Rs.): <span
                                                 class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" id="balance"
-                                               class="form-control" readonly/>
+                                        <input class="form-control" id="balance"
+                                               readonly type="text"/>
                                     </div>
                                 </div>
                             </div>
@@ -568,9 +580,9 @@
                                         <span
                                                 class="text-danger">*</span></label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="bankName"
-                                               placeholder="Enter Bank Name Here"
-                                               class="form-control" name="bankName"/>
+                                        <input class="form-control" id="bankName"
+                                               name="bankName"
+                                               placeholder="Enter Bank Name Here" type="text"/>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-6">
@@ -578,10 +590,11 @@
                                         <span
                                                 class="text-danger">*</span></label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="cardNumber"
-                                               class="form-control"
+                                        <input class="form-control" id="cardNumber"
                                                name="cardNumber"
-                                               placeholder="Enter Number"/><span id="typedLength"></span> &nbsp;<span id="cardType"></span>
+                                               placeholder="Enter Number"
+                                               type="text"/><span id="typedLength"></span> &nbsp;<span
+                                            id="cardType"></span>
                                     </div>
                                 </div>
                             </div>
@@ -590,34 +603,24 @@
                                     <label class="control-label col-sm-offset-1 col-sm-3"
                                            for="remarks">Remarks: </label>
                                     <div class="col-md-6">
-                                        <input type="text" id="remarks"
-                                               placeholder="Enter Anything Special"
-                                               class="form-control" name="remarks"/>
+                                        <input class="form-control" id="remarks"
+                                               name="remarks"
+                                               placeholder="Enter Anything Special" type="text"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-offset-2">
-                                    <div class="row">
-                                        <div class="col-sm-4 text-right">
-                                            <a data-toggle="collapse" data-parent="#accordion"
-                                               href="#collapse1">
-                                                <button class="btn btn-warning"><span
-                                                        class="glyphicon glyphicon-edit"></span>&nbsp;Edit
-                                                </button>
-                                            </a>
-                                        </div>
-                                        <div class="col-sm-4 text-center">
-                                            <button class="btn btn-success" type="submit"><span
-                                                    class="glyphicon glyphicon-print"></span>&nbsp;
-                                                &nbsp;Print
-                                            </button>
-                                        </div>
-                                        <div class="col-sm-4 text-left">
-                                            <button class="btn btn-danger" type="reset"><span
-                                                    class="glyphicon glyphicon-remove"></span>&nbsp;Cancel
-                                            </button>
-                                        </div>
+                                <div class="container-fluid">
+                                    <div class="col-sm-6 text-center">
+                                        <button class="btn btn-success" type="submit"><span
+                                                class="glyphicon glyphicon-print"></span>&nbsp;
+                                            &nbsp;Print
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-6 text-center">
+                                        <button class="btn btn-danger" type="reset"><span
+                                                class="glyphicon glyphicon-remove"></span>&nbsp;Cancel
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -630,15 +633,15 @@
         <div class="container-fluid">
             <label th:if="${#fields.hasErrors('*')}" th:text="'Errors: '">Errors: </label>
             <ul>
-                <li th:each="err: ${#fields.errors('*')}" th:text="${err}"
-                    class="error"></li>
+                <li class="error" th:each="err: ${#fields.errors('*')}"
+                    th:text="${err}"></li>
             </ul>
         </div>
     </form>
 </div>
 <!--Invoice Processing Details - end -->
 <footer class="page-footer" th:replace="fragments/footer"></footer>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <script th:replace="fragments/script"></script>
 <!--custom for invoice only-->
 <script th:src="@{/js/invoice.js}"></script>

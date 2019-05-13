@@ -57,7 +57,8 @@ public class InvoiceProcessController {
     public InvoiceProcessController(InvoiceService invoiceService, UserService userService, PatientService patientService,
                                     DoctorService doctorService, LabTestService labTestService, DateTimeAgeService dateTimeAgeService,
                                     CollectingCenterService collectingCenterService, DiscountRatioService discountRatioService,
-                                    MedicalPackageService medicalPackageService, InvoiceHasLabTestService invoiceHasLabTestService, FileHandelService fileHandelService, ServletContext context, ConsultationService consultationService) {
+                                    MedicalPackageService medicalPackageService, InvoiceHasLabTestService invoiceHasLabTestService,
+                                    FileHandelService fileHandelService, ServletContext context, ConsultationService consultationService) {
         this.invoiceService = invoiceService;
         this.userService = userService;
         this.patientService = patientService;
@@ -82,17 +83,10 @@ public class InvoiceProcessController {
         model.addAttribute("discountRatios", discountRatioService.findAll());
         model.addAttribute("labTests", labTestService.findAll());
         model.addAttribute("medicalPackages", medicalPackageService.openMedicalPackage(MedicalPackageStatus.OPEN));
-        String lastPatientNumber =  patientService.lastPatient().getNumber();
         model.addAttribute("consultations", consultationService.findAll());
-        String patientNumber= lastPatientNumber.replaceAll("[^0-9]+", "");
-        Integer PatientNumber = Integer.parseInt(patientNumber);
-        int newPatientNumber = PatientNumber+1;
-        model.addAttribute("lastPatient",lastPatientNumber);
-        model.addAttribute("newPatient","EHS"+ newPatientNumber);
+        model.addAttribute("lastPatient",patientService.lastPatient().getNumber());
         model.addAttribute("title", Title.values());
         model.addAttribute("gender", Gender.values());
-        model.addAttribute("patient", new Patient());
-
         return "process/invoiceProcess";
     }
 
