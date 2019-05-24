@@ -37,12 +37,12 @@ public  class InvoiceService implements AbstractService<Invoice, Integer> {
         this.invoiceDao = invoiceDao;
     }
 
-    @Transactional
+
     public List<Invoice> findAll() {
         return invoiceDao.findAll();
     }
 
-    @Transactional
+
     public Invoice findById(Integer id) {
         return invoiceDao.getOne(id);
     }
@@ -52,13 +52,13 @@ public  class InvoiceService implements AbstractService<Invoice, Integer> {
         return invoiceDao.save(invoice);
     }
 
-    @Transactional
+
     public boolean delete(Integer id) {
         invoiceDao.deleteById(id);
         return false;
     }
 
-    @Transactional
+
     public List<Invoice> search(Invoice invoice) {
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
@@ -67,37 +67,40 @@ public  class InvoiceService implements AbstractService<Invoice, Integer> {
         Example<Invoice> invoiceExample = Example.of(invoice, matcher);
         return invoiceDao.findAll(invoiceExample);
     }
-    @Transactional
+
+    public Invoice findLastInvoice(){
+        return invoiceDao.findFirstByOrderByIdDesc();
+    }
+
     public List<Invoice> findByPatient(Patient patient) {
         return invoiceDao.findByPatient(patient);
     }
 
-    @Transactional
     public Invoice findByPatientAndCreateDate(Patient patient, LocalDate date) {
         return invoiceDao.findByPatientAndCreatedAt(patient, date);
     }
-    @Transactional
+
     public List<Invoice> findByDateAndUser(LocalDate currentDate, User byUserName) {
         return invoiceDao.findByCreatedAtAndUser(currentDate, byUserName);
     }
-    @Transactional
+
     public List<Invoice> findByDate(LocalDate today) {
         return invoiceDao.findByCreatedAt(today);
     }
-    @Transactional
+
     public Integer countByCreatedAt(LocalDate today) {
         return invoiceDao.countByCreatedAt(today);
     }
-    @Transactional
+
     public List<Invoice> findByCreatedAtIsBetween(LocalDate from, LocalDate to) {
         return invoiceDao.findByCreatedAtIsBetween(from, to);
     }
-    @Transactional
+
     public Integer countByCreatedAtIsBetween(LocalDate from, LocalDate to) {
         return invoiceDao.countByCreatedAtIsBetween(from,to);
     }
 
-    @Transactional
+
     public boolean createPdf(Invoice invoice1, ServletContext context, HttpServletRequest request, HttpServletResponse response) {
 
         System.out.println("invoice service");

@@ -26,6 +26,9 @@ public class InvoiceHasLabTest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "number", nullable = false, unique = true)
+    private Integer number;
+
     @ManyToOne
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
@@ -39,8 +42,8 @@ public class InvoiceHasLabTest {
     private LabTestStatus labTestStatus=LabTestStatus.NOSAMPLE;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate createdAt;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.DETACH})
     private User user,sampleCollectingUser, workSheetTakenUser, resultEnteredUser, reportAuthorizedUser, reportPrintedUser,reportRePrintedUser;
@@ -69,10 +72,11 @@ public class InvoiceHasLabTest {
     public InvoiceHasLabTest() {
     }
 
-    public InvoiceHasLabTest(Invoice invoice, LabTest labTest, LabTestStatus labTestStatus, LocalDate createdAt) {
+    public InvoiceHasLabTest(Invoice invoice, LabTest labTest, LabTestStatus labTestStatus, LocalDateTime createdAt, Integer number) {
         this.invoice = invoice;
         this.labTest = labTest;
         this.labTestStatus = labTestStatus;
         this.createdAt = createdAt;
+        this.number = number;
     }
 }

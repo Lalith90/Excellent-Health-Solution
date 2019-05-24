@@ -89,12 +89,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 //Logout controlling
                 .logout()
-                .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/index")
+                .invalidateHttpSession(true)
                 .and()
                 .exceptionHandling()
+                .and()
+                //Session Management
+                .sessionManagement()
+                .invalidSessionUrl("/login")
+                .sessionFixation()
+                .changeSessionId()
+                .maximumSessions(10)
+                .expiredUrl("/login")
+                .and()
                 //Cross site disable
                 .and()
                 .csrf()

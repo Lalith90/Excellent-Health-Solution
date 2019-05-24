@@ -3,64 +3,34 @@ package lk.solution.health.excellent.processHandling.controller;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import lk.solution.health.excellent.common.service.DateTimeAgeService;
-import lk.solution.health.excellent.common.service.FileHandelService;
-import lk.solution.health.excellent.general.service.InvoiceHasLabTestService;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.lab.service.LabTestService;
-import lk.solution.health.excellent.resource.entity.MedicalPackage;
 import lk.solution.health.excellent.resource.entity.Patient;
 import lk.solution.health.excellent.resource.service.*;
-import lk.solution.health.excellent.transaction.service.DiscountRatioService;
-import lk.solution.health.excellent.transaction.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletContext;
 import javax.websocket.server.PathParam;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/invoiceProcess")
 public class InvoiceProcessRestController {
 
-    private final InvoiceService invoiceService;
-    private final UserService userService;
     private final PatientService patientService;
-    private final DoctorService doctorService;
     private final LabTestService labTestService;
-    private final DateTimeAgeService dateTimeAgeService;
-    private final CollectingCenterService collectingCenterService;
-    private final DiscountRatioService discountRatioService;
     private final MedicalPackageService medicalPackageService;
-    private final InvoiceHasLabTestService invoiceHasLabTestService;
-    private final FileHandelService fileHandelService;
-    private final ServletContext context;
 
     @Autowired
-    public InvoiceProcessRestController(InvoiceService invoiceService, UserService userService, PatientService patientService,
-                                        DoctorService doctorService, LabTestService labTestService, DateTimeAgeService dateTimeAgeService,
-                                        CollectingCenterService collectingCenterService, DiscountRatioService discountRatioService,
-                                        MedicalPackageService medicalPackageService, InvoiceHasLabTestService invoiceHasLabTestService, FileHandelService fileHandelService, ServletContext context) {
-        this.invoiceService = invoiceService;
-        this.userService = userService;
+    public InvoiceProcessRestController(PatientService patientService, LabTestService labTestService, MedicalPackageService medicalPackageService) {
         this.patientService = patientService;
-        this.doctorService = doctorService;
         this.labTestService = labTestService;
-        this.dateTimeAgeService = dateTimeAgeService;
-        this.collectingCenterService = collectingCenterService;
-        this.discountRatioService = discountRatioService;
         this.medicalPackageService = medicalPackageService;
-        this.invoiceHasLabTestService = invoiceHasLabTestService;
-        this.fileHandelService = fileHandelService;
-        this.context = context;
     }
+
 
     // using spring boot filtering service most required variable send to the front end
     private void filterParameter(MappingJacksonValue mappingJacksonValue, FilterProvider filters) {
@@ -77,6 +47,7 @@ public class InvoiceProcessRestController {
         filterParameter(mappingJacksonValue, filters);
         return mappingJacksonValue;
     }
+
     // medical package send to font end
     @GetMapping("/medicalPackageGet/{id}")
     public MappingJacksonValue getMedicalPackageById(@PathVariable Integer id) {
@@ -86,27 +57,28 @@ public class InvoiceProcessRestController {
         filterParameter(mappingJacksonValue, filters);
         return mappingJacksonValue;
     }
+
     //send patient details  send to font end
     @GetMapping("/patientFind")
-    public MappingJacksonValue getPatient(@PathParam("Patient")Patient patient) {
+    public MappingJacksonValue getPatient(@PathParam("Patient") Patient patient) {
         //Get All Patient
         List<Patient> patients = patientService.findAll();
 
         List<Patient> patientList = new ArrayList<>();
-        if (patient.getNumber()!= null) {
+        if (patient.getNumber() != null) {
             patientList.add(patientService.findByNumber(patient.getNumber()));
         }
-        if (patient.getNic()!= null) {
+        if (patient.getNic() != null) {
             patientList.add(patientService.findByNIC(patient.getNic()));
         }
-        if (patient.getMobile()!= null) {
+        if (patient.getMobile() != null) {
             patientList.addAll(patientService.findByMobile(patient.getMobile()));
         }
-        if (patientList.isEmpty()){
+        if (patientList.isEmpty()) {
             System.out.println(patient.getName());
             patientList.addAll(patientService.search(patient));
         }
-           // patientList.forEach((e)-> System.out.println(e.getName()));
+        // patientList.forEach((e)-> System.out.println(e.getName()));
 
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(patientList);
         SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "number", "title", "name", "gender", "nic", "dateOfBirth", "email", "mobile", "land");
@@ -155,7 +127,17 @@ public class InvoiceProcessRestController {
         return labTestService.findById(id);
     }
 
-    /*
+
+    public MappingJacksonValue getAll() {
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(labTestService.findAll());
+        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "description", "labtestDoneHere");
+        FilterProvider filters = new SimpleFilterProvider().addFilter("LabTest", simpleBeanPropertyFilter);
+        filterParameter(mappingJacksonValue, filters);
+
+
+        return mappingJacksonValue;
+    }
+   /*
         @ResponseBody
         public MappingJacksonValue getOne(@PathVariable Integer id){
 
@@ -172,16 +154,6 @@ public class InvoiceProcessRestController {
 
         }
         @GetMapping("/labTest1")*/
-    public MappingJacksonValue getAll() {
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(labTestService.findAll());
-        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "description", "labtestDoneHere");
-        FilterProvider filters = new SimpleFilterProvider().addFilter("LabTest", simpleBeanPropertyFilter);
-        filterParameter(mappingJacksonValue, filters);
-
-
-        return mappingJacksonValue;
-    }
-
 
 //    @RequestMapping(value="/pat", method = RequestMethod.GET)
 //    public List<Patient> findAll(@RequestParam(name = "name",required = false) String name){

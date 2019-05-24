@@ -12,7 +12,9 @@ function defaultHideAreaInInvoice() {
     contentHide(document.getElementById("newDoctor"));
     contentHide(document.getElementById("card"));
     contentHide(document.getElementById("patientListDisplay"));
+    contentHide(document.getElementById("btnRegisteredButton"));
     //data show content show and hide - end
+
 }
 
 /*// Create new table selected lab test table - start//*/
@@ -90,10 +92,7 @@ let selectedMedicalPackageNameAndPrice;
 // get current url
 let currentURL = window.location.href;
 // regex
-let nicRegex = /^([0-9]{9}[v|V|x|X])|^([0-9]{12})$/;
-let nameRegex = /^[a-zA-Z]{5}[a-zA-Z]+$/;
 let numberRegex = /^([eE][hH][sS][\d]+)$/;
-let mobileRegex = /^([0][7][\d]{8}$)|^([7][\d]{8})$/;
 let creditVisaCardRegex = /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/;
 
 //Patient list from taken database
@@ -145,11 +144,11 @@ function addRow(labTest) {
 
     updateTotalPrice(labTest.price);
 
-
-    row.insertCell(0).innerHTML = `<input type="text" name="labTest" class="form-control" value="${labTest.id}" readonly>`;
-    row.insertCell(1).innerHTML = labTest.code;
-    row.insertCell(2).innerHTML = labTest.name;
-    row.insertCell(3).innerHTML = '<input type="button" value = "Remove" onClick="deleteRow(this)" class="btn btn-danger">';
+    row.insertCell(0).innerHTML = labTest.id;
+    row.insertCell(1).innerHTML = `<input type="text" name="labTests" class="form-control" value="${labTest.id}" readonly>`;
+    row.insertCell(2).innerHTML = labTest.code;
+    row.insertCell(3).innerHTML = labTest.name;
+    row.insertCell(4).innerHTML = '<input type="button" value = "Remove" onClick="deleteRow(this)" class="btn btn-danger">';
 
 }
 
@@ -182,16 +181,35 @@ function deleteRow(obj) {
     selectedLabTestShowAndHide();
 }
 
+//remove all lab test in table
+function removeLabTestDetail() {
+    let table = document.getElementById("myTableData");
+    let rowCount = table.rows.length;
+    for (let x = rowCount - 1; x > 0; x--) {
+        table.deleteRow(x);
+    }
+}
+
 //update total price medical package and lab test
 function updateTotalPrice() {
+
     totalLabTestPrice = 0;
     selectedLabTestArray.forEach(function (element) {
         totalLabTestPrice += parseFloat(element.price);
     });
+
     document.getElementById("selectedLabTestCount").innerText = "Selected Lab Test Count = " + selectedLabTestArray.length;
     document.getElementById("totalPrice1").innerText = "Total Price = " + totalLabTestPrice;
-    document.getElementById("totalPrice").value = totalLabTestPrice + selectedMedicalPackageNameAndPrice;
-    $("#amount").val($("#totalPrice").val());
+
+
+    if (isNaN(selectedMedicalPackageNameAndPrice)) {
+        $("#totalPrice").val(totalLabTestPrice);
+        $("#amount").val(totalLabTestPrice);
+    } else {
+
+        document.getElementById("totalPrice").value = totalLabTestPrice + selectedMedicalPackageNameAndPrice;
+        $("#amount").val($("#totalPrice").val());
+    }
 }
 
 /*// Create new table selected lab test table - end//*/
@@ -255,6 +273,7 @@ $("#btnNewPatient").on("click", function () {
     document.getElementById("patientNumber").value = "EHS".concat(Number(previousPatientNumber.slice(3)) + 1);
     //set all new patient value to empty
     $("#id,#number,#patientName,#nic,#dateOfBirth,#email,#mobile,#land").val("");
+    $("#id,#number,#patientName,#nic,#dateOfBirth,#email,#mobile,#land").css('background-color', '');
 });
 
 // language=JQuery-CSS
@@ -268,7 +287,6 @@ $("#patientFind").on("change", function () {
     document.getElementById("patientFindValue").value = '';
     document.getElementById("patientFindValue").style.setProperty('background-color', '#ffffff', 'important');
 });
-
 //patient search filed validation
 $("#patientFindValue").on("keyup", function () {
     let selectedValue = document.getElementById("patientFindValue").value;
@@ -386,6 +404,8 @@ function creatNewPatientList(patient) {
 
 function sendDataToDetailsForm() {
 
+    contentHide(document.getElementById("patientSearchContent"));
+
     if (patientList.length === 1) {
         contentHide(document.getElementById("previousNumber"));
         contentShow(document.getElementById("patientContent"));
@@ -393,7 +413,9 @@ function sendDataToDetailsForm() {
 
         fillPatientDetailsForm(patientList[0]);
     }
+
     if (1 < patientList.length) {
+        contentHide(document.getElementById("previousNumber"));
         if (document.getElementById("patientShowTable")) {
             $("#patientShowTable").remove();
         }
@@ -441,6 +463,7 @@ function fillToForm(obj) {
     contentHide(document.getElementById("patientListDisplay"));
 
     $("#id,#number,#title,#patientName,#gender,#nic,#dateOfBirth,#email,#mobile,#land").val("");
+    $("#id,#number,#patientName,#nic,#dateOfBirth,#email,#mobile,#land").css('background-color', '');
 
     let index = obj.parentNode.parentNode.rowIndex;
     console.log(index);
@@ -490,18 +513,6 @@ function fillPatientDetailsForm(patientInArray) {
 
 /*Patient details taken - end*/
 
-/*Doctor details taken - start*/
-$("#btnNewDoctor").on("click", function () {
-    contentShow(document.getElementById("newDoctor"));
-    contentHide(document.getElementById("systemDoctor"));
-});
-
-$("#btnRegisterDoctor").on("click", function () {
-    contentShow(document.getElementById("systemDoctor"));
-    contentHide(document.getElementById("newDoctor"));
-});
-
-/*Doctor details taken - end*/
 
 //discount ratio apply or not
 $("#cmbDiscountRatio").on("change", function () {
@@ -550,24 +561,15 @@ $("#amountTendered").on("keyup", function () {
 
 /*//-----------------> Information selection ------ end <----------------------------//*/
 
-//AJAX FUNCTION CALL
-async function getData(url) {
-    try {
-        const result = await fetch(url);
-        return await result.json();
-    } catch (e) {
-        console.log("Error : " + e);
-    }
+/*When click the reset button */
+$("#reset").on("click", function () {
+    removeMedicalPackageDetail();
+    removeLabTestDetail();
+    totalLabTestPrice = 0;
+    selectedLabTestArray = [];
+    contentHide(document.getElementById("labTestShowTable"));
+    contentHide(document.getElementById("medicalPackageDetails"));
 
-}
+});
 
-// data show table show and hide - start
-function contentShow(contentName) {
-    contentName.removeAttribute("class");
-}
 
-function contentHide(contentName) {
-    contentName.setAttribute("class", "display");
-}
-
-// data show table show and hide - end

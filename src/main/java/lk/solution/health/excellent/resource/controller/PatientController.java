@@ -85,7 +85,6 @@ public class PatientController {
     public String addPatient(@Valid @ModelAttribute Patient patient, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Integer userId = userService.findByUserIdByUserName(auth.getName());
-        System.out.println(patient);
         if (result.hasErrors()) {
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());
@@ -104,7 +103,9 @@ public class PatientController {
                     "\n\n\n\n\n Please inform us to if there is any changes on your details" +
                     "\n Kindly request keep your data up to date with us. so we can provide better service for you." +
                     "\n \n \n   Thank You" +
-                    "\n Excellent Health Solution";
+                    "\n Excellent Health Solution" +
+                    "\n\n\n\n" +
+                    "This is a one way communication email service \n please don reply";
          boolean isFlag = emailService.sendPatientRegistrationEmail(patient.getEmail(),"Welcome to Excellent Health Solution ", message);
         if (isFlag){
              redirectAttributes.addFlashAttribute("message", "Successfully Update and Email was sent.");
@@ -134,7 +135,8 @@ public class PatientController {
                     "\n\n\n\n\n Please inform us to if there is any changes on your details" +
                     "\n Kindly request keep your data up to date with us. so we can provide better service for you." +
                     "\n \n \n   Thank You" +
-                    "\n Excellent Health Solution";
+                    "\n Excellent Health Solution" +
+                    "This is a one way communication email service \n please don reply";
             boolean isFlag = emailService.sendPatientRegistrationEmail(patient.getEmail(),"Welcome to Excellent Health Solution ", message);
             if (isFlag){
                 redirectAttributes.addFlashAttribute("message", "Successfully Add and Email was sent.");

@@ -55,6 +55,11 @@ $(document).ready(function () {
     // });
 
 });
+// regex
+let nicRegex = /^([0-9]{9}[v|V|x|X])|^([0-9]{12})$/;
+let mobileRegex = /^([0][7][\d]{8}$)|^([7][\d]{8})$/;
+let nameRegex = /^[a-zA-Z]{5}[a-zA-Z]+$/;
+
 
 /*//Nic - data of birth - start//*/
 function dateLengthValidate(day) {
@@ -219,10 +224,76 @@ function calculateGender(nic) {
 
 /*//Nic - gender - end//*/
 
+//mobile number and land number validation
+$("#mobile").bind("keyup", function () {
+    let mobile = $(this).val();
+    if (mobileRegex.test(mobile)) {
+        backgroundColourChangeGood($(this));
+    } else {
+        backgroundColourChangeBad($(this));
+    }
+});
+
+$("#land").bind("keyup", function () {
+    let land = $(this).val();
+    if (mobileRegex.test(land)) {
+        backgroundColourChangeGood($(this));
+    } else {
+        backgroundColourChangeBad($(this));
+    }
+});
+
+//NIC colour change
+$("#nic").bind("keyup", function () {
+    let nic = $(this).val();
+    if (nicRegex.test(nic)) {
+        backgroundColourChangeGood($(this));
+    } else {
+        backgroundColourChangeBad($(this));
+    }
+});
+//Name validation
+$("#patientName").bind("keyup", function () {
+    let name = $(this).val();
+    if (nameRegex.test(name)) {
+        backgroundColourChangeGood($(this));
+    } else {
+        backgroundColourChangeBad($(this));
+    }
+});
+
+//colour change function --start
+function backgroundColourChangeGood(id) {
+    $(id).css('background-color', '#00FFFF');
+}
+
+function backgroundColourChangeBad(id) {
+    $(id).css('background-color', '#FF00AA');
+}
+//colour change function -- end
 
 
-/*
-//FUNCTION INITIALIZE TO RELEVANT PART
-function initialize() {
-    $(cmbMedicalPackage).ready("change", cmbMedicalPackageDetailGet);
-}*/
+
+
+//AJAX FUNCTION CALL
+async function getData(url) {
+    try {
+        const result = await fetch(url);
+        return await result.json();
+    } catch (e) {
+        console.log("Error : " + e);
+        let loginUrl = window.location.protocol  + "/login";
+        window.open(loginUrl,'_blank');
+    }
+}
+
+// content show table show and hide - start
+function contentShow(contentName) {
+    contentName.removeAttribute("class");
+}
+
+function contentHide(contentName) {
+    contentName.setAttribute("class", "display");
+}
+
+// content show table show and hide - end

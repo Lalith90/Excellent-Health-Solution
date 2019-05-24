@@ -45,8 +45,8 @@ public class Doctor {
     private Integer slmcNumber;
 
     @Basic
-    @Column(name = "mobile", length = 10)
-    private String mobile;
+    @Column(name = "mobile")
+    private String mobile = "No mobile number";
 
     @Basic
     @Column(name = "land", length = 10)

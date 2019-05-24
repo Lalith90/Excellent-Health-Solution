@@ -1,3 +1,4 @@
+/*
 package lk.solution.health.excellent.general.controller;
 
 import lk.solution.health.excellent.common.service.DateTimeAgeService;
@@ -70,16 +71,22 @@ public class InvoiceHasLabTestController {
 
     @RequestMapping(value = {"/add","/update"}, method = RequestMethod.POST)
     public String invoiceSave(@Valid @ModelAttribute Invoice invoice, BindingResult result, Model model) {
+*/
 /*
         for (InvoiceHasLabTest labTest : invoice.getInvoiceHasLabTests() ){
             System.out.println(labTest.getLabTest().getId());
-        }*/
+        }*//*
+
 //           System.out.println(invoice.getInvoiceHasLabTests());
 
-        /*to get current user - start*/
+        */
+/*to get current user - start*//*
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Integer userId = userService.findByUserIdByUserName(auth.getName());
-        /*to get current user - start*/
+        */
+/*to get current user - start*//*
+
         if (result.hasErrors()) {
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());
@@ -101,3 +108,4 @@ public class InvoiceHasLabTestController {
     }
 
 }
+*/

@@ -1,11 +1,13 @@
 package lk.solution.health.excellent.processHandling.helpingClass;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.resource.entity.CollectingCenter;
 import lk.solution.health.excellent.resource.entity.Doctor;
 import lk.solution.health.excellent.resource.entity.MedicalPackage;
 import lk.solution.health.excellent.resource.entity.Patient;
 import lk.solution.health.excellent.transaction.entity.DiscountRatio;
+import lk.solution.health.excellent.transaction.entity.Enum.InvoicePrintOrNot;
 import lk.solution.health.excellent.transaction.entity.Enum.PaymentMethod;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,20 +20,26 @@ import java.util.List;
 
 @Getter
 @Setter
+@JsonIgnoreProperties(value = {"medicalPackage", "labTests"})
 public class InvoiceProcess {
+
     private List<LabTest> labTests;
 
     private MedicalPackage medicalPackage;
+
     @NotNull(message = " Patient is need to invoice")
     private Patient patient;
 
     private Doctor doctor;
-    @NotNull(message = "collecting center is need " )
+    @NotNull(message = "collecting center is need ")
     private CollectingCenter collectingCenter;
     private DiscountRatio discountRatio;
 
     private String remarks, bankName;
     private Integer cardNumber;
+
+    @Enumerated(EnumType.STRING)
+    private InvoicePrintOrNot invoicePrintOrNot;
 
     @NotNull(message = "Please double check price and amount")
     private BigDecimal totalprice, amount;
@@ -42,4 +50,21 @@ public class InvoiceProcess {
     public InvoiceProcess() {
     }
 
+    @Override
+    public String toString() {
+        return "InvoiceProcess{" +
+                "labTests=" + labTests +
+                ", medicalPackage=" + medicalPackage +
+                ", patient=" + patient.toString() +
+                ", doctor=" + doctor +
+                ", collectingCenter=" + collectingCenter +
+                ", discountRatio=" + discountRatio +
+                ", remarks='" + remarks + '\'' +
+                ", bankName='" + bankName + '\'' +
+                ", cardNumber=" + cardNumber +
+                ", totalprice=" + totalprice +
+                ", amount=" + amount +
+                ", paymentMethod=" + paymentMethod +
+                '}';
+    }
 }

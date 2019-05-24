@@ -26,10 +26,10 @@ public class EmailService {
     }
 
 
-    public boolean sendPatientRegistrationEmail(String recieverEmail,String subject, String messageText) throws MailException {
+    public boolean sendPatientRegistrationEmail(String receiverEmail,String subject, String messageText) throws MailException {
                SimpleMailMessage mailMessage = new SimpleMailMessage();
      try {
-         mailMessage.setTo(recieverEmail);
+         mailMessage.setTo(receiverEmail);
          mailMessage.setFrom("Excellent_Health_Solution");
          mailMessage.setSubject(subject);
          mailMessage.setText(messageText);

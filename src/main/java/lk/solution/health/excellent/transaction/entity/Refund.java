@@ -15,8 +15,8 @@ import java.util.Objects;
 @Table(name = "refund")
 @Getter
 @Setter
-//@JsonIgnoreProperties annotation is a Jackson annotation. Spring Boot uses Jackson for Serializing and Deserializing Java objects to and from JSON.
-@JsonIgnoreProperties(value = "createdAt",allowGetters = true)
+//@JsonIgnoreProperties annotation is a Jackson annotation. Spring Boot uses Jackson for Serializing and Deserialize Java objects to and from JSON.
+@JsonIgnoreProperties(value = "createdAt", allowGetters = true)
 //implements Serializable
 public class Refund {
     @Id
@@ -24,7 +24,7 @@ public class Refund {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY,
+    @OneToOne(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.MERGE,
                     CascadeType.PERSIST,
@@ -33,14 +33,14 @@ public class Refund {
     private Invoice invoice;
 
     @Basic
-    @Column(name = "amount", precision=10, scale=2)
+    @Column(name = "amount", precision = 10, scale = 2)
     private BigDecimal amount;
 
     @Basic
     @Column(name = "reason", length = 45)
     private String reason;
 
-    @Column(name = "created_at",nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createdAt;
 

@@ -24,4 +24,8 @@ public class DateTimeAgeService {
         LocalDate today = LocalDate.now();
         return Period.between(dateOfBirth, today).getYears();
     }
+
+    public int getCurrentYear(){
+        return LocalDate.now().getYear();
+    }
 }

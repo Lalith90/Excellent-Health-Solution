@@ -15,18 +15,59 @@
           th:object="${invoiceProcess}">
         <div class="container-fluid">
             <div class="panel-group" id="accordion">
-                <!--Lab tests and medical packages details -->
+                <!--Doctor -->
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h4 class="panel-title text-center">
                             <a data-parent="#accordion" data-toggle="collapse"
                                href="#collapse1">
+                                <b>Doctor Details</b> &nbsp;<i class="fa fa-user-md"></i>&nbsp;
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse collapse in" id="collapse1">
+                        <div class="panel-body">
+
+                            <div class="row">
+                                <!--New Doctor-->
+                                <div class="col-sm-2">
+                                    <a href="/doctor/add">
+                                        <button class="btn btn-info" id="btnNewDoctor"
+                                                type="button">New <i
+                                                class="fa fa-user-md"></i>
+                                        </button>
+                                    </a>
+                                </div>
+                                <div class="form-group">
+                                    <div class="container-fluid" id="systemDoctor">
+                                        <label class="control-label col-sm-3" for="doctor">
+                                            Doctor Name : </label>
+                                        <div class="col-sm-5">
+                                            <select class="form-control" default="1"
+                                                    id="doctor" name="doctor">
+                                                <option th:each="doctor : ${doctors}"
+                                                        th:text="${doctor.name} + ${'  -  '} + ${doctor.getConsultation().name} + ${'  -  '} + ${doctor.mobile}"
+                                                        th:value="${doctor.id}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Lab tests and medical packages details -->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4 class="panel-title text-center">
+                            <a data-parent="#accordion" data-toggle="collapse"
+                               href="#collapse2">
                                 <b>Tests &amp; Medical Package </b> &nbsp;
                                 <i class="fa fa-medkit" style="font-size:24px"></i>
                             </a>
                         </h4>
                     </div>
-                    <div class="panel-collapse collapse in" id="collapse1">
+                    <div class="panel-collapse collapse" id="collapse2">
                         <div class="panel panel-body">
                             <!--lab Test table-->
                             <div class="col-sm-7">
@@ -69,9 +110,10 @@
                                             </div>
                                             <div class="panel panel-body">
                                                 <div class="container-fluid">
-                                                    <table class="table table-striped table-condensed"
+                                                    <table class="table table-striped table-condensed text-left"
                                                            id="myTableData">
                                                         <tr>
+                                                            <th>id</th>
                                                             <th>Test id</th>
                                                             <th>Test Code</th>
                                                             <th>Test Name</th>
@@ -96,7 +138,7 @@
                                         <div class="col-md-7">
                                             <select class="form-control"
                                                     id="cmbMedicalPackage"
-                                                    name="invoice.medicalPackage">
+                                                    name="medicalPackage">
                                                 <option th:each="medicalPackage : ${medicalPackages}"
                                                         th:text="${{medicalPackage.price}}+${' '}+${medicalPackage.name}"
                                                         th:value="${medicalPackage.id}"></option>
@@ -106,6 +148,11 @@
                                 </div>
                                 <!--medical package included lab test-->
                                 <div class="row" id="medicalPackageDetails">
+                                    <div class="alert alert-warning alert-dismissible text-center">
+                                        <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
+                                        <strong>Alert!</strong>
+                                        <p><i>CHECK SELECTED LAB TEST AND MEDICAL PACKAGE INCLUDED LAB TEST</i></p>
+                                    </div>
                                     <div class="container-fluid">
                                         <div class="panel panel-primary">
                                             <div class="panel-heading">
@@ -138,12 +185,12 @@
                     <div class="panel-heading">
                         <h3 class="panel-title text-center">
                             <a data-parent="#accordion" data-toggle="collapse"
-                               href="#collapse2">
+                               href="#collapse3">
                                 <i class="fa fa-wheelchair"></i>
                                 &nbsp; <b>Patient Details</b>
                             </a></h3>
                     </div>
-                    <div class="panel-collapse collapse " id="collapse2">
+                    <div class="panel-collapse collapse " id="collapse3">
                         <div class="panel-body">
                             <div class="row">
                                 <div class="container-fluid">
@@ -264,7 +311,7 @@
                                             Date<span class="text-danger">*</span></label>
                                         <div class="col-md-8">
                                             <input class="form-control" id="dateOfBirth"
-                                                   name="dateOfBirth" placeholder="Ex: 1990 - 01 - 20"
+                                                   name="patient.dateOfBirth" placeholder="Ex: 1990 - 01 - 20"
                                                    required type="date"/>
                                         </div>
                                     </div>
@@ -305,157 +352,6 @@
                                             <input class="form-control" id="land"
                                                    name="patient.land"
                                                    placeholder="Enter Land Here" type="text"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--Doctor and Medical Package-->
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h4 class="panel-title text-center">
-                            <a data-parent="#accordion" data-toggle="collapse"
-                               href="#collapse3">
-                                <b>Doctor Details</b> &nbsp;<i class="fa fa-user-md"></i>&nbsp;
-                            </a>
-                        </h4>
-                    </div>
-                    <div class="panel-collapse collapse" id="collapse3">
-                        <div class="panel-body">
-                            <div class="row">
-                                <!--Find doctor And New Doctor-->
-                                <div class="col-sm-offset-2">
-                                    <button class="btn btn-info" id="btnNewDoctor"
-                                            type="button">New <i
-                                            class="fa fa-user-md"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group">
-                                    <div class="container-fluid" id="systemDoctor">
-                                        <label class="control-label col-sm-3" for="doctor">
-                                            Doctor Name</label>
-                                        <div class="col-sm-7">
-                                            <select class="form-control" id="doctor"
-                                                    name="doctor">
-                                                <option th:each="doctor : ${doctors}"
-                                                        th:text="${doctor.name} + ${'  -  '} + ${doctor.slmcNumber} + ${'  -  '} + ${doctor.mobile}+ ${'  -  '} + ${doctor.getConsultation().name}"
-                                                        th:value="${doctor.id}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--New Doctor-->
-                            <div class="row" id="newDoctor">
-                                <div class="container-fluid">
-                                    <div class="col-sm-offset-1">
-                                        <button class="btn btn-primary" id="btnRegisterDoctor"
-                                                type="button">Registered <i
-                                                class="fa fa-user-md"></i>
-                                        </button>
-                                    </div>
-                                    <div class="col-sm-6 text-center">
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"
-                                                   th:for="title">Title</label>
-                                            <div class="col-md-4">
-                                                <select class="form-control"
-                                                        name="doctor.title">
-                                                    <option th:each="titles : ${title}"
-                                                            th:text="${titles.title}"
-                                                            th:value="${titles}"></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"
-                                                   for="fullName">Name</label>
-                                            <div class="col-md-8">
-                                                <input class="form-control" id="fullname"
-                                                       name="doctor.name"
-                                                       placeholder="Enter Full Here" required
-                                                       type="text"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"
-                                                   for="cmbGender">Gender</label>
-                                            <div class="col-md-4">
-                                                <select class="form-control" id="cmbGender"
-                                                        name="doctor.gender">
-                                                    <option th:each="genders : ${gender}"
-                                                            th:text="${genders.gender}"
-                                                            th:value="${genders}"></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"
-                                                   for="doctorConsultation">Consultation</label>
-                                            <div class="col-md-8">
-                                                <select class="form-control"
-                                                        id="doctorConsultation"
-                                                        name="doctor.consultation">
-                                                    <option th:each="consultation : ${consultations}"
-                                                            th:text="${consultation.name}"
-                                                            th:value="${consultation.id}"></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"
-                                                   for="slmcNumber">SLMC Number</label>
-                                            <div class="col-md-8">
-                                                <input class="form-control" id="slmcNumber"
-                                                       name="doctor.slmcNumber"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 text-center">
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4" for="doctor.email">Email</label>
-                                            <div class="col-md-8">
-                                                <input class="form-control" id="doctor.email"
-                                                       name="doctor.email"
-                                                       placeholder="Enter email Here"
-                                                       type="email"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"
-                                                   for="doctor.mobile">Mobile
-                                                Number</label>
-                                            <div class="col-md-8">
-                                                <input class="form-control" id="doctor.mobile"
-                                                       name="doctor.mobile"
-                                                       placeholder="Enter Mobile Here"
-                                                       type="text"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"
-                                                   for="doctor.land">Land
-                                                Number</label>
-                                            <div class="col-md-8">
-                                                <input class="form-control" id="doctor.land"
-                                                       name="doctor.land"
-                                                       placeholder="Enter Land Here"
-                                                       type="text"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"
-                                                   for="description">Description</label>
-                                            <div class="col-md-8">
-                                                <textarea class="form-control" id="description"
-                                                          name="doctor.description"></textarea>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -520,8 +416,8 @@
                                            th:for="discountRatio">Discount
                                         Ratio</label>
                                     <div class="col-sm-6">
-                                        <select class="form-control" id="cmbDiscountRatio"
-                                                name="discountRatio">
+                                        <select class="form-control" default="1"
+                                                id="cmbDiscountRatio" name="discountRatio">
                                             <option th:each="discountRatio : ${discountRatios}"
                                                     th:text="${discountRatio.amount}"
                                                     th:value="${discountRatio.id}"></option>
@@ -543,8 +439,8 @@
                                            th:for="paymentMethod">Payment
                                         Method:</label>
                                     <div class="col-sm-6">
-                                        <select class="form-control" id="cmbPaymentMethod"
-                                                name="paymentMethod">
+                                        <select class="form-control" default="1"
+                                                id="cmbPaymentMethod" name="paymentMethod">
                                             <option th:each="paymentMethod : ${paymentMethods}"
                                                     th:text="${paymentMethod.paymentMethod}"
                                                     th:value="${paymentMethod}"></option>
@@ -610,15 +506,27 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-offset-1 col-sm-3">Printed bill required
+                                        : </label>
+                                    <div class="col-md-6">
+                                        <label class="radio-inline"><input name="invoicePrintOrNot" type="radio"
+                                                                           value="PRINT">Required</label>
+                                        <label class="radio-inline"><input class="radio-inline" name="invoicePrintOrNot"
+                                                                           type="radio" value="NOT" checked>Not Required</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="container-fluid">
                                     <div class="col-sm-6 text-center">
                                         <button class="btn btn-success" type="submit"><span
-                                                class="glyphicon glyphicon-print"></span>&nbsp;
+                                                class="glyphicon glyphicon-print "></span>&nbsp;
                                             &nbsp;Print
                                         </button>
                                     </div>
                                     <div class="col-sm-6 text-center">
-                                        <button class="btn btn-danger" type="reset"><span
+                                        <button class="btn btn-danger" id="reset" type="reset"><span
                                                 class="glyphicon glyphicon-remove"></span>&nbsp;Cancel
                                         </button>
                                     </div>

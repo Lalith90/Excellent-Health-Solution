@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lk.solution.health.excellent.general.entity.Enum.Gender;
 import lk.solution.health.excellent.general.entity.Enum.Title;
+import lk.solution.health.excellent.transaction.entity.Invoice;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,6 +15,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -81,9 +84,9 @@ public class Patient {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate updatedAt;
 
-/*    @OneToMany
+    @OneToMany
     @JoinColumn(name = "patient_id")
-    private List<Invoice> invoices = new ArrayList<>();*/
+    private List<Invoice> invoices = new ArrayList<>();
 
     public Patient() {
      }
@@ -101,6 +104,25 @@ public class Patient {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", title=" + title +
+                ", name='" + name + '\'' +
+                ", gender=" + gender +
+                ", nic='" + nic + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", email='" + email + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", land='" + land + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

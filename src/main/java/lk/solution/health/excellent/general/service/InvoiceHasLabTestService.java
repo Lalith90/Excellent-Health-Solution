@@ -67,7 +67,7 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
     }
 
     @CachePut(value = "invoiceHasLabTest")
-    public InvoiceHasLabTest lastInvoiceHasLabTest(){
+    public InvoiceHasLabTest findLastInvoiceHasLabTest(){
         return invoiceHasLabTestDao.findFirstByOrderByIdDesc();
     }
 

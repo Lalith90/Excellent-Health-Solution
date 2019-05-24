@@ -73,4 +73,6 @@ public class MedicalPackage {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
 }
