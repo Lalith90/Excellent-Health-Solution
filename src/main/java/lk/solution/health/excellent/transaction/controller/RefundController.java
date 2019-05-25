@@ -83,7 +83,7 @@ public class RefundController {
 
         refund.setInvoice(invoiceService.findById(refund.getInvoice().getId()));
         refund.setUser(userService.findByUserName(auth.getName()));
-        refund.setCreatedAt(dateTimeAgeService.getCurrentDate());
+        refund.setCreatedAt(dateTimeAgeService.getCurrentDateTime());
         refundService.persist(refund);
         return "redirect:/refund";
     }

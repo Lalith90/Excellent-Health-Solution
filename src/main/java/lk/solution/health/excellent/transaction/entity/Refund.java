@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -42,7 +43,7 @@ public class Refund {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {
@@ -56,7 +57,7 @@ public class Refund {
     public Refund() {
     }
 
-    public Refund(Invoice invoice, String reason, LocalDate createdAt) {
+    public Refund(Invoice invoice, String reason, LocalDateTime createdAt) {
         this.invoice = invoice;
         this.reason = reason;
         this.createdAt = createdAt;

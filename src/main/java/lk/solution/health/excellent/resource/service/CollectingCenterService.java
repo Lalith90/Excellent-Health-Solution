@@ -66,4 +66,9 @@ public class CollectingCenterService implements AbstractService<CollectingCenter
     public List<CollectingCenter> openCollectingCenter(CollectingCenterStatus val) {
         return collectingCenterDao.findByCollectingCenterStatus(val);
     }
+
+    @Cacheable(value = "collectingCenter")
+    public CollectingCenter firstCollectingCenter() {
+        return collectingCenterDao.findFirstByOrderByIdAsc();
+    }
 }

@@ -3,9 +3,11 @@ package lk.solution.health.excellent.general.service;
 import lk.solution.health.excellent.common.interfaces.AbstractService;
 import lk.solution.health.excellent.general.dao.InvoiceHasLabTestDao;
 import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
+import lk.solution.health.excellent.lab.dao.LabTestDao;
 import lk.solution.health.excellent.lab.entity.Enum.LabTestStatus;
 import lk.solution.health.excellent.lab.entity.Enum.LabtestDoneHere;
 import lk.solution.health.excellent.lab.entity.LabTest;
+import lk.solution.health.excellent.transaction.dao.InvoiceDao;
 import lk.solution.health.excellent.transaction.entity.Invoice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -16,24 +18,28 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
 public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTest, Integer> {
 
     private final InvoiceHasLabTestDao invoiceHasLabTestDao;
+    private final LabTestDao labTestDao;
 
 
     @Autowired
-    public InvoiceHasLabTestService(InvoiceHasLabTestDao invoiceHasLabTestDao) {
+    public InvoiceHasLabTestService(InvoiceHasLabTestDao invoiceHasLabTestDao, LabTestDao labTestDao) {
         this.invoiceHasLabTestDao = invoiceHasLabTestDao;
+        this.labTestDao = labTestDao;
     }
 
-   @Cacheable(value = "invoiceHasLabTest")
-   @Transactional
+    @Cacheable(value = "invoiceHasLabTest")
+    @Transactional
     public List<InvoiceHasLabTest> findAll() {
-       System.out.println(" Invoice has Lab Test cache ok");
+        System.out.println(" Invoice has Lab Test cache ok");
         return invoiceHasLabTestDao.findAll();
     }
 
@@ -58,16 +64,16 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
     @CachePut(value = "invoiceHasLabTest")
     public List<InvoiceHasLabTest> search(InvoiceHasLabTest invoiceHasLabTest) {
         ExampleMatcher matcher = ExampleMatcher
-            .matching()
-            .withIgnoreCase()
-            .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+                .matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 
         Example<InvoiceHasLabTest> invoiceHasLabTestExample = Example.of(invoiceHasLabTest, matcher);
         return invoiceHasLabTestDao.findAll(invoiceHasLabTestExample);
     }
 
     @CachePut(value = "invoiceHasLabTest")
-    public InvoiceHasLabTest findLastInvoiceHasLabTest(){
+    public InvoiceHasLabTest findLastInvoiceHasLabTest() {
         return invoiceHasLabTestDao.findFirstByOrderByIdDesc();
     }
 
@@ -83,11 +89,11 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
 
     @CachePut(value = "invoiceHasLabTest")
     public InvoiceHasLabTest findByInvoiceAndLabTest(Invoice invoice, LabTest labTest) {
-       return invoiceHasLabTestDao.findByInvoiceAndLabTest(invoice, labTest);
+        return invoiceHasLabTestDao.findByInvoiceAndLabTest(invoice, labTest);
     }
 
     @CachePut(value = "invoiceHasLabTest")
-    public List<InvoiceHasLabTest> findByInvoiceAndLabTestStatusAndLabtestDoneHere(Invoice invoice, LabTestStatus nosample, LabtestDoneHere doneHere){
+    public List<InvoiceHasLabTest> findByInvoiceAndLabTestStatusAndLabtestDoneHere(Invoice invoice, LabTestStatus nosample, LabtestDoneHere doneHere) {
         return invoiceHasLabTestDao.findByInvoiceAndLabTestStatusAndLabTest_LabtestDoneHere(invoice, nosample, doneHere);
     }
 
@@ -102,18 +108,29 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
     }
 
     @CachePut(value = "invoiceHasLabTest")
-    public Integer countByCreatedAt(LocalDate today) {
-    return invoiceHasLabTestDao.countByCreatedAt(today);
+    public Integer countByCreatedAt(LocalDateTime today) {
+        return invoiceHasLabTestDao.countByCreatedAt(today);
     }
 
     @CachePut(value = "invoiceHasLabTest")
-    public Integer countByCreatedAtIsBetween(LocalDate from, LocalDate to) {
+    public Integer countByCreatedAtIsBetween(LocalDateTime from, LocalDateTime to) {
         return invoiceHasLabTestDao.countByCreatedAtIsBetween(from, to);
     }
 
     @CachePut(value = "invoiceHasLabTest")
     public List<InvoiceHasLabTest> findByLabTest(LabTest labTest) {
-      return invoiceHasLabTestDao.findByLabTest(labTest);
+        return invoiceHasLabTestDao.findByLabTest(labTest);
+    }
+
+    public HashSet<LabTest> findLabTestByInvoice(Invoice invoice) {
+        HashSet<LabTest> labTests = new HashSet<>();
+        System.out.println("come to here ");
+        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTestDao.findByInvoice(invoice)) {
+            System.out.println("come to in");
+            labTests.add(invoiceHasLabTest.getLabTest());
+            //labTests.add(labTestDao.getOne(invoiceHasLabTest.getLabTest().getId()));
+        }
+        return labTests;
     }
 }
 

@@ -95,8 +95,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
                 .and()
                 .exceptionHandling()
-                .and()
-                //Session Management
+/*              .and()
+        //Session Management
                 .sessionManagement()
                 .invalidSessionUrl("/login")
                 .sessionFixation()
@@ -104,7 +104,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .maximumSessions(10)
                 .expiredUrl("/login")
                 .and()
-                //Cross site disable
+        //Cross site disable*/
                 .and()
                 .csrf()
                 .disable();

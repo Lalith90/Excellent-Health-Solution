@@ -42,6 +42,14 @@ public class Invoice {
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
+    @Column(name = "discount", nullable = false, precision = 10, scale = 2)
+    private BigDecimal discountAmount;
+
+    @Column(name = "amountTendered", nullable = false, precision = 10, scale = 2)
+    private BigDecimal amountTendered;
+
+    @Column(name = "balance", nullable = false, precision = 10, scale = 2)
+    private BigDecimal balance;
 
     @Column(name = "bank_name")
     private String bankName;
@@ -80,18 +88,45 @@ public class Invoice {
     private Doctor doctor;
 
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "invoice_id")
     private List<InvoiceHasLabTest> invoiceHasLabTests = new ArrayList<>();
 
     public Invoice() {
     }
 
-    public Invoice(Integer number, PaymentMethod paymentMethod, BigDecimal totalprice, BigDecimal amount, String bankName, Integer cardNumber, String remarks, InvoicePrintOrNot invoicePrintOrNot, LocalDateTime createdAt, Patient patient, CollectingCenter collectingCenter, DiscountRatio discountRatio, User user, MedicalPackage medicalPackage, Doctor doctor) {
+    public BigDecimal getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(BigDecimal discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public BigDecimal getAmountTendered() {
+        return amountTendered;
+    }
+
+    public void setAmountTendered(BigDecimal amountTendered) {
+        this.amountTendered = amountTendered;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public Invoice(Integer number, PaymentMethod paymentMethod, BigDecimal totalprice, BigDecimal amount, BigDecimal discountAmount, BigDecimal amountTendered, BigDecimal balance, String bankName, Integer cardNumber, String remarks, InvoicePrintOrNot invoicePrintOrNot, LocalDateTime createdAt, Patient patient, CollectingCenter collectingCenter, DiscountRatio discountRatio, User user, MedicalPackage medicalPackage, Doctor doctor) {
         this.number = number;
         this.paymentMethod = paymentMethod;
         this.totalprice = totalprice;
         this.amount = amount;
+        this.discountAmount = discountAmount;
+        this.amountTendered = amountTendered;
+        this.balance = balance;
         this.bankName = bankName;
         this.cardNumber = cardNumber;
         this.remarks = remarks;

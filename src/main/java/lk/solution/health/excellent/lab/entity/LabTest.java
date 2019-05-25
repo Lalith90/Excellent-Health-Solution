@@ -57,7 +57,7 @@ public class LabTest {
     @Column(name = "comment")
     private String comment;
 
-    @OneToMany(mappedBy = "labTest")
+    @OneToMany(mappedBy = "labTest", fetch = FetchType.EAGER)
     private List<InvoiceHasLabTest>  invoiceHasLabTests= new ArrayList<>();
 
     @ManyToMany(mappedBy = "labTests",fetch=FetchType.LAZY)

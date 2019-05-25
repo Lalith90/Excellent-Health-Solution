@@ -13,5 +13,7 @@ public interface CollectingCenterDao extends JpaRepository<CollectingCenter, Int
 
     List<CollectingCenter> findByCollectingCenterStatus(CollectingCenterStatus val);
 
+    CollectingCenter findFirstByOrderByIdAsc();
+
 
 }

@@ -42,7 +42,7 @@ public class InvoiceProcess {
     private InvoicePrintOrNot invoicePrintOrNot;
 
     @NotNull(message = "Please double check price and amount")
-    private BigDecimal totalprice, amount;
+    private BigDecimal totalprice, amount, amountTendered, balance;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
@@ -50,21 +50,5 @@ public class InvoiceProcess {
     public InvoiceProcess() {
     }
 
-    @Override
-    public String toString() {
-        return "InvoiceProcess{" +
-                "labTests=" + labTests +
-                ", medicalPackage=" + medicalPackage +
-                ", patient=" + patient.toString() +
-                ", doctor=" + doctor +
-                ", collectingCenter=" + collectingCenter +
-                ", discountRatio=" + discountRatio +
-                ", remarks='" + remarks + '\'' +
-                ", bankName='" + bankName + '\'' +
-                ", cardNumber=" + cardNumber +
-                ", totalprice=" + totalprice +
-                ", amount=" + amount +
-                ", paymentMethod=" + paymentMethod +
-                '}';
-    }
+
 }

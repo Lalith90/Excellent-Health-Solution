@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -169,7 +170,7 @@ private void commonClear(){
 
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     public String cashierSummary(Model model){
-        LocalDate toDay = dateTimeAgeService.getCurrentDate();
+        LocalDateTime toDay = dateTimeAgeService.getCurrentDateTime();
 
         //get Requested user
         authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -185,7 +186,7 @@ private void commonClear(){
              refunds = refundService.findByUserAndCreatedAt(user, toDay);
         }
         if ( user.getRole().getName().equals("ROLE_MANAGER") || user.getRole().getName().equals("ROLE_MLT1") || user.getRole().getName().equals("ROLE_MLT2")) {
-            //take to all invoice todate all
+            //take to all invoice to date all
             invoices = invoiceService.findByDate(toDay);
             //take to all refund todate all
             refunds = refundService.findByCreatedAt(toDay);
@@ -219,8 +220,8 @@ private void commonClear(){
     @RequestMapping(value = "/searchSummary", method = RequestMethod.POST)
     public String searchGivenDateRange(@ModelAttribute SearchProcess searchProcess,
                                        Model model, RedirectAttributes redirectAttributes){
-        LocalDate from = searchProcess.getStartDate();
-        LocalDate to = searchProcess.getEndDate();
+        LocalDateTime from = searchProcess.getStartDate();
+        LocalDateTime to = searchProcess.getEndDate();
         if (from ==null || to == null){
             redirectAttributes.addFlashAttribute("alerStatu", true);
             return "redirect:/summary";

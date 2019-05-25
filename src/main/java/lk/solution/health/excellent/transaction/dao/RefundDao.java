@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -13,9 +14,9 @@ import java.util.List;
 public interface RefundDao extends JpaRepository<Refund, Integer> {
 
 
-    List<Refund> findByUserAndCreatedAt(User user, LocalDate today);
+    List<Refund> findByUserAndCreatedAt(User user, LocalDateTime today);
 
-    List<Refund> findByCreatedAt(LocalDate today);
+    List<Refund> findByCreatedAt(LocalDateTime today);
 
-    List<Refund> findByCreatedAtIsBetween(LocalDate from, LocalDate to);
+    List<Refund> findByCreatedAtIsBetween(LocalDateTime from, LocalDateTime to);
 }

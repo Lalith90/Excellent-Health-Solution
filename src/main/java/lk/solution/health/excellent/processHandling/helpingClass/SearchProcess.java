@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -17,7 +18,7 @@ public class SearchProcess {
     Integer id;
     String name, number, code, comment, nic;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    LocalDate startDate, endDate;
+    LocalDateTime startDate, endDate;
     List<LabTest> labTests;
     List<InvoiceHasLabTest> invoiceHasLabTests;
     List<LabTestParameter> labTestParameters;

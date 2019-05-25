@@ -29,11 +29,11 @@ public class InvoiceHasLabTest {
     @Column(name = "number", nullable = false, unique = true)
     private Integer number;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "labtest_id")
     private LabTest labTest;
 

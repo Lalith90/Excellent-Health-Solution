@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -50,15 +51,15 @@ public class RefundService implements AbstractService<Refund, Integer> {
         return refundDao.findAll(refundExample);
     }
 
-    public List<Refund> findByUserAndCreatedAt(User user, LocalDate today) {
+    public List<Refund> findByUserAndCreatedAt(User user, LocalDateTime today) {
         return refundDao.findByUserAndCreatedAt(user, today);
     }
 
-    public List<Refund> findByCreatedAt(LocalDate today) {
+    public List<Refund> findByCreatedAt(LocalDateTime today) {
         return refundDao.findByCreatedAt(today);
     }
 
-    public List<Refund> findByCreatedAtIsBetween(LocalDate from, LocalDate to) {
+    public List<Refund> findByCreatedAtIsBetween(LocalDateTime from, LocalDateTime to) {
         return refundDao.findByCreatedAtIsBetween(from, to);
     }
 }

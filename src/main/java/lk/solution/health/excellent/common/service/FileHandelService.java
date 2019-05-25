@@ -1,5 +1,7 @@
 package lk.solution.health.excellent.common.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,13 +14,13 @@ import java.io.OutputStream;
 @Service
 public class FileHandelService {
     private final ServletContext context;
-
+    private static Logger logger = LoggerFactory.getLogger(FileHandelService.class);
     @Autowired
     public FileHandelService(ServletContext context) {
         this.context = context;
     }
 
-    public boolean filedownload(String fullPath, HttpServletResponse response, String files) {
+    public boolean fileDownload(String fullPath, HttpServletResponse response, String files) {
         File file = new File(fullPath);
         final int BUFFER_SIZE = 4096;
         if (file.exists()){
@@ -42,6 +44,7 @@ public class FileHandelService {
 
             }catch (Exception e){
                 e.printStackTrace();
+                logger.error(e.toString());
                 return false;
             }
         }

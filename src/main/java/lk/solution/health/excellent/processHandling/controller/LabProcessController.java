@@ -311,7 +311,7 @@ public class LabProcessController {
         System.out.println(isFlag);
         if (isFlag) {
             String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf");
-            boolean download = fileHandelService.filedownload(fullPath, response, invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf");
+            boolean download = fileHandelService.fileDownload(fullPath, response, invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf");
             if (download){
                 System.out.println("download is done");
                 return "redirect:/lab/afterResultAuthorizeList";
