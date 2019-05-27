@@ -1,87 +1,146 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8"/>
-<title >EHSL</title>
-<style th:replace="fragments/style"></style>
+    <meta charset="UTF-8"/>
+    <title>EHSL</title>
+    <style th:replace="fragments/style"></style>
 </head>
 <body>
 <nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
 <div class="container-fluid" style="margin-top: 60px">
     <div class="panel panel-primary" th:object="${paymentDetail}">
-        <div class="panel panel-heading ">
-           <h4> <span th:text="${paymentDetail.patient.title.title}"></span> &nbsp; <span th:text="${paymentDetail.patient.name}"></span></h4>
+        <div class="panel panel-heading text-center">
+            <h4><span th:text="${paymentDetail.patient.title.title}"></span> &nbsp; <span
+                    th:text="${paymentDetail.patient.name}"></span></h4>
         </div>
         <div class="panel-body">
-            <!--left side-->
+            <!-- left side -->
             <div class="col-sm-6">
                 <div class="row">
-                        <div class="container-fluid">
-                            <h3>Id :   <span th:text="${paymentDetail.id}"></span>
-                            </h3>
-                    </div>
-                </div>
-                <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Number :   <span th:text="${paymentDetail.number}"></span>
-                            </h3>
-                    </div>
-                </div>
-                <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Name :   <span th:text="${paymentDetail.patient.title.title}"></span> &nbsp; <span th:text="${paymentDetail.patient.name}"></span>
-                            </h3>
-                    </div>
-                </div>
-                <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Calling Name :   <span th:text="${paymentDetail.patient.gender.gender}"></span>
-                            </h3>
-                    </div>
-                </div>
-                <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                NIC :   <span th:text="${paymentDetail.patient.nic}"></span>
-                            </h3>
-                    </div>
-                </div>
-                <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Email :   <span th:text="${paymentDetail.patient.email}"></span>
-                            </h3>
-                    </div>
-                </div>
-                <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Mobile :   <span th:text="${paymentDetail.patient.mobile}"></span>
-                            </h3>
+                    <div class="container-fluid">
+                        <h3>
+                            Number : <span th:text="${paymentDetail.number}"></span>
+                        </h3>
                     </div>
                 </div>
                 <div class="row">
                     <div class="container-fluid">
                         <h3>
-                            Date of Created :   <span th:text="${paymentDetail.createdAt}"></span>
+                            Name : <span th:text="${paymentDetail.patient.title.title}"></span> &nbsp; <span
+                                th:text="${paymentDetail.patient.name}"></span>
                         </h3>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            NIC : <span th:text="${paymentDetail.patient.nic}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Email : <span th:text="${paymentDetail.patient.email}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Mobile : <span th:text="${paymentDetail.patient.mobile}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Date of Created : <span th:text="${{paymentDetail.createdAt}}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>Invoiced By : <span th:text="${paymentDetail.user.username}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>Bill Print Or Not : <span th:text="${paymentDetail.invoicePrintOrNot.invoicePrintOrNot}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row" th:if="${labTest!=null}">
+                    <div class="container-fluid">
+                        <h4> Contained Lab Test</h4>
+                        <table class="table table-condensed">
+                            <tr th:each="labTests : ${labTest}">
+                                <td th:text="${labTests.name}"></td>
+                                <td th:text="${labTests.price}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="text-right">
-                <a href="/payment">
-                    <button class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span>&nbsp; Back</button>
-                    <!-- /.btn -->
-                </a>
+            <!-- Right side -->
+            <div class="col-sm-6">
+                <div class="row" th:if="${paymentDetail.medicalPackage!='Not Selected'}">
+                    <div class="container-fluid">
+                        <h4>Medical Packge Name : <span th:text="${paymentDetail.medicalPackage.name}"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            Price : <span th:text="${paymentDetail.medicalPackage.price}"></span></h4>
+                        <h5> Contained Lab Test</h5>
+                        <table class="table table-condensed">
+                            <tr th:each="labTest , rowCount:${paymentDetail.medicalPackage.labTests}">
+                                <td th:text="${rowCount.count}"></td>
+                                <td th:text="${labTest.name}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h5> Total Amount : <span th:text="${paymentDetail.totalprice}"></span></h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h5> Discount Amount : <span th:text="${paymentDetail.discountAmount}"></span></h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h5> Amount : <span th:text="${paymentDetail.amount}"></span></h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h5> Payment Method : <span th:text="${paymentDetail.paymentMethod.paymentMethod}"></span></h5>
+                    </div>
+                </div>
+                <div class="row" th:if="${paymentDetail.paymentMethod.paymentMethod=='Cash'}">
+                    <div class="container-fluid">
+                        <h5> Tendered Amount : <span th:text="${paymentDetail.amountTendered}"></span></h5>
+                    </div>
+                </div>
+                <div class="row" th:if="${paymentDetail.paymentMethod.paymentMethod=='Cash'}">
+                    <div class="container-fluid">
+                        <h5> Balance : <span th:text="${paymentDetail.balance}"></span></h5>
+                    </div>
+                </div>
             </div>
-            <!-- /.class -->
+            <div class="row">
+                <div class="container-fluid text-center">
+                    <a href="/invoice">
+                        <button class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span>&nbsp; Back
+                        </button>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-    <footer class="page-footer" th:replace="fragments/footer"></footer>
-    <script th:replace="fragments/script"></script>
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<script th:replace="fragments/script"></script>
 </body>
 </html>

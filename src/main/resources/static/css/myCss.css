@@ -294,13 +294,13 @@ button .btn {
 }
 /*remove lab test from selected table - end*/
 
-/*all lable font size increase - start*/
+/*all lable fonts size increase - start*/
 label{
     font-size: 18px !important;
     font-max-size: 20px;
     font-min-size: 12px;
 }
-/*all lable font size increase - end*/
+/*all lable fonts size increase - end*/
 
 /*Table show and hide - start*/
 .display{

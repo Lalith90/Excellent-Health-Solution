@@ -1,84 +1,107 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8"/>
-<title th:text="${patientDetail.name}">EHSL</title>
-<style th:replace="fragments/style"></style>
+    <meta charset="UTF-8"/>
+    <title th:text="${patientDetail.name}">EHSL</title>
+    <style th:replace="fragments/style"></style>
 </head>
 <body>
 <nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
 <div class="container-fluid" style="margin-top: 60px">
     <div class="panel panel-primary" th:object="${patientDetail}">
-        <div class="panel panel-heading">
-            <h4><b><span th:text="${patientDetail.title.title}"></span> &nbsp; <span th:text="${patientDetail.name}"></span></b></h4>
+        <div class="panel panel-heading text-center">
+            <h4><b><span th:text="${patientDetail.title.title}"></span> &nbsp; <span
+                    th:text="${patientDetail.name}"></span></b></h4>
         </div>
         <div class="pane panel-body">
-            <div class="row">
-                        <div class="container-fluid">
-                            <h3>Id :   <span th:text="${patientDetail.id}"></span>
-                            </h3>
-                    </div>
-                </div>
-            <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Number :   <span th:text="${patientDetail.number}"></span>
-                            </h3>
-                    </div>
-                </div>
-            <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Name :   <span th:text="${patientDetail.title.title}"></span> &nbsp; <span th:text="${patientDetail.name}"></span>
-                            </h3>
-                    </div>
-                </div>
-            <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Calling Name :   <span th:text="${patientDetail.gender.gender}"></span>
-                            </h3>
-                    </div>
-                </div>
-            <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                NIC :   <span th:text="${patientDetail.nic}"></span>
-                            </h3>
-                    </div>
-                </div>
-            <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Email :   <span th:text="${patientDetail.email}"></span>
-                            </h3>
-                    </div>
-                </div>
-            <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Mobile :   <span th:text="${patientDetail.mobile}"></span>
-                            </h3>
-                    </div>
-                </div>
-            <div class="row">
+            <div class="col-sm-6">
+                <div class="row">
                     <div class="container-fluid">
                         <h3>
-                            Date of Created :   <span th:text="${patientDetail.createdAt}"></span>
+                            Number : <span th:text="${patientDetail.number}"></span>
                         </h3>
                     </div>
                 </div>
-            <br>
-            <div class="row text-center">
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Name : <span th:text="${patientDetail.title.title}"></span> &nbsp; <span
+                                th:text="${patientDetail.name}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            NIC : <span th:text="${patientDetail.nic}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Date of Birthday : <span th:text="${patientDetail.dateOfBirth}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Email : <span th:text="${patientDetail.email}"></span>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Mobile : <span th:text="${patientDetail.mobile}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Land : <span th:text="${patientDetail.land}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Date of Created : <span th:text="${patientDetail.createdAt}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Created User : <span th:text="${patientDetail.createdUser.username}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Recently Updated Date : <span th:text="${patientDetail.updatedAt}"></span>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row text-center">
                     <a href="/patient">
-                        <button class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span>&nbsp; Back</button>
+                        <button class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span>&nbsp; Back
+                        </button>
                         <!-- /.btn -->
                     </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
-    <footer class="page-footer" th:replace="fragments/footer"></footer>
-    <script th:replace="fragments/script"></script>
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<script th:replace="fragments/script"></script>
 </body>
 </html>

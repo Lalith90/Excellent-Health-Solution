@@ -23,7 +23,7 @@ import java.util.Objects;
 @Table(name = "patient")
 @Getter
 @Setter
-@JsonIgnoreProperties(value = {"createdAt", "updatedAt"},allowGetters = true)
+@JsonIgnoreProperties(value = {"createdAt", "updatedAt","createdUser", "upDateUser"},allowGetters = true)
 @JsonFilter("Patient")
 public class Patient {
     @Id
@@ -43,7 +43,7 @@ public class Patient {
 
     @Basic
     @Column(name = "name", nullable = false, length = 45)
-    @Pattern(regexp = "^([a-zA-Z\\\\s]{3,})$", message = " This name can not accept, Please check and try again")
+    @Pattern(regexp = "^([a-zA-Z\\s]{4,})$", message = " This name can not accept, Please check and try again, Name should be included more than four ccharacter")
     private String name;
 
 
@@ -53,7 +53,7 @@ public class Patient {
 
     @Basic
     @Column(name = "nic", length = 12, unique = true)
-    @Pattern(regexp = "^([\\\\d]{9}[v|V|x|X])$|^([\\\\d]{12})$", message = "NIC number is contained numbers between 9 and X/V or 12 ")
+    @Pattern(regexp = "^([\\d]{9}[v|V|x|X])$|^([\\d]{12})$", message = "NIC number is contained numbers between 9 and X/V or 12 ")
     private String nic;
 
 
@@ -88,10 +88,18 @@ public class Patient {
     @JoinColumn(name = "patient_id")
     private List<Invoice> invoices = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.MERGE,
+                    CascadeType.PERSIST,
+                    CascadeType.REFRESH,
+                    CascadeType.DETACH})
+    private User createdUser, upDateUser;
+
     public Patient() {
      }
 
-    public Patient(String number, Title title, String name, Gender gender, String nic, LocalDate dateOfBirth, String email, String mobile, String land, LocalDate createdAt, LocalDate updatedAt) {
+    public Patient(@NotNull(message = "This code is already add or enter incorrectly") String number, Title title, @Pattern(regexp = "^([a-zA-Z\\\\s]{3,})$", message = " This name can not accept, Please check and try again") String name, Gender gender, @Pattern(regexp = "^([\\\\d]{9}[v|V|x|X])$|^([\\\\d]{12})$", message = "NIC number is contained numbers between 9 and X/V or 12 ") String nic, @NotNull(message = "Birthday should be included") LocalDate dateOfBirth, @Email(message = "Please provide a valid Email") String email, @Min(value = 9, message = "Should be needed to enter valid mobile number") String mobile, String land, LocalDate createdAt, LocalDate updatedAt, User createdUser, User upDateUser) {
         this.number = number;
         this.title = title;
         this.name = name;
@@ -103,6 +111,8 @@ public class Patient {
         this.land = land;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.createdUser = createdUser;
+        this.upDateUser = upDateUser;
     }
 
     @Override

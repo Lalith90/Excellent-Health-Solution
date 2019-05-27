@@ -13,7 +13,7 @@
             <h4><b>Patient Management</b></h4>
         </div>
         <div class="panel panel-body">
-            <div class="alert  alert-dismissable fade in" th:classappend="${alertStatus==true?'alert-info':'alert-warning'}">
+            <div th:if="${messageArea==true}" class="alert  alert-dismissable fade in text-center" th:classappend="${alertStatus==true?'alert-info':'alert-warning'}">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 <strong><span th:text="${message}"></span></strong>
             </div>
@@ -37,6 +37,7 @@
                                 <th> Mobile </th>
                                 <th> Land Number </th>
                                 <th> Date of Registered  </th>
+                                <th>Created By</th>
                                 <th class="text-center">Modify</th>
                             </tr>
                         </thead>
@@ -48,9 +49,10 @@
                                 <th th:text="${patient.mobile}"></th>
                                 <th th:text="${patient.land}"></th>
                                 <th  th:text="${patient.createdAt}"></th>
+                                <th  th:text="${patient.createdUser.username}"></th>
                                 <th><a th:href="${'/patient/' + patient.id}" class="btn btn-success"><i class="fa fa-folder-open"></i>&nbsp;View</a>
                                     <a th:href="${'/patient/edit/' + patient.id}" class="btn btn-primary"><i class="fa fa-edit"></i>&nbsp;Edit</a>
-                                    <a th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}" th:href="${'/patient/remove/' + patient.id}" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    <a th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}" th:href="${'/patient/remove/' + patient.id}" class="btn btn-danger"><i class="fas fa-user-times"></i>
                                         Delete</a></th>
                             </tr>
                         </tbody>

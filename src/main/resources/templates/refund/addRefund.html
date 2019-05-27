@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" >
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-        <title th:text="${addStatus?'EHSL - Create Refund Page': 'EHSL - Update Refund Page'}"></title>
-            <style th:replace="fragments/style"></style>
+    <title th:text="${addStatus?'EHSL - Create Refund Page': 'EHSL - Update Refund Page'}"></title>
+    <style th:replace="fragments/style"></style>
 </head>
 <body>
 <nav th:replace="fragments/header :: header"></nav>
@@ -17,17 +17,22 @@
                 <div class="col-sm-4 ">
                     <a class="btn btn-primary" href="/home"> Return Home</a>
                 </div>
-                <div style="text-align: center;" class="col-sm-4">
+                <div class="col-sm-4" style="text-align: center;">
                     <h4 class="text-info"></h4>
                 </div>
                 <div class="col-sm-4 text-right">
-                    <a href="/refund"><button class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-list">&nbsp; View List </span></button> </a>
+                    <a href="/refund">
+                        <button class="btn btn-sm btn-primary"><span
+                                class="glyphicon glyphicon-list">&nbsp; View List </span></button>
+                    </a>
                 </div>
             </div>
-            <!-- /.row -->
             <div class="row">
                 <div class="container-fluid">
-                    <form class="form-horizontal"  th:action="${addStatus==true?'/refund/add':'/refund/update'}" th:object="${refund}" th:method="POST">
+                    <form class="form-horizontal"
+                          th:action="${#authorization.expression('hasRole(''ROLE_MANAGER'')')==true?'/refund/managerAdd':'/refund/add'}"
+                          th:method="POST"
+                          th:object="${refund}">
                         <label th:if="${#fields.hasErrors('*')}" th:text="'Errors: '">Errors: </label>
                         <ul>
                             <li th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
@@ -36,33 +41,51 @@
                             <div class="form-group" th:if="${addStatus==false}">
                                 <label class="control-label col-md-4" for="id">ID :</label>
                                 <div class="col-md-8">
-                                    <input type="text" id="id" placeholder="Enter ID Here" class="form-control" name="id" th:field="*{id}"/>
-                                    <span class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}">Error Number</span>
+                                    <input class="form-control" id="id" name="id" placeholder="Enter ID Here"
+                                           th:field="*{id}" type="text"/>
+                                    <span class="error" th:errors="*{id}" th:if="${#fields.hasErrors('id')}">Error Number</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-4" for="invoice">Invoice ID </label>
                                 <div class="col-md-8">
-                                    <input type="text" id="invoice" placeholder="Enter Number Here" class="form-control" name="invoiceId" th:field="*{invoice.id}" required />
-                                    <span class="error" th:if="${#fields.hasErrors('invoice')}" th:errors="*{invoice}">Error Refund Name</span>
+                                    <input class="form-control" id="invoice" name="invoice.number"
+                                           placeholder="Enter Number Here" required type="text"/>
+                                    <span class="error" th:errors="*{invoice}"
+                                          th:if="${#fields.hasErrors('invoice')}">Error Refund Name</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-4" for="amount">Amount</label>
                                 <div class="col-md-8">
-                                    <input type="text" id="amount" placeholder="Enter Full Here" class="form-control" name="amount" th:field="*{amount}" required/>
-                                    <span class="error" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">Error Amount</span>
+                                    <input class="form-control" id="amount" name="refund.amount"
+                                           placeholder="Enter Full Here" required th:field="*{amount}" type="text"/>
+                                    <span class="error" th:errors="*{amount}"
+                                          th:if="${#fields.hasErrors('amount')}">Error Amount</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-4" for="reason">Reason</label>
                                 <div class="col-md-8">
-                                    <textarea id="reason" placeholder="Enter Full Here" class="form-control" name="reason" th:field="*{reason}"></textarea>
-                                    <span class="error" th:if="${#fields.hasErrors('reason')}" th:errors="*{reason}">Error Reason</span>
+                                        <textarea class="form-control" id="reason" name="refund.reason"
+                                                  placeholder="Enter Full Here" required
+                                                  th:field="*{reason}"></textarea>
+                                    <span class="error" th:errors="*{reason}"
+                                          th:if="${#fields.hasErrors('reason')}">Error Reason</span>
                                 </div>
                             </div>
-                            <div class="text-center row" >
-                                <button class="btn btn-success" type="submit" > <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp; &nbsp;<span th:text="${addStatus==true?'Save': 'Update'}" ></span></button>
+                            <div class="text-center row">
+                                <button class="btn btn-success" type="submit"><span
+                                        class="glyphicon glyphicon-thumbs-up"></span>&nbsp; &nbsp;<span
+                                        th:text="${addStatus==true?'Save': 'Update'}"></span></button>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 text-center" th:if="${invoiceError==true}">
+                            <div class="alert alert-warning alert-dismissible text-center">
+                                <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
+                                <strong>Alert!</strong>
+                                <p>There is no ability to refund which was given invoice number, </br> Hence please
+                                    contact <i>Manager</i></p>
                             </div>
                         </div>
                     </form>

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>EHSL - List</title>
-<style th:replace="fragments/style"></style>
+    <title>EHSL - List</title>
+    <style th:replace="fragments/style"></style>
 </head>
 <body>
 <nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
@@ -16,7 +16,8 @@
                 <div class="col-sm-12">
                     <form class="form-inline">
                         <div class="form-group">
-                            <a th:href="${'/refund/add'}" class="btn btn-success"><span class="glyphicon glyphicon-paperclip"></span> &nbsp;New Refund </a>
+                            <a class="btn btn-success" th:href="${'/refund/add'}"><span
+                                    class="glyphicon glyphicon-paperclip"></span> &nbsp;New Refund </a>
                         </div>
                     </form>
                 </div>
@@ -25,27 +26,32 @@
                 <div class="table-responsive">
                     <table class="table table-striped table-condensed text-center" id="myTable">
                         <thead>
-                            <tr>
-                                <th>Index</th>
-                                <th>Invoice Number</th>
-                                <th> Invoice Price </th>
-                                <th> Refund Amount </th>
-                                <th> User </th>
-                                <th >Modify</th>
-                            </tr>
+                        <tr>
+                            <th>Index</th>
+                            <th>Invoice Number</th>
+                            <th> Invoice Price</th>
+                            <th> Refund Amount</th>
+                            <th> User</th>
+                            <th>Modify</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="refund, rowCount : ${refunds}">
-                                <th th:text="${rowCount.count}"></th>
-                                <th th:text="${refund.invoice.id}"></th>
-                                <th th:text="${refund.invoice.amount}"></th>
-                                <th th:text="${refund.amount}"></th>
-                                <th th:text="${refund.user.username}"></th>
-                                <th><a th:href="${'/refund/' + refund.id}" class="btn btn-success"><i class="fa fa-folder-open"></i>&nbsp;View</a>
-                                    <a th:href="${'/refund/edit/' + refund.id}" class="btn btn-primary"><i class="fa fa-edit"></i>&nbsp;Edit</a>
-                                    <a th:href="${'/refund/remove/' + refund.id}" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i>
-                                        Delete</a></th>
-                            </tr>
+                        <tr th:each="refund, rowCount : ${refunds}">
+                            <th th:text="${rowCount.count}"></th>
+                            <th th:text="${refund.invoice.id}"></th>
+                            <th th:text="${refund.invoice.amount}"></th>
+                            <th th:text="${refund.amount}"></th>
+                            <th th:text="${refund.user.username}"></th>
+                            <th><a class="btn btn-success" th:href="${'/refund/' + refund.id}"><i
+                                    class="fa fa-folder-open"></i>&nbsp;View</a>
+                                <a class="btn btn-primary"
+                                   th:href="${'/refund/edit/' + refund.id}" th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}"><i
+                                        class="fa fa-edit"></i>&nbsp;Edit</a>
+                                <a class="btn btn-danger"
+                                   th:href="${'/refund/remove/' + refund.id}" th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}"><i
+                                        aria-hidden="true" class="fa fa-trash-o"></i>
+                                    Delete</a></th>
+                        </tr>
                         </tbody>
                     </table>
                 </div>

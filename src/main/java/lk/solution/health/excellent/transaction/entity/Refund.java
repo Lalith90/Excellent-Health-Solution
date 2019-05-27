@@ -75,4 +75,16 @@ public class Refund {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    @Override
+    public String toString() {
+        return "Refund{" +
+                "id=" + id +
+                ", invoice=" + invoice +
+                ", amount=" + amount +
+                ", reason='" + reason + '\'' +
+                ", createdAt=" + createdAt +
+                ", user=" + user +
+                '}';
+    }
 }

@@ -51,6 +51,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/invoiceProcess")
 public class InvoiceProcessController {
+    private static Logger logger = LoggerFactory.getLogger(InvoiceProcessController.class);
     private final InvoiceService invoiceService;
     private final UserService userService;
     private final PatientService patientService;
@@ -65,7 +66,7 @@ public class InvoiceProcessController {
     private final ServletContext context;
     private final ConsultationService consultationService;
     private final EmailService emailService;
-    private static Logger logger = LoggerFactory.getLogger(InvoiceProcessController.class);
+
     @Autowired
     public InvoiceProcessController(InvoiceService invoiceService, UserService userService, PatientService patientService,
                                     DoctorService doctorService, LabTestService labTestService, DateTimeAgeService dateTimeAgeService,
@@ -107,7 +108,6 @@ public class InvoiceProcessController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String newInvoice(@Valid @ModelAttribute InvoiceProcess invoiceProcess, BindingResult result, Model model,
                              HttpServletRequest request, HttpServletResponse response) {
-
         if (result.hasErrors()) {
 
             for (FieldError error : result.getFieldErrors()) {
@@ -131,13 +131,16 @@ public class InvoiceProcessController {
         List<LabTest> labTests = new ArrayList<>();
         /* Make invoice number with current year 000_138_484 --> start*/
         // new invoice number (1_900_000_000)
-        int newInvoiceNumber = 0;
+        int newInvoiceNumber;
         int previousNumber = invoiceService.findLastInvoice().getNumber();
         int newNumberFirstTwoCharacters = Integer.parseInt(String.valueOf(previousNumber).substring(0, 2));
         LocalDateTime currentDateTime = dateTimeAgeService.getCurrentDateTime();
         int currentYearLastTwoNumber = Integer.parseInt(String.valueOf(currentDateTime.getYear()).substring(2, 4));
 
-        if (currentYearLastTwoNumber == newNumberFirstTwoCharacters) {
+
+        if (invoiceService.findLastInvoice().getNumber() == null) {
+            newInvoiceNumber = Integer.parseInt(currentYearLastTwoNumber + "00000000");
+        }else if (currentYearLastTwoNumber == newNumberFirstTwoCharacters) {
             newInvoiceNumber = previousNumber + 1;
         } else {
             newInvoiceNumber = previousNumber + 100_000_000;
@@ -145,6 +148,11 @@ public class InvoiceProcessController {
         /* Make invoice number with current year 1_900_000_000 --> start*/
 
         /*medical package and lab tests -- start*/
+        // all lab test medical package and normal lab test
+        if (invoiceProcess.getLabTests() != null && invoiceProcess.getMedicalPackage() != null) {
+            labTests.addAll(invoiceProcess.getMedicalPackage().getLabTests());
+            labTests.addAll(invoiceProcess.getLabTests());
+        }
         // normal lab test
         if (invoiceProcess.getMedicalPackage() == null) {
             labTests.addAll(invoiceProcess.getLabTests());
@@ -153,11 +161,7 @@ public class InvoiceProcessController {
         if (invoiceProcess.getLabTests() == null) {
             labTests.addAll(invoiceProcess.getMedicalPackage().getLabTests());
         }
-        // all lab test medical package and normal lab test
-        if (invoiceProcess.getLabTests() != null && invoiceProcess.getMedicalPackage() != null) {
-            labTests.addAll(invoiceProcess.getMedicalPackage().getLabTests());
-            labTests.addAll(invoiceProcess.getLabTests());
-        }
+
         /*medical package and lab tests -- end*/
         /*Patient Details verification - start*/
         //find patient already in or not in system
@@ -245,14 +249,19 @@ public class InvoiceProcessController {
         invoice = invoiceService.persist(invoice);
 
         /*To lab test count number - start */
-        int labTestCountNumber = 0;
+        int labTestCountNumber;
         int previousInvoiceHasLabTestNumber = invoiceHasLabTestService.findLastInvoiceHasLabTest().getNumber();
         int newLabTestCountNumberFirstTwoCharacters = Integer.parseInt(String.valueOf(previousInvoiceHasLabTestNumber).substring(0, 2));
 
         /*To lab test count number - end */
 
 
-        int lastInvoiceHasId = invoiceHasLabTestService.findLastInvoiceHasLabTest().getId();
+        int lastInvoiceHasId;
+        if (invoiceHasLabTestService.findLastInvoiceHasLabTest().getId() == null) {
+            lastInvoiceHasId = Integer.parseInt(currentYearLastTwoNumber + "00000000");
+        } else {
+            lastInvoiceHasId = invoiceHasLabTestService.findLastInvoiceHasLabTest().getId();
+        }
         InvoiceHasLabTest invoiceHasLabTest = new InvoiceHasLabTest();
         invoiceHasLabTest.setInvoice(invoice);
         invoiceHasLabTest.setLabTestStatus(LabTestStatus.NOSAMPLE);
@@ -271,15 +280,13 @@ public class InvoiceProcessController {
             lastInvoiceHasId++;
             labTestCountNumber++;
         }
-// Lab test array convert to null
-        labTests = null;
 //if patient not asked what printed bill nut he has email therefor bill would be send through email
         if (invoice.getInvoicePrintOrNot() == InvoicePrintOrNot.NOT && !invoice.getPatient().getEmail().isEmpty()) {
             //set all lab tests to one string
             int selectedLabTestCount = 1;
             String labTestList = "";
             for (LabTest test : invoiceProcess.getLabTests()) {
-                labTestList += selectedLabTestCount + "\t" + test.getName() + "\t\t\t (Rs.)" + test.getPrice() + "\n";
+                labTestList += selectedLabTestCount + "\t" + test.getName() + "\t\t\t" + test.getPrice() + "\n";
                 selectedLabTestCount++;
             }
             int selectedMedicalPackageIncludedLabTestCount = 1;
@@ -299,19 +306,20 @@ public class InvoiceProcessController {
                     "\n\n \t\t\t\t\t Selected Lab Tests \n" + labTestList +
                     "\n\n \t\t\t\t\tMedical Package Details  \n" + medicalPackageNameAndLabTest +
                     "\n\n\n Discount (Rs) \t\t\t  - " + discountPrice +
-                    "\n Net Amount (Rs) \t\t- " + totalPrice +
+                    "\n Net Amount (Rs) \t\t- " + totalPrice.setScale(2, BigDecimal.ROUND_CEILING).toString() +
                     "\n\n --------------------" +
                     "\n Cashier(" + currentUser.getEmployee().getCallingName() + ")" +
                     "\n\n\n\n\n Please inform us to if there is any changes on this bill" +
                     "\n \n \n   \t\t Thank You" +
                     "\n \t Excellent Health Solution" +
-                    "\n\n\n\n\nThis is a one way communication email service hence please do not reply if you need to further details regarding anything take call to hot line  ";
+                    "\n\n\n\n\nThis is a one way communication email service hence please do not reply if you need to further details regarding anything take call to hot line  "+
+                    "\n\n\n\n\nWe will not responsible for reports not collected within 30 days.   ";
 
             boolean isFlag = emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution ", message);
             System.out.println(isFlag);
         } else {
             //to print invoice
-            boolean isFlag = invoiceService.createPdf(invoice, context,request, response);
+            boolean isFlag = invoiceService.createPdf(invoice, context, request, response);
             if (isFlag) {
                 String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoice.getPatient().getTitle().getTitle() + " " + invoice.getPatient().getName() + "invoice" + ".pdf");
                 boolean download = fileHandelService.fileDownload(fullPath, response, invoice.getPatient().getTitle().getTitle() + " " + invoice.getPatient().getName() + "invoice" + ".pdf");

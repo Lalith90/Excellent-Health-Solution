@@ -9,7 +9,7 @@
 <nav th:replace="fragments/header :: header"></nav>
 <div class="container-fluid" style="margin-top: 50px">
     <div class="panel panel-primary">
-        <div class="panel panel-heading">
+        <div class="panel panel-heading text-center">
             <h4><b><span th:text="${addStatus==true?'New Patient Add':'Update Patient'}"></span></b></h4>
         </div>
         <div class="panel-body">
@@ -39,7 +39,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-4" for="txtNumber">Number<span class="text-danger">*</span></label>
                                 <div class="col-md-3">
-                                    <input type="text" id="txtNumber" placeholder="Enter Number" th:value="${newPatient}" class="form-control" name="number"   required/>
+                                    <input type="text" id="txtNumber" placeholder="Enter Number" th:value="${newPatient}" class="form-control" name="number" readonly  required/>
                                     <span class="error" th:if="${#fields.hasErrors('number')}" th:errors="*{number}">Error Number</span>
                                 </div>
                                 <div class="col-sm-5 text-warning" th:if="${addStatus==true}">
@@ -57,9 +57,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-4" for="txtFullName">Full Name<span class="text-danger">*</span></label>
+                                <label class="control-label col-md-4" for="patientName">Full Name<span class="text-danger">*</span></label>
                                 <div class="col-md-8">
-                                    <input type="text" id="txtFullname" placeholder="Enter Full Here" class="form-control" name="name" th:field="*{name}" required/>
+                                    <input type="text" id="patientName" placeholder="Enter Full Here" class="form-control" name="name" th:field="*{name}" required/>
                                     <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error Full Name</span>
                                 </div>
                             </div>

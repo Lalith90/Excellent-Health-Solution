@@ -122,14 +122,9 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
         return invoiceHasLabTestDao.findByLabTest(labTest);
     }
 
-    public HashSet<LabTest> findLabTestByInvoice(Invoice invoice) {
-        HashSet<LabTest> labTests = new HashSet<>();
-        System.out.println("come to here ");
-        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTestDao.findByInvoice(invoice)) {
-            System.out.println("come to in");
-            labTests.add(invoiceHasLabTest.getLabTest());
-            //labTests.add(labTestDao.getOne(invoiceHasLabTest.getLabTest().getId()));
-        }
+    public List<LabTest> findLabTestByInvoice(Invoice invoice) {
+        List<LabTest> labTests = new ArrayList<>();
+        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTestDao.findByInvoice(invoice))  labTests.add(invoiceHasLabTest.getLabTest());
         return labTests;
     }
 }

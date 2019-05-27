@@ -57,6 +57,16 @@ public class LabTest {
     @Column(name = "comment")
     private String comment;
 
+    @Override
+    public String toString() {
+        return "LabTest{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                '}';
+    }
+
     @OneToMany(mappedBy = "labTest", fetch = FetchType.EAGER)
     private List<InvoiceHasLabTest>  invoiceHasLabTests= new ArrayList<>();
 

@@ -40,6 +40,7 @@
 							<li><a href="/medicalPackage">Medical Package Management </a></li>
 							<li><a href="/collectingCenter">Collecting Center Management </a></li>
 							<li><a href="/labTest">Lab Test Management </a></li>
+							<li><a href="/refund">Refund Management </a></li>
 							<li><a href="/user">User Management </a></li>
 						</ul>
 						<!--PHLABOTO NAV BAR CONTENT -->
@@ -100,6 +101,7 @@
 							<li><a href="/medicalPackage/add">Medical Package Create</a></li>
 							<li><a href="/user/add">New User</a></li>
 							<li><a href="/labTest">Lab Test Find</a></li>
+							<li><a href="/refund/add">Refund Add</a></li>
 						</ul>
 						<!--PHLABOTO NAV BAR CONTENT -->
 						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">
@@ -150,13 +152,13 @@
 						<ul class="dropdown-menu">
 							<li>
 								<a href="/profile">
-									<i class="fa fa-gear fa-spin" style="font-size:18px"></i>
+									<i class="fas fa-user-tie"></i>
 									&nbsp;Profile
 								</a>
 							</li>
 							<li>
 								<a href="/passwordChange">
-									<i class="fa fa-expeditedssl"></i>
+									<i class="fas fa-key"></i>
 									&nbsp;Change Password
 								</a>
 							</li>

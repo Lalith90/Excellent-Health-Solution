@@ -42,8 +42,7 @@ public class PatientController {
 
     @RequestMapping
     public String patientPage(Model model) {
-        List<Patient> patients = patientService.findAll();
-        model.addAttribute("patients", patients);
+        model.addAttribute("patients",  patientService.findAll());
         return "patient/patient";
     }
 
@@ -54,26 +53,32 @@ public class PatientController {
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-    public String editPatientFrom(@PathVariable("id") Integer id,Model model) {
+    public String editPatientFrom(@PathVariable("id") Integer id, Model model) {
         model.addAttribute("patient", patientService.findById(id));
-        model.addAttribute("newPatient",patientService.findById(id).getNumber());
+        model.addAttribute("newPatient", patientService.findById(id).getNumber());
         model.addAttribute("addStatus", false);
         model.addAttribute("title", Title.values());
         model.addAttribute("gender", Gender.values());
         return "patient/addPatient";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String patientAddFrom(Model model) {
-        String input =  patientService.lastPatient().getNumber();
-        String patientNumber= input.replaceAll("[^0-9]+", "");
-        Integer PatientNumber = Integer.parseInt(patientNumber);
-        int newPatientNumber = PatientNumber+1;
+    //common attribute collect to one method
+    private void commonModel(Model model) {
+        String input = patientService.lastPatient().getNumber();
+        String patientNumber = input.replaceAll("[^0-9]+", "");
+        int PatientNumber = Integer.parseInt(patientNumber);
+        int newPatientNumber = PatientNumber + 1;
         model.addAttribute("addStatus", true);
-        model.addAttribute("lastPatient",input);
-        model.addAttribute("newPatient","EHS"+ newPatientNumber);
+        model.addAttribute("messageArea", false);
+        model.addAttribute("lastPatient", input);
+        model.addAttribute("newPatient", "EHS" + newPatientNumber);
         model.addAttribute("title", Title.values());
         model.addAttribute("gender", Gender.values());
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String patientAddFrom(Model model) {
+        commonModel(model);
         model.addAttribute("patient", new Patient());
         return "patient/addPatient";
     }
@@ -81,7 +86,7 @@ public class PatientController {
     // Above method support to send data to front end - All List, update, edit
     //Bellow method support to do back end function save, delete, update, search
 
-    @RequestMapping(value = {"/add","/update"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/add", "/update"}, method = RequestMethod.POST)
     public String addPatient(@Valid @ModelAttribute Patient patient, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Integer userId = userService.findByUserIdByUserName(auth.getName());
@@ -89,71 +94,72 @@ public class PatientController {
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());
             }
-            model.addAttribute("addStatus", true);
-            model.addAttribute("title", Title.values());
-            model.addAttribute("gender", Gender.values());
-            model.addAttribute("patient", patient);
-            return "/patient/addPatient";
+            commonModel(model);
+            return "patient/addPatient";
         }
-        if (patient.getId() != null){
+        //check patient is already in the system or not (Patient update)
+        if (patient.getId() != null) {
+            patient.setUpDateUser(userService.findById(userId));
             patient.setUpdatedAt(dateTimeAgeService.getCurrentDate());
-            if(patient.getEmail() != null){
-            String message = "Welcome to Excellent Health Solution \n " +
-                    "Your detail is updated"+
-                    "\n\n\n\n\n Please inform us to if there is any changes on your details" +
-                    "\n Kindly request keep your data up to date with us. so we can provide better service for you." +
-                    "\n \n \n   Thank You" +
-                    "\n Excellent Health Solution" +
-                    "\n\n\n\n" +
-                    "This is a one way communication email service \n please don reply";
-         boolean isFlag = emailService.sendPatientRegistrationEmail(patient.getEmail(),"Welcome to Excellent Health Solution ", message);
-        if (isFlag){
-             redirectAttributes.addFlashAttribute("message", "Successfully Update and Email was sent.");
-             redirectAttributes.addFlashAttribute("alertStatus",true);
-             patientService.persist(patient);
-             return "redirect:/patient";
-        }else {
-            redirectAttributes.addFlashAttribute("message", "Successfully Update but Email was not sent.");
-            redirectAttributes.addFlashAttribute("alertStatus",false);
-                patientService.persist(patient);
-                return "redirect:/patient";
-        }
-            }
-
             patientService.persist(patient);
+
+            if (patient.getEmail() != null) {
+                String message = "Welcome to Excellent Health Solution \n " +
+                        "Your detail is updated" +
+                        "\n\n\n\n\n Please inform us to if there is any changes on your details" +
+                        "\n Kindly request keep your data up to date with us. so we can provide better service for you." +
+                        "\n \n \n   Thank You" +
+                        "\n Excellent Health Solution" +
+                        "\n\n\n\n" +
+                        "This is a one way communication email service \n please do not reply";
+                boolean isFlag = emailService.sendPatientRegistrationEmail(patient.getEmail(), "Welcome to Excellent Health Solution ", message);
+                if (isFlag) {
+                    redirectAttributes.addFlashAttribute("message", "Successfully Update and Email was sent.");
+                    redirectAttributes.addFlashAttribute("alertStatus", true);
+                    redirectAttributes.addFlashAttribute("messageArea", true);
+                    return "redirect:/patient";
+                } else {
+                    redirectAttributes.addFlashAttribute("message", "Successfully Update but Email was not sent.");
+                    redirectAttributes.addFlashAttribute("alertStatus", false);
+                    redirectAttributes.addFlashAttribute("messageArea", true);
+                    return "redirect:/patient";
+                }
+            }
             return "redirect:/patient";
         }
-        if (patient.getEmail() != null){
+// patient create
+        patient.setCreatedUser(userService.findById(userId));
+        patient.setCreatedAt(dateTimeAgeService.getCurrentDate());
+        patientService.persist(patient);
+        if (patient.getEmail() != null) {
             String message = "Welcome to Excellent Health Solution \n " +
-                    "Your registration number is "+patient.getNumber()+
-                    "\nYour Details are"+
-                    "\n "+patient.getTitle().getTitle()+" "+patient.getName()+
-                    "\n "+patient.getNic()+
-                    "\n "+patient.getDateOfBirth()+
-                    "\n "+patient.getMobile()+
-                    "\n "+patient.getLand()+
+                    "Your registration number is " + patient.getNumber() +
+                    "\nYour Details are" +
+                    "\n " + patient.getTitle().getTitle() + " " + patient.getName() +
+                    "\n " + patient.getNic() +
+                    "\n " + patient.getDateOfBirth() +
+                    "\n " + patient.getMobile() +
+                    "\n " + patient.getLand() +
                     "\n\n\n\n\n Please inform us to if there is any changes on your details" +
                     "\n Kindly request keep your data up to date with us. so we can provide better service for you." +
                     "\n \n \n   Thank You" +
                     "\n Excellent Health Solution" +
                     "This is a one way communication email service \n please don reply";
-            boolean isFlag = emailService.sendPatientRegistrationEmail(patient.getEmail(),"Welcome to Excellent Health Solution ", message);
-            if (isFlag){
+            boolean isFlag = emailService.sendPatientRegistrationEmail(patient.getEmail(), "Welcome to Excellent Health Solution ", message);
+            if (isFlag) {
                 redirectAttributes.addFlashAttribute("message", "Successfully Add and Email was sent.");
-                redirectAttributes.addFlashAttribute("alertStatus",true);
-                patient.setCreatedAt(dateTimeAgeService.getCurrentDate());
-                patientService.persist(patient);
+                redirectAttributes.addFlashAttribute("alertStatus", true);
+                redirectAttributes.addFlashAttribute("messageArea", true);
+
                 return "redirect:/patient";
-            }else {
+            } else {
                 redirectAttributes.addFlashAttribute("message", "Successfully Add but Email was not sent.");
-                redirectAttributes.addFlashAttribute("alertStatus",false);
-                patient.setCreatedAt(dateTimeAgeService.getCurrentDate());
-                patientService.persist(patient);
+                redirectAttributes.addFlashAttribute("alertStatus", false);
+                redirectAttributes.addFlashAttribute("messageArea", true);
                 return "redirect:/patient";
             }
         }
-        patient.setCreatedAt(dateTimeAgeService.getCurrentDate());
-        patientService.persist(patient);
+
         return "redirect:/patient";
     }
 

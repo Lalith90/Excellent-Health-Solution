@@ -15,11 +15,15 @@ import lk.solution.health.excellent.resource.entity.Patient;
 import lk.solution.health.excellent.resource.entity.User;
 import lk.solution.health.excellent.resource.service.CollectingCenterService;
 import lk.solution.health.excellent.transaction.dao.InvoiceDao;
+import lk.solution.health.excellent.transaction.entity.Enum.PaymentMethod;
 import lk.solution.health.excellent.transaction.entity.Invoice;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -34,10 +38,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.Phaser;
-import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +57,7 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
         this.invoiceHasLabTestService = invoiceHasLabTestService;
     }
 
-
+    @Cacheable("invoice")
     public List<Invoice> findAll() {
         return invoiceDao.findAll();
     }
@@ -65,12 +67,12 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
         return invoiceDao.getOne(id);
     }
 
-    @Transactional
+    @CachePut(value = "invoice" )
     public Invoice persist(Invoice invoice) {
         return invoiceDao.save(invoice);
     }
 
-
+    @CacheEvict(value="invoice", allEntries=true)
     public boolean delete(Integer id) {
         invoiceDao.deleteById(id);
         return false;
@@ -114,6 +116,10 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
         return invoiceDao.findByCreatedAtIsBetween(from, to);
     }
 
+    public Invoice findByNumber(int number){
+        return invoiceDao.findByNumber(number);
+    }
+
     public Integer countByCreatedAtIsBetween(LocalDateTime from, LocalDateTime to) {
         return invoiceDao.countByCreatedAtIsBetween(from, to);
     }
@@ -121,6 +127,12 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
     // common style for several phParagraph
     private void commonStyleForParagraph(Paragraph paragraph) {
         paragraph.setAlignment(Element.ALIGN_CENTER);
+        paragraph.setIndentationLeft(50);
+        paragraph.setIndentationRight(50);
+    }
+
+    private void commonStyleForParagraphTwo(Paragraph paragraph) {
+        paragraph.setAlignment(Element.ALIGN_LEFT);
         paragraph.setIndentationLeft(50);
         paragraph.setIndentationRight(50);
     }
@@ -160,7 +172,6 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             //cell 3
             String medicalPackageOrNotValue = "";
             if (!medicalPackage) {
-                System.out.println("come to only lab test");
                 medicalPackageOrNotValue = labTest.getPrice().setScale(2, BigDecimal.ROUND_CEILING).toString();
             }
             PdfPCell cell2 = new PdfPCell(new Phrase(medicalPackageOrNotValue, secondaryFont));
@@ -193,6 +204,8 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             //All front
             Font mainFont = FontFactory.getFont("Arial", 12, BaseColor.BLACK);
             Font secondaryFont = FontFactory.getFont("Arial", 9, BaseColor.BLACK);
+            Font highLiltedFont = FontFactory.getFont("Arial", 9, BaseColor.BLACK);
+             highLiltedFont = FontFactory.getFont(FontFactory.TIMES_BOLD);
 
 
             Paragraph paragraph = new Paragraph("Excellent Health Solution", mainFont);
@@ -243,7 +256,7 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             commonStyleForPdfPCell(cell4);
             mainTable.addCell(cell4);
 
-            PdfPCell cell5 = new PdfPCell(new Phrase(invoice.getDoctor().getConsultation().getName(), secondaryFont));
+            PdfPCell cell5 = new PdfPCell(new Phrase("Consultation : "+invoice.getDoctor().getConsultation().getName(), secondaryFont));
             commonStyleForPdfPCell(cell5);
             mainTable.addCell(cell5);
 
@@ -264,19 +277,100 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
                 document.add(labTestToTable(labTests, true));
             }
             if (invoice.getMedicalPackage() != null && invoice.getInvoiceHasLabTests() != null) {
-                System.out.println("Both are inclueded");
-                List<LabTest> labTests = new ArrayList<>(invoiceHasLabTestService.findLabTestByInvoice(invoice));
-                System.out.println("not null");
-                document.add(labTestToTable(labTests, false));
-
-                Paragraph paragraph6 = new Paragraph("Medical Package details", secondaryFont);
+                Paragraph paragraph6 = new Paragraph("\n Medical Package Name : " + invoice.getMedicalPackage().getName() + "                                                         Price :                                 " + invoice.getMedicalPackage().getPrice() + "\n Included Lab Test                                                                        ", secondaryFont);
                 commonStyleForParagraph(paragraph6);
                 document.add(paragraph6);
 
                 List<LabTest> labTests1 = invoice.getMedicalPackage().getLabTests();
-                document.add(labTestToTable(labTests1, true));
+                document.add(labTestToTable(labTests1, true));// medical package included lab test
+
+                Paragraph paragraph7 = new Paragraph("\n Laboratory Test Name :                                                                                        \n", secondaryFont);
+                commonStyleForParagraph(paragraph7);
+                document.add(paragraph7);
+
+                // remove medical package is included in all lab test array
+                List<LabTest> labTests = invoiceHasLabTestService.findLabTestByInvoice(invoice);
+                List<LabTest> labTests2 = labTests.stream().filter(labTest -> !labTests1.contains(labTest)).collect(Collectors.toList());
+                document.add(labTestToTable(labTests2, false)); // only selected lab test
             }
 
+// according to payment method bill should be change
+            PaymentMethod paymentMethod = invoice.getPaymentMethod();
+
+            // invoice details table
+            //Create a Table (Patient Details)
+            PdfPTable invoiceTable = new PdfPTable(new float[]{3f, 1f});
+            //invoiceTable.setWidthPercentage(50);
+
+            PdfPCell totalAmount = new PdfPCell(new Phrase("\nTotal Amount(Rs.) : ", secondaryFont));
+            commonStyleForPdfPCellLastOne(totalAmount);
+            invoiceTable.addCell(totalAmount);
+
+            PdfPCell totalAmountRs = new PdfPCell(new Phrase("---------------\n"+invoice.getTotalprice().setScale(2, BigDecimal.ROUND_CEILING).toString(), secondaryFont));
+            commonStyleForPdfPCellLastOne(totalAmountRs);
+            invoiceTable.addCell(totalAmountRs);
+
+            PdfPCell paymentMethodOnBill = new PdfPCell(new Phrase("\nPayment Method : ", secondaryFont));
+            commonStyleForPdfPCellLastOne(paymentMethodOnBill);
+            invoiceTable.addCell(paymentMethodOnBill);
+
+            PdfPCell paymentMethodOnBillState = new PdfPCell(new Phrase("========\n"+paymentMethod.getPaymentMethod(), secondaryFont));
+            commonStyleForPdfPCellLastOne(paymentMethodOnBillState);
+            invoiceTable.addCell(paymentMethodOnBillState);
+
+            PdfPCell discountRadioAndAmount = new PdfPCell(new Phrase("Discount ( " + invoice.getDiscountRatio().getAmount() + "% ) (Rs.) : ", secondaryFont));
+            commonStyleForPdfPCellLastOne(discountRadioAndAmount);
+            invoiceTable.addCell(discountRadioAndAmount);
+
+            PdfPCell discountRadioAndAmountRs = new PdfPCell(new Phrase(invoice.getDiscountAmount().setScale(2, BigDecimal.ROUND_CEILING).toString(), secondaryFont));
+            commonStyleForPdfPCellLastOne(discountRadioAndAmountRs);
+            invoiceTable.addCell(discountRadioAndAmountRs);
+
+            PdfPCell amount = new PdfPCell(new Phrase("Amount (Rs.) : ",highLiltedFont ));
+            commonStyleForPdfPCellLastOne(amount);
+            invoiceTable.addCell(amount);
+
+            PdfPCell amountRs = new PdfPCell(new Phrase(invoice.getAmount().setScale(2, BigDecimal.ROUND_CEILING).toString(), highLiltedFont));
+            commonStyleForPdfPCellLastOne(amountRs);
+            invoiceTable.addCell(amountRs);
+
+
+            if (paymentMethod.equals(PaymentMethod.CASH)) {
+                PdfPCell amountTendered = new PdfPCell(new Phrase("Tender Amount (Rs.) : ", secondaryFont));
+                commonStyleForPdfPCellLastOne(amountTendered);
+                invoiceTable.addCell(amountTendered);
+
+                PdfPCell amountTenderedRs = new PdfPCell(new Phrase(invoice.getAmountTendered().setScale(2, BigDecimal.ROUND_CEILING).toString(), secondaryFont));
+                commonStyleForPdfPCellLastOne(amountTenderedRs);
+                invoiceTable.addCell(amountTenderedRs);
+
+                PdfPCell balance = new PdfPCell(new Phrase("Balance (Rs.) : ", highLiltedFont));
+                commonStyleForPdfPCellLastOne(balance);
+                invoiceTable.addCell(balance);
+
+                PdfPCell balanceRs = new PdfPCell(new Phrase(invoice.getBalance().setScale(2, BigDecimal.ROUND_CEILING).toString(), highLiltedFont));
+                commonStyleForPdfPCellLastOne(balanceRs);
+                invoiceTable.addCell(balanceRs);
+
+            } else {
+                PdfPCell bank = new PdfPCell(new Phrase("Bank Name : ", secondaryFont));
+                commonStyleForPdfPCellLastOne(bank);
+                invoiceTable.addCell(bank);
+
+                PdfPCell bankName = new PdfPCell(new Phrase(invoice.getBankName(), secondaryFont));
+                commonStyleForPdfPCellLastOne(bankName);
+                invoiceTable.addCell(bankName);
+            }
+
+            document.add(invoiceTable);
+
+            Paragraph remarks = new Paragraph("Remarks : " + invoice.getRemarks(), secondaryFont);
+            commonStyleForParagraphTwo(remarks);
+            document.add(remarks);
+
+            Paragraph message = new Paragraph("\nWe will not responsible for reports not collected within 30 days. \n\n ------------------------------------\n            ( " + invoice.getUser().getUsername() + " )", secondaryFont);
+            commonStyleForParagraphTwo(message);
+            document.add(message);
 
             document.close();
             writer.close();

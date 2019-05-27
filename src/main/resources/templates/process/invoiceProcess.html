@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8"/>
@@ -13,7 +13,7 @@
 <div class="container-fluid" style="margin-top: 60px">
     <form class="form-horizontal" th:action="@{invoiceProcess/add}" th:method="POST"
           th:object="${invoiceProcess}">
-        <div class="container-fluid">
+        <div class="container">
             <div class="panel-group" id="accordion">
                 <!--Doctor -->
                 <div class="panel panel-info">
@@ -27,7 +27,6 @@
                     </div>
                     <div class="panel-collapse collapse in" id="collapse1">
                         <div class="panel-body">
-
                             <div class="row">
                                 <!--New Doctor-->
                                 <div class="col-sm-2">
@@ -137,8 +136,8 @@
                                             Package</label>
                                         <div class="col-md-7">
                                             <select class="form-control"
-                                                    id="cmbMedicalPackage"
-                                                    name="medicalPackage">
+                                                    default="1"
+                                                    id="cmbMedicalPackage" name="medicalPackage">
                                                 <option th:each="medicalPackage : ${medicalPackages}"
                                                         th:text="${{medicalPackage.price}}+${' '}+${medicalPackage.name}"
                                                         th:value="${medicalPackage.id}"></option>
@@ -365,8 +364,7 @@
                         <h4 class="panel-title text-center">
                             <a data-parent="#accordion" data-toggle="collapse"
                                href="#collapse4">
-                                <b>Collecting Center Details</b> &nbsp; <i
-                                    class="fa fa-hospital-o"></i>
+                                <b>Collecting Center Details</b> &nbsp; <i class="fas fa-home"></i>
                             </a>
                         </h4>
                     </div>
@@ -396,7 +394,7 @@
                         <h4 class="panel-title text-center">
                             <a data-parent="#accordion" data-toggle="collapse"
                                href="#collapse5">
-                                <b>Payment Details </b> &nbsp;<i class="fa fa-money"></i>
+                                <b>Payment Details </b> &nbsp;<i class="fas fa-hand-holding-usd"></i>
                             </a>
                         </h4>
                     </div>
@@ -456,8 +454,8 @@
                                         (Rs.):</label>
                                     <div class="col-md-6">
                                         <input class="form-control" id="amountTendered"
-                                               placeholder="Enter Amount Here"
                                                name="amountTendered"
+                                               placeholder="Enter Amount Here"
                                                type="text"/>
                                     </div>
                                 </div>
@@ -514,8 +512,8 @@
                                     <div class="col-md-6">
                                         <label class="radio-inline"><input name="invoicePrintOrNot" type="radio"
                                                                            value="PRINT">Required</label>
-                                        <label class="radio-inline"><input class="radio-inline" name="invoicePrintOrNot"
-                                                                           type="radio" value="NOT" checked>Not Required</label>
+                                        <label class="radio-inline"><input checked class="radio-inline"
+                                                                           name="invoicePrintOrNot" type="radio" value="NOT">Not Required</label>
                                     </div>
                                 </div>
                             </div>
@@ -539,7 +537,7 @@
                 </div>
             </div>
         </div>
-        <!-- information area - end -->
+        <!-- Error display-->
         <div class="container-fluid">
             <label th:if="${#fields.hasErrors('*')}" th:text="'Errors: '">Errors: </label>
             <ul>

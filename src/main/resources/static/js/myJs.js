@@ -58,7 +58,7 @@ $(document).ready(function () {
 // regex
 let nicRegex = /^([0-9]{9}[v|V|x|X])|^([0-9]{12})$/;
 let mobileRegex = /^([0][7][\d]{8}$)|^([7][\d]{8})$/;
-let nameRegex = /^[a-zA-Z]{5}[a-zA-Z]+$/;
+let nameRegex = /^[a-zA-Z]{5}[ a-zA-Z]+$/;
 
 
 /*//Nic - data of birth - start//*/
@@ -282,8 +282,17 @@ async function getData(url) {
         return await result.json();
     } catch (e) {
         console.log("Error : " + e);
+        conformationAndLoginWindow();
+
+    }
+}
+
+// conformation message and to login page
+function conformationAndLoginWindow() {
+    let r = confirm("There is no way to access to the system without re re-login \n Please click \'Ok\' to login");
+    if (r === true) {
         let loginUrl = window.location.protocol  + "/login";
-        window.open(loginUrl,'_blank');
+        window.open(loginUrl,'_self');
     }
 }
 

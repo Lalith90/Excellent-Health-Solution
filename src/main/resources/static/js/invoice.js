@@ -1,21 +1,13 @@
 $(document).ready(function () {
-        defaultHideAreaInInvoice();
-    }
-);
-
-//Default need to hide area
-function defaultHideAreaInInvoice() {
     //data show content show and hide - start
     contentHide(document.getElementById("medicalPackageDetails"));
     contentHide(document.getElementById("labTestShowTable"));
     contentHide(document.getElementById("patientContent"));
-    contentHide(document.getElementById("newDoctor"));
     contentHide(document.getElementById("card"));
     contentHide(document.getElementById("patientListDisplay"));
-    contentHide(document.getElementById("btnRegisteredButton"));
     //data show content show and hide - end
-
-}
+    }
+);
 
 /*// Create new table selected lab test table - start//*/
 class LabTest {

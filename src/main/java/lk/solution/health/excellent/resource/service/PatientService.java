@@ -23,7 +23,7 @@ public class PatientService implements AbstractService<Patient, Integer> {
         this.patientDao = patientDao;
     }
 
-    @Cacheable(value = "patient")
+    @Cacheable("patient")
     public List<Patient> findAll() {
         System.out.println("patient cache ok");
         return patientDao.findAll();
@@ -35,7 +35,6 @@ public class PatientService implements AbstractService<Patient, Integer> {
     }
 
     @CachePut(value = "patient")
-    @Transactional
     public Patient persist(Patient patient) {
         return patientDao.save(patient);
     }

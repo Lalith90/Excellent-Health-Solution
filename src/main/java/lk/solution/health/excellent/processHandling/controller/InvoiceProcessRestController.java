@@ -37,7 +37,7 @@ public class InvoiceProcessRestController {
         mappingJacksonValue.setFilters(filters);
     }
 
-    // medical package lab test send to font end
+    // medical package lab test send to fonts end
     @GetMapping("/medicalPackageLabTestGet/{id}")
     public MappingJacksonValue getLabTestByMedicalPackageId(@PathVariable Integer id) {
         List<LabTest> labTests = medicalPackageService.findById(id).getLabTests();
@@ -48,7 +48,7 @@ public class InvoiceProcessRestController {
         return mappingJacksonValue;
     }
 
-    // medical package send to font end
+    // medical package send to fonts end
     @GetMapping("/medicalPackageGet/{id}")
     public MappingJacksonValue getMedicalPackageById(@PathVariable Integer id) {
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(medicalPackageService.findById(id));
@@ -58,7 +58,7 @@ public class InvoiceProcessRestController {
         return mappingJacksonValue;
     }
 
-    //send patient details  send to font end
+    //send patient details  send to fonts end
     @GetMapping("/patientFind")
     public MappingJacksonValue getPatient(@PathParam("Patient") Patient patient) {
         //Get All Patient
