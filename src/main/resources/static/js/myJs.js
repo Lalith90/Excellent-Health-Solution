@@ -272,7 +272,18 @@ function backgroundColourChangeBad(id) {
 }
 //colour change function -- end
 
-
+/* some content need to print use this method */
+// el (id of content)is variable that need to give when function call
+function printContent(el) {
+    // restorepage = current document
+    let restorepage = document.body.innerHTML;
+    // printcontent = need to print area that area must enclosed with div
+    document.body.innerHTML = document.getElementById(el).innerHTML;
+    //called javascript print function
+    window.print();
+    //after print set current web page
+    document.body.innerHTML = restorepage;
+}
 
 
 //AJAX FUNCTION CALL

@@ -135,8 +135,7 @@
                                                for="cmbMedicalPackage">Medical
                                             Package</label>
                                         <div class="col-md-7">
-                                            <select class="form-control"
-                                                    default="1"
+                                            <select class="form-control" default="0"
                                                     id="cmbMedicalPackage" name="medicalPackage">
                                                 <option th:each="medicalPackage : ${medicalPackages}"
                                                         th:text="${{medicalPackage.price}}+${' '}+${medicalPackage.name}"
@@ -185,8 +184,7 @@
                         <h3 class="panel-title text-center">
                             <a data-parent="#accordion" data-toggle="collapse"
                                href="#collapse3">
-                                <i class="fa fa-wheelchair"></i>
-                                &nbsp; <b>Patient Details</b>
+                                &nbsp; <b>Patient Details</b> <i class="fa fa-wheelchair"></i>
                             </a></h3>
                     </div>
                     <div class="panel-collapse collapse " id="collapse3">
@@ -403,7 +401,7 @@
                             <div class="row">
                                 <div class="form-group col-sm-6">
                                     <label class="control-label col-sm-6" for="totalPrice">Total
-                                        Price</label>
+                                        Price :</label>
                                     <div class="col-sm-6">
                                         <input class="form-control" id="totalPrice"
                                                name="totalprice" readonly type="text"/>
@@ -412,7 +410,7 @@
                                 <div class="form-group col-sm-6">
                                     <label class="control-label col-sm-6"
                                            th:for="discountRatio">Discount
-                                        Ratio</label>
+                                        Ratio :</label>
                                     <div class="col-sm-6">
                                         <select class="form-control" default="1"
                                                 id="cmbDiscountRatio" name="discountRatio">
@@ -426,7 +424,7 @@
                             <div class="row">
                                 <div class="form-group col-sm-6">
                                     <label class="control-label col-sm-6"
-                                           for="amount">Amount</label>
+                                           for="amount">Amount :</label>
                                     <div class="col-sm-6">
                                         <input class="form-control" id="amount"
                                                name="amount" readonly type="text"/>
@@ -435,7 +433,7 @@
                                 <div class="form-group col-sm-6">
                                     <label class="control-label col-sm-6"
                                            th:for="paymentMethod">Payment
-                                        Method:</label>
+                                        Method :</label>
                                     <div class="col-sm-6">
                                         <select class="form-control" default="1"
                                                 id="cmbPaymentMethod" name="paymentMethod">
@@ -451,7 +449,7 @@
                                     <label class="control-label col-md-6"
                                            for="amountTendered">Amount
                                         Tendered
-                                        (Rs.):</label>
+                                        (Rs.) :</label>
                                     <div class="col-md-6">
                                         <input class="form-control" id="amountTendered"
                                                name="amountTendered"
@@ -461,7 +459,7 @@
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label class="control-label col-md-6" for="balance">Balance
-                                        (Rs.): <span
+                                        (Rs.) : <span
                                                 class="text-danger">*</span></label>
                                     <div class="col-md-6">
                                         <input class="form-control" id="balance"
@@ -472,7 +470,7 @@
                             </div>
                             <div class="row" id="card">
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label col-sm-6" for="bankName">Bank:
+                                    <label class="control-label col-sm-6" for="bankName">Bank :
                                         <span
                                                 class="text-danger">*</span></label>
                                     <div class="col-sm-6">
@@ -482,7 +480,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label col-sm-6" for="cardNumber">Number:
+                                    <label class="control-label col-sm-6" for="cardNumber">Number :
                                         <span
                                                 class="text-danger">*</span></label>
                                     <div class="col-sm-6">
@@ -497,7 +495,7 @@
                             <div class="row">
                                 <div class="form-group">
                                     <label class="control-label col-sm-offset-1 col-sm-3"
-                                           for="remarks">Remarks: </label>
+                                           for="remarks">Remarks : </label>
                                     <div class="col-md-6">
                                         <input class="form-control" id="remarks"
                                                name="remarks"
@@ -513,14 +511,15 @@
                                         <label class="radio-inline"><input name="invoicePrintOrNot" type="radio"
                                                                            value="PRINT">Required</label>
                                         <label class="radio-inline"><input checked class="radio-inline"
-                                                                           name="invoicePrintOrNot" type="radio" value="NOT">Not Required</label>
+                                                                           name="invoicePrintOrNot" type="radio"
+                                                                           value="NOT">Not Required</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="container-fluid">
                                     <div class="col-sm-6 text-center">
-                                        <button class="btn btn-success" type="submit"><span
+                                        <button class="btn btn-success" id="btnSubmitInvoice" type="submit"><span
                                                 class="glyphicon glyphicon-print "></span>&nbsp;
                                             &nbsp;Print
                                         </button>
@@ -545,11 +544,13 @@
                     th:text="${err}"></li>
             </ul>
         </div>
+        <div class="alert-warning" th:if="${error==true}">
+            <p class="text-warning">Please recheck invoice and fill all from start to end <br> You may have add details wrongly that why system love to you and give punishment to fill details again  </p>
+        </div>
     </form>
 </div>
 <!--Invoice Processing Details - end -->
 <footer class="page-footer" th:replace="fragments/footer"></footer>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <script th:replace="fragments/script"></script>
 <!--custom for invoice only-->
 <script th:src="@{/js/invoice.js}"></script>

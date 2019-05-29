@@ -1,11 +1,11 @@
 $(document).ready(function () {
-    //data show content show and hide - start
-    contentHide(document.getElementById("medicalPackageDetails"));
-    contentHide(document.getElementById("labTestShowTable"));
-    contentHide(document.getElementById("patientContent"));
-    contentHide(document.getElementById("card"));
-    contentHide(document.getElementById("patientListDisplay"));
-    //data show content show and hide - end
+        //data show content show and hide - start
+        contentHide(document.getElementById("medicalPackageDetails"));
+        contentHide(document.getElementById("labTestShowTable"));
+        contentHide(document.getElementById("patientContent"));
+        contentHide(document.getElementById("card"));
+        contentHide(document.getElementById("patientListDisplay"));
+        //data show content show and hide - end
     }
 );
 
@@ -547,8 +547,18 @@ $("#cardNumber").on("keyup", function () {
 
 //balance settlement
 $("#amountTendered").on("keyup", function () {
-
     $("#balance").val($("#amountTendered").val() - $("#amount").val());
+
+    if($("#balance").val()<0){
+        backgroundColourChangeBad($(this));
+        contentHide(document.getElementById("btnSubmitInvoice"));
+    }else {
+        backgroundColourChangeGood($(this));
+        contentShow(document.getElementById("btnSubmitInvoice"));
+        $("#btnSubmitInvoice").attr('class','btn btn-success');
+
+    }
+
 });
 
 /*//-----------------> Information selection ------ end <----------------------------//*/

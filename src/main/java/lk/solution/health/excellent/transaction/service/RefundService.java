@@ -51,16 +51,17 @@ public class RefundService implements AbstractService<Refund, Integer> {
         return refundDao.findAll(refundExample);
     }
 
-    public List<Refund> findByUserAndCreatedAt(User user, LocalDateTime today) {
+    public List<Refund> findByUserAndCreatedAt(User user, LocalDate today) {
         return refundDao.findByUserAndCreatedAt(user, today);
     }
 
-    public List<Refund> findByCreatedAt(LocalDateTime today) {
+    public List<Refund> findByDate(LocalDate today) {
         return refundDao.findByCreatedAt(today);
     }
 
-    public List<Refund> findByCreatedAtIsBetween(LocalDateTime from, LocalDateTime to) {
+    public List<Refund> findByCreatedAtIsBetween(LocalDate from, LocalDate to) {
         return refundDao.findByCreatedAtIsBetween(from, to);
     }
+
 }
 

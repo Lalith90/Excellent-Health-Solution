@@ -6,6 +6,7 @@ import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.resource.entity.Enum.MedicalPackageStatus;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ import java.util.Objects;
 @Table(name = "medical_package")
 @Getter
 @Setter
+@ToString
 @JsonIgnoreProperties(value = "createdDate",allowGetters = true)
 @JsonFilter("MedicalPackage")
 public class MedicalPackage {

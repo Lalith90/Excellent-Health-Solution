@@ -76,7 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/patient/**").hasAnyRole("MANAGER", "CHASHIER")
                 .antMatchers("/lab/authorize/**").hasRole("MLT1")
                 .antMatchers("/lab/**").hasAnyRole("MLT1, MLT2")
-                .antMatchers("/phlabotoProcess/**").hasRole("PHLEBOTOMISE")
+                .antMatchers("/phlebotomyProcess/**").hasRole("PHLEBOTOMISE")
                 .anyRequest()
                 .authenticated()
                 .and()

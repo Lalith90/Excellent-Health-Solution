@@ -2,7 +2,9 @@ package lk.solution.health.excellent.transaction.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lk.solution.health.excellent.resource.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,6 +18,8 @@ import java.util.Objects;
 @Table(name = "refund")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 //@JsonIgnoreProperties annotation is a Jackson annotation. Spring Boot uses Jackson for Serializing and Deserialize Java objects to and from JSON.
 @JsonIgnoreProperties(value = "createdAt", allowGetters = true)
 //implements Serializable
@@ -43,7 +47,7 @@ public class Refund {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {
@@ -53,15 +57,6 @@ public class Refund {
                     CascadeType.DETACH})
     private User user;
 
-
-    public Refund() {
-    }
-
-    public Refund(Invoice invoice, String reason, LocalDateTime createdAt) {
-        this.invoice = invoice;
-        this.reason = reason;
-        this.createdAt = createdAt;
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -76,15 +71,5 @@ public class Refund {
         return Objects.hash(id);
     }
 
-    @Override
-    public String toString() {
-        return "Refund{" +
-                "id=" + id +
-                ", invoice=" + invoice +
-                ", amount=" + amount +
-                ", reason='" + reason + '\'' +
-                ", createdAt=" + createdAt +
-                ", user=" + user +
-                '}';
-    }
+
 }

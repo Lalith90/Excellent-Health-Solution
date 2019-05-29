@@ -7,7 +7,6 @@ import lk.solution.health.excellent.lab.dao.LabTestDao;
 import lk.solution.health.excellent.lab.entity.Enum.LabTestStatus;
 import lk.solution.health.excellent.lab.entity.Enum.LabtestDoneHere;
 import lk.solution.health.excellent.lab.entity.LabTest;
-import lk.solution.health.excellent.transaction.dao.InvoiceDao;
 import lk.solution.health.excellent.transaction.entity.Invoice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -18,9 +17,8 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -108,12 +106,12 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
     }
 
     @CachePut(value = "invoiceHasLabTest")
-    public Integer countByCreatedAt(LocalDateTime today) {
+    public Integer countByCreatedAt(LocalDate today) {
         return invoiceHasLabTestDao.countByCreatedAt(today);
     }
 
     @CachePut(value = "invoiceHasLabTest")
-    public Integer countByCreatedAtIsBetween(LocalDateTime from, LocalDateTime to) {
+    public Integer countByCreatedAtIsBetween(LocalDate from, LocalDate to) {
         return invoiceHasLabTestDao.countByCreatedAtIsBetween(from, to);
     }
 
@@ -126,6 +124,10 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
         List<LabTest> labTests = new ArrayList<>();
         for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTestDao.findByInvoice(invoice))  labTests.add(invoiceHasLabTest.getLabTest());
         return labTests;
+    }
+
+    public List<InvoiceHasLabTest> findByDate(LocalDate createdAt) {
+        return invoiceHasLabTestDao.findByCreatedAt(createdAt);
     }
 }
 

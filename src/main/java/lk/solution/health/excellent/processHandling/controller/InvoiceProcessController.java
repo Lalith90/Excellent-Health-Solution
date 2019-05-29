@@ -21,6 +21,7 @@ import lk.solution.health.excellent.transaction.entity.Enum.PaymentMethod;
 import lk.solution.health.excellent.transaction.entity.Invoice;
 import lk.solution.health.excellent.transaction.service.DiscountRatioService;
 import lk.solution.health.excellent.transaction.service.InvoiceService;
+import lk.solution.health.excellent.util.ExceptionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,16 +35,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,13 +65,14 @@ public class InvoiceProcessController {
     private final ServletContext context;
     private final ConsultationService consultationService;
     private final EmailService emailService;
+    private final ExceptionService exceptionService;
 
     @Autowired
     public InvoiceProcessController(InvoiceService invoiceService, UserService userService, PatientService patientService,
                                     DoctorService doctorService, LabTestService labTestService, DateTimeAgeService dateTimeAgeService,
                                     CollectingCenterService collectingCenterService, DiscountRatioService discountRatioService,
                                     MedicalPackageService medicalPackageService, InvoiceHasLabTestService invoiceHasLabTestService,
-                                    FileHandelService fileHandelService, ServletContext context, ConsultationService consultationService, EmailService emailService) {
+                                    FileHandelService fileHandelService, ServletContext context, ConsultationService consultationService, EmailService emailService, ExceptionService exceptionService) {
         this.invoiceService = invoiceService;
         this.userService = userService;
         this.patientService = patientService;
@@ -87,6 +87,7 @@ public class InvoiceProcessController {
         this.context = context;
         this.consultationService = consultationService;
         this.emailService = emailService;
+        this.exceptionService = exceptionService;
     }
 
     @GetMapping
@@ -106,13 +107,18 @@ public class InvoiceProcessController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String newInvoice(@Valid @ModelAttribute InvoiceProcess invoiceProcess, BindingResult result, Model model,
+    public String newInvoice(@Valid @ModelAttribute InvoiceProcess invoiceProcess, BindingResult result, Model model, RedirectAttributes redirectAttributes,
                              HttpServletRequest request, HttpServletResponse response) {
+        System.out.println(invoiceProcess.toString());
+        // Second value is greater than one {< 0}, Both are equal { = 0}, First value is greater {>0}
+        //boolean value = invoiceProcess.getAmount().compareTo(invoiceProcess.getAmountTendered()) < 0;
+        // System.out.println(value);
         if (result.hasErrors()) {
 
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());
             }
+
             model.addAttribute("paymentMethods", PaymentMethod.values());
             model.addAttribute("invoicePrintOrNot", InvoicePrintOrNot.values());
             model.addAttribute("patients", patientService.findAll());
@@ -121,6 +127,7 @@ public class InvoiceProcessController {
             model.addAttribute("discountRatios", discountRatioService.findAll());
             model.addAttribute("labTests", labTestService.findAll());
             model.addAttribute("medicalPackages", medicalPackageService.openMedicalPackage(MedicalPackageStatus.OPEN));
+            redirectAttributes.addFlashAttribute("error", true);
             return "process/invoiceProcess";
         }
 
@@ -134,13 +141,13 @@ public class InvoiceProcessController {
         int newInvoiceNumber;
         int previousNumber = invoiceService.findLastInvoice().getNumber();
         int newNumberFirstTwoCharacters = Integer.parseInt(String.valueOf(previousNumber).substring(0, 2));
-        LocalDateTime currentDateTime = dateTimeAgeService.getCurrentDateTime();
+        LocalDate currentDateTime = dateTimeAgeService.getCurrentDate();
         int currentYearLastTwoNumber = Integer.parseInt(String.valueOf(currentDateTime.getYear()).substring(2, 4));
 
 
         if (invoiceService.findLastInvoice().getNumber() == null) {
             newInvoiceNumber = Integer.parseInt(currentYearLastTwoNumber + "00000000");
-        }else if (currentYearLastTwoNumber == newNumberFirstTwoCharacters) {
+        } else if (currentYearLastTwoNumber == newNumberFirstTwoCharacters) {
             newInvoiceNumber = previousNumber + 1;
         } else {
             newInvoiceNumber = previousNumber + 100_000_000;
@@ -162,7 +169,8 @@ public class InvoiceProcessController {
             labTests.addAll(invoiceProcess.getMedicalPackage().getLabTests());
         }
 
-        /*medical package and lab tests -- end*/
+
+
         /*Patient Details verification - start*/
         //find patient already in or not in system
         if (patientService.search(invoiceProcess.getPatient()).isEmpty()) {
@@ -209,7 +217,6 @@ public class InvoiceProcessController {
                 }
             }
         }
-        /*Patient Details verification - end*/
 
 
         BigDecimal totalPrice = invoiceProcess.getTotalprice();
@@ -224,26 +231,37 @@ public class InvoiceProcessController {
         if (backEndAmount.equals(invoiceProcess.getAmount())) {
             return "redirect:/invoiceProcess";
         }
+
         Invoice invoice = new Invoice();
 
+        //Payment method is CASH
+        if (invoiceProcess.getPaymentMethod() != PaymentMethod.CASH) {
+            invoice.setBankName(invoiceProcess.getBankName());
+            invoice.setCardNumber(exceptionService.stringToInt(invoiceProcess.getCardNumber().trim()));
+        } else {
+            invoice.setAmountTendered(invoiceProcess.getAmountTendered());
+            invoice.setBalance(invoiceProcess.getBalance());
+        }
+        /*//--> If medical package has not any lab test hence we set to invoice medical package as null <--//*/
+        if (invoiceProcess.getMedicalPackage().getLabTests().isEmpty()) {
+            invoice.setMedicalPackage(null);
+        } else {
+            invoice.setMedicalPackage(invoiceProcess.getMedicalPackage());
+        }
+        invoice.setAmount(invoiceProcess.getAmount());
+        invoice.setTotalprice(invoiceProcess.getTotalprice());
         invoice.setNumber(newInvoiceNumber);
         invoice.setPaymentMethod(invoiceProcess.getPaymentMethod());
-        invoice.setTotalprice(invoiceProcess.getTotalprice());
-        invoice.setAmount(invoiceProcess.getAmount());
-        invoice.setBankName(invoiceProcess.getBankName());
-        invoice.setCardNumber(invoiceProcess.getCardNumber());
         invoice.setRemarks(invoiceProcess.getRemarks());
         invoice.setCreatedAt(currentDateTime);
         invoice.setPatient(invoiceProcess.getPatient());
         invoice.setCollectingCenter(invoiceProcess.getCollectingCenter());
         invoice.setDiscountRatio(invoiceProcess.getDiscountRatio());
         invoice.setUser(currentUser);
-        invoice.setMedicalPackage(invoiceProcess.getMedicalPackage());
         invoice.setDoctor(invoiceProcess.getDoctor());
         invoice.setInvoicePrintOrNot(invoiceProcess.getInvoicePrintOrNot());
         invoice.setDiscountAmount(discountPrice);
-        invoice.setAmountTendered(invoiceProcess.getAmountTendered());
-        invoice.setBalance(invoiceProcess.getBalance());
+        invoice.setInvoicedAt(dateTimeAgeService.getCurrentDateTime());
 
 //save invoice and get its details to save invoice has lab test
         invoice = invoiceService.persist(invoice);
@@ -300,7 +318,7 @@ public class InvoiceProcessController {
             }
             String message = "\n \t\t\t\t\t\t SERVICE NON APPOINTMENTS - RECEIPT" +
                     "\n \t\t\t\t ----------------------------------------------------------------------------------------------------" +
-                    "\n Bill No : \t\t\t\t" + invoice.getNumber() + "\t\t\t\tDate : \t\t" + invoice.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) +
+                    "\n Bill No : \t\t\t\t" + invoice.getNumber() + "\t\t\t\tDate : \t\t" + invoice.getInvoicedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) +
                     "\n Patient Name : \t\t" + invoice.getPatient().getTitle().getTitle() + " " + invoice.getPatient().getName() + "\t\tMobile : \t\t" + invoice.getPatient().getMobile() +
                     "\n Referral Doctor : \t\t" + invoice.getDoctor().getTitle().getTitle() + " " + invoice.getDoctor().getName() +
                     "\n\n \t\t\t\t\t Selected Lab Tests \n" + labTestList +
@@ -312,7 +330,7 @@ public class InvoiceProcessController {
                     "\n\n\n\n\n Please inform us to if there is any changes on this bill" +
                     "\n \n \n   \t\t Thank You" +
                     "\n \t Excellent Health Solution" +
-                    "\n\n\n\n\nThis is a one way communication email service hence please do not reply if you need to further details regarding anything take call to hot line  "+
+                    "\n\n\n\n\nThis is a one way communication email service hence please do not reply if you need to further details regarding anything take call to hot line  " +
                     "\n\n\n\n\nWe will not responsible for reports not collected within 30 days.   ";
 
             boolean isFlag = emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution ", message);

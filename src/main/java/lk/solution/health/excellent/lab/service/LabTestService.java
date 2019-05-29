@@ -31,7 +31,7 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
         this.dateTimeAgeService = dateTimeAgeService;
     }
 
-    @Cacheable(value = "labTest")
+    @Cacheable("labTest")
     public List<LabTest> findAll() {
         System.out.println("Lab Test cache ok");
         return labTestDao.findAll();

@@ -5,7 +5,9 @@ import lk.solution.health.excellent.lab.entity.Enum.LabTestStatus;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.resource.entity.User;
 import lk.solution.health.excellent.transaction.entity.Invoice;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,6 +19,8 @@ import java.time.LocalDateTime;
 @Table(name = "invoice_has_Labtest")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(value = {"workSheetTakenDateTime", "resultEnteredDateTime", "sampleCollectedDateTime","reportAuthorizeDateTime","reportPrintedDateTime","reportRePrintedDateTime",
         "sampleCollectingUser", "workSheetTakenUser", "resultEnteredUser", "reportAuthorizedUser", "reportPrintedUser", "reportRePrintedUser"},allowGetters = true)
 public class InvoiceHasLabTest {
@@ -42,8 +46,8 @@ public class InvoiceHasLabTest {
     private LabTestStatus labTestStatus=LabTestStatus.NOSAMPLE;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdAt;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.DETACH})
     private User user,sampleCollectingUser, workSheetTakenUser, resultEnteredUser, reportAuthorizedUser, reportPrintedUser,reportRePrintedUser;
@@ -69,14 +73,5 @@ public class InvoiceHasLabTest {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime reportRePrintedDateTime;
 
-    public InvoiceHasLabTest() {
-    }
 
-    public InvoiceHasLabTest(Invoice invoice, LabTest labTest, LabTestStatus labTestStatus, LocalDateTime createdAt, Integer number) {
-        this.invoice = invoice;
-        this.labTest = labTest;
-        this.labTestStatus = labTestStatus;
-        this.createdAt = createdAt;
-        this.number = number;
-    }
 }

@@ -10,7 +10,9 @@ import lk.solution.health.excellent.transaction.entity.DiscountRatio;
 import lk.solution.health.excellent.transaction.entity.Enum.InvoicePrintOrNot;
 import lk.solution.health.excellent.transaction.entity.Enum.PaymentMethod;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -20,6 +22,8 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
+@NoArgsConstructor
 @JsonIgnoreProperties(value = {"medicalPackage", "labTests"})
 public class InvoiceProcess {
 
@@ -35,20 +39,18 @@ public class InvoiceProcess {
     private CollectingCenter collectingCenter;
     private DiscountRatio discountRatio;
 
-    private String remarks, bankName;
-    private Integer cardNumber;
+    private String remarks, bankName, cardNumber;
 
     @Enumerated(EnumType.STRING)
     private InvoicePrintOrNot invoicePrintOrNot;
 
+    private BigDecimal amountTendered, balance;
+
     @NotNull(message = "Please double check price and amount")
-    private BigDecimal totalprice, amount, amountTendered, balance;
+    private BigDecimal totalprice, amount;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
-
-    public InvoiceProcess() {
-    }
 
 
 }

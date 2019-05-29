@@ -35,7 +35,7 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,23 +96,23 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
         return invoiceDao.findByPatient(patient);
     }
 
-    public Invoice findByPatientAndCreateDate(Patient patient, LocalDateTime date) {
+    public Invoice findByPatientAndCreateDate(Patient patient, LocalDate date) {
         return invoiceDao.findByPatientAndCreatedAt(patient, date);
     }
 
-    public List<Invoice> findByDateAndUser(LocalDateTime currentDate, User byUserName) {
+    public List<Invoice> findByDateAndUser(LocalDate currentDate, User byUserName) {
         return invoiceDao.findByCreatedAtAndUser(currentDate, byUserName);
     }
 
-    public List<Invoice> findByDate(LocalDateTime today) {
+    public List<Invoice> findByDate(LocalDate today) {
         return invoiceDao.findByCreatedAt(today);
     }
 
-    public Integer countByCreatedAt(LocalDateTime today) {
+    public Integer countByCreatedAt(LocalDate today) {
         return invoiceDao.countByCreatedAt(today);
     }
 
-    public List<Invoice> findByCreatedAtIsBetween(LocalDateTime from, LocalDateTime to) {
+    public List<Invoice> findByCreatedAtIsBetween(LocalDate from, LocalDate to) {
         return invoiceDao.findByCreatedAtIsBetween(from, to);
     }
 
@@ -120,7 +120,7 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
         return invoiceDao.findByNumber(number);
     }
 
-    public Integer countByCreatedAtIsBetween(LocalDateTime from, LocalDateTime to) {
+    public Integer countByCreatedAtIsBetween(LocalDate from, LocalDate to) {
         return invoiceDao.countByCreatedAtIsBetween(from, to);
     }
 
@@ -150,11 +150,10 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
         pdfPCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         pdfPCell.setBorderColor(BaseColor.WHITE);
     }
-
+//all lab test gather to table and show
     private PdfPTable labTestToTable(List<LabTest> labTests, boolean medicalPackage) {
-        System.out.println("come to lab test table");
         //Font
-        Font secondaryFont = FontFactory.getFont("Didot", 9, BaseColor.BLACK);
+        Font secondaryFont = FontFactory.getFont(FontFactory.TIMES_BOLDITALIC, 9, BaseColor.BLACK);
         //create a table
         float[] columnWidth = {10f, 240f, 150f};//column amount{column 1 , column 2 , column 3}
         PdfPTable labTestTable = new PdfPTable(columnWidth);
@@ -236,7 +235,7 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             float[] columnWidths = {200f, 200f};//column amount{column 1 , column 2 }
             PdfPTable mainTable = new PdfPTable(columnWidths);
             // add cell to table
-            PdfPCell cell = new PdfPCell(new Phrase("Date : \t" + invoice.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss")), secondaryFont));
+            PdfPCell cell = new PdfPCell(new Phrase("Date : \t" + invoice.getInvoicedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), secondaryFont));
             commonStyleForPdfPCell(cell);
             mainTable.addCell(cell);
 
@@ -262,8 +261,12 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
 
             document.add(mainTable);
 
-            //Lab Test and Medical Package details
+//space taken adding pharagraph
+            Paragraph takeSpaceLabtestShowTable  = new Paragraph("\n", secondaryFont);
+            commonStyleForParagraphTwo(takeSpaceLabtestShowTable);
+            document.add(takeSpaceLabtestShowTable);
 
+//Lab Test and Medical Package details
             if (invoice.getMedicalPackage() == null && invoice.getInvoiceHasLabTests() != null) {
                 List<LabTest> labTests = new ArrayList<>();
                 List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByInvoice(invoice);
@@ -288,19 +291,17 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
                 commonStyleForParagraph(paragraph7);
                 document.add(paragraph7);
 
-                // remove medical package is included in all lab test array
+// remove medical package is included in all lab test array
                 List<LabTest> labTests = invoiceHasLabTestService.findLabTestByInvoice(invoice);
                 List<LabTest> labTests2 = labTests.stream().filter(labTest -> !labTests1.contains(labTest)).collect(Collectors.toList());
                 document.add(labTestToTable(labTests2, false)); // only selected lab test
             }
-
 // according to payment method bill should be change
             PaymentMethod paymentMethod = invoice.getPaymentMethod();
 
-            // invoice details table
-            //Create a Table (Patient Details)
+// invoice details table
+      //Create a Table (Patient Details)
             PdfPTable invoiceTable = new PdfPTable(new float[]{3f, 1f});
-            //invoiceTable.setWidthPercentage(50);
 
             PdfPCell totalAmount = new PdfPCell(new Phrase("\nTotal Amount(Rs.) : ", secondaryFont));
             commonStyleForPdfPCellLastOne(totalAmount);

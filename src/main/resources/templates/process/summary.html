@@ -6,126 +6,133 @@
     <style th:replace="fragments/style"></style>
 </head>
 <body>
-<nav class="navbar navbar-default" th:replace="fragments/header :: header" style="margin-bottom: 60px"></nav>
+<nav class="navbar navbar-default" style="margin-bottom: 60px" th:replace="fragments/header :: header"></nav>
 <div class="container-fluid" style="margin-top: 60px">
     <div class="panel panel-primary">
         <div class="panel panel-heading text-center">
-            <span th:text="${date}"></span>&nbsp;Summary
+            <h3><span th:text="${date}"></span>&nbsp;Summary</h3>
         </div>
-        <div class="panel panel-body">
-            <div class="container-fluid">
-                <div class="container-fluid text-center" th:if="${alerStatu==true}">
-                    <div class="alert alert-danger alert-dismissable fade in">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        Please enter two date column other views how can fulfil your request.
-                    </div>
-                </div>
-                <!-- Manager and MLT - One can see - start-->
-                <div class="container-fluid"
-                     th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')') || #authorization.expression('hasRole(''ROLE_MANAGER'')')}">
-                    <div class="col-sm-3"></div>
-                    <div class="container col-sm-6">
-                        <h4 class="text-info"><b> Custom Search</b></h4>
-                        <div class="row">
-                            <form class="form-inline" th:action="@{/searchSummary}" th:method="POST">
-                                <div class="form-group col-sm-5">
-                                    <label for="startDate" class="">FROM:</label>
-                                    <input type="date" id="startDate" class="form-control" name="startDate"/>
-                                </div>
-                                <div class="form-group col-sm-4">
-                                    <label for="endDate" class="">TO:</label>
-                                    <input type="date" id="endDate" class="form-control" name="endDate"/>
-                                </div>
-                                <div class="form-group col-sm-1">
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-success"><span
-                                                class="glyphicon glyphicon-search"></span>&nbsp;Search
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="col-sm-3"></div>
-                </div>
-                <br>
-                <!-- Manager and MLT - One can see - start-->
-                <!--every one can see - start-->
-                <div class="col-sm-3"></div>
-                <div class="container-fluid" id="summary">
-                    <div class="container-fluid col-sm-6"
-                         th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')') || #authorization.expression('hasRole(''ROLE_MANAGER'')') || #authorization.expression('hasRole(''ROLE_CHASHIER'')')}">
-                        <div class="row">
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-5">Date : <span th:text="${{date}}"></span></div>
-                            <div class="col-sm-5">User : <span th:text="${user}"></span></div>
-                        </div>
-                        <div class="row">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-condensed text-center table-bordered">
-                                    <caption class="text-center text-primary"><b><i><span th:text="${givenDate}"></span>&nbsp;
-                                        COLLECTION REPORT</i></b></caption>
-                                    <thead>
-                                    <tr class="text-center">
-                                        <th>Item</th>
-                                        <th>Price (Rs.)</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr class="text-info">
-                                        <th>LAB INVESTIGATIONS COLLECTION</th>
-                                        <th><span th:text="${{labCollection}}"></span></th>
-                                    </tr>
-                                    <tr class="text-info">
-                                        <th>MEDICAL PACKAGES COLLECTION</th>
-                                        <th><span th:text="${{medicalPackageCollection}}"></span></th>
-                                    </tr>
-                                    <tr class="text-primary">
-                                        <th>TOTAL COLLECTION</th>
-                                        <th><span th:text="${{totalCollection}}"></span></th>
-                                    </tr>
-                                    <tr class="text-warning">
-                                        <th>DISCOUNT COLLECTION</th>
-                                        <th><span th:text="${{discountedAmount}}"></span></th>
-                                    </tr>
-                                    <tr class="text-warning">
-                                        <th>REFUND COLLECTION</th>
-                                        <th><span th:text="${{totalRefund}}"></span></th>
-                                    </tr>
-                                    <tr class="text-info">
-                                        <th>TOTAL CASH COLLECTION</th>
-                                        <th><span th:text="${{totalCash}}"></span></th>
-                                    </tr>
-                                    <tr class="text-info">
-                                        <th>TOTAL CARD COLLECTION</th>
-                                        <th><span th:text="${{totalCard}}"></span></th>
-                                    </tr>
-                                    <tr class="text-success">
-                                        <th>CASH TO BE DEPOSITED</th>
-                                        <th><span th:text="${{needToDeposit}}"></span></th>
-                                    </tr>
-                                    </tbody>
-                                </table>
+        <div class="container text-center">
+            <div class="panel panel-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="container-fluid text-center" th:if="${alerStatu==true}">
+                            <div class="alert alert-danger alert-dismissable fade in">
+                                <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
+                                Please enter two date to requested field otherwise there is no way to fulfil your
+                                requirement.
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-3"></div>
-                <div class="container-fluid col-sm-offset-5" th:if="${print==true}">
-                    <button onclick="printContent('summary')" class="btn btn-success"><span
-                            class="glyphicon glyphicon-print"></span>&nbsp;Print
-                    </button>
+                    <div class="row">
+                        <!-- Manager and MLT - One can see - start-->
+                        <div class="container-fluid"
+                             th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')') || #authorization.expression('hasRole(''ROLE_MANAGER'')')}">
+                            <div class="row">
+                                <div class="container-fluid">
+                                    <h4 class="text-info"><b> Custom Search</b></h4>
+                                    <form class="form-inline" th:action="@{/searchSummary}" th:method="POST">
+                                        <div class="form-group">
+                                            <label for="startDate">FROM :</label>
+                                            <input class="form-control" id="startDate" name="startDate" type="date"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="endDate">TO :</label>
+                                            <input class="form-control" id="endDate" name="endDate" type="date"/>
+                                        </div>
+                                        <button class="btn btn-success" type="submit"><span
+                                                class="glyphicon glyphicon-search"></span>&nbsp;Search
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Manager and MLT - One can see - start-->
+                    <!--every one can see - start-->
+                    <div class="row">
+                        <div class="container-fluid">
+                            <div class="col-sm-6"><h3> Date : <span th:text="${{date}}"></span></h3></div>
+                            <div class="col-sm-6"><h3> User : <span th:text="${user}"></span></h3></div>
+                        </div>
+                    </div>
+                    <div class="row" id="summary">
+                        <div class="container-fluid"
+                             th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')') || #authorization.expression('hasRole(''ROLE_CHASHIER'')')}">
+                            <div class="row">
+                                <div class="col-sm-offset-2 col-sm-8">
+                                    <div class="table-responsive">
+                                        <table class="table  table-striped table-condensed table-bordered">
+                                            <caption class="text-center text-primary"><b><i><span
+                                                    th:text="${givenDate}"></span>&nbsp;
+                                                COLLECTION REPORT</i></b></caption>
+                                            <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Price (Rs.)</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr class="text-info">
+                                                <th>LAB INVESTIGATIONS COLLECTION</th>
+                                                <th class="text-right"><span th:text="${{labCollection}}"></span></th>
+                                            </tr>
+                                            <tr class="text-info">
+                                                <th>MEDICAL PACKAGES COLLECTION</th>
+                                                <th class="text-right"><span
+                                                        th:text="${{medicalPackageCollection}}"></span>
+                                                </th>
+                                            </tr>
+                                            <tr class="text-primary">
+                                                <th>TOTAL COLLECTION</th>
+                                                <th class="text-right"><span th:text="${{totalCollection}}"></span></th>
+                                            </tr>
+                                            <tr class="text-warning">
+                                                <th>DISCOUNT COLLECTION</th>
+                                                <th class="text-right"><span th:text="${{discountedAmount}}"></span>
+                                                </th>
+                                            </tr>
+                                            <tr class="text-warning">
+                                                <th>REFUND COLLECTION</th>
+                                                <th class="text-right"><span th:text="${{totalRefund}}"></span></th>
+                                            </tr>
+                                            <tr class="text-info">
+                                                <th>TOTAL CASH COLLECTION</th>
+                                                <th class="text-right"><span th:text="${{totalCash}}"></span></th>
+                                            </tr>
+                                            <tr class="text-info">
+                                                <th>TOTAL CARD & CHEQUE COLLECTION</th>
+                                                <th class="text-right"><span th:text="${{totalCard}}"></span></th>
+                                            </tr>
+                                            <tr class="text-success">
+                                                <th>CASH TO BE DEPOSITED</th>
+                                                <th class="text-right"><span th:text="${{needToDeposit}}"></span></th>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="container-fluid" th:if="${print==true}">
+                            <button class="btn btn-success" onclick="printContent('summary')"><span
+                                    class="glyphicon glyphicon-print"></span>&nbsp;Print
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <!--every one can see - end-->
                 <!--MLT 1 and 2, Manger   - start-->
-                <div class="container-fluid"
+                <div class="container-fluid "
                      th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')||#authorization.expression('hasRole(''ROLE_MLT2'')') ||#authorization.expression('hasRole(''ROLE_MLT1'')') || #authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')') }">
-                    <div class="col-sm-3"></div>
                     <div class="row" id="workLoad">
-                        <div class="container-fluid col-sm-6">
+                        <div class="col-sm-offset-2 col-sm-8">
                             <div class="table-responsive">
-                                <table class="table table-striped table-condensed text-center table-bordered">
-                                    <caption class="text-center text-primary"><b><i><span th:text="${givenDate}"></span>&nbsp;
+                                <table class="table table-striped table-condensed table-bordered">
+                                    <caption class="text-center text-primary"><b><i><span
+                                            th:text="${givenDate}"></span>&nbsp;
                                         WORK LOAD REPORT</i></b></caption>
                                     <thead>
                                     <tr class="text-center">
@@ -135,28 +142,33 @@
                                     </thead>
                                     <tbody>
                                     <tr class="text-info">
-                                        <th>Pateint Count</th>
-                                        <th th:text="${{patientCount}}"></th>
+                                        <th>Invoiced Count</th>
+                                        <th class="text-right" th:text="${{invoicedCount}}"></th>
+                                    </tr>
+                                    <tr class="text-info">
+                                        <th>Patient Count</th>
+                                        <th class="text-right" th:text="${{patientCount}}"></th>
                                     </tr>
                                     <tr class="text-info">
                                         <th>Medical Package Count</th>
-                                        <th th:text="${medicalPackageCount}"></th>
+                                        <th class="text-right" th:text="${medicalPackageCount}"></th>
                                     </tr>
-                                    <tr class="text-info">
-                                        <th>Lab Test Count</th>
-                                        <th th:text="${{labTestCount}}"></th>
+                                    <tr class="text-success">
+                                        <th>Total Investigation Count</th>
+                                        <th class="text-right" th:text="${{investigationCount}}"></th>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <div class="container-fluid col-sm-offset-5" th:if="${print==true}">
-                        <button onclick="printContent('workLoad')" class="btn btn-success"><span
-                                class="glyphicon glyphicon-print"></span>&nbsp;Print
-                        </button>
+                    <div class="row">
+                        <div class="container-fluid" th:if="${print==true}">
+                            <button class="btn btn-success" onclick="printContent('workLoad')"><span
+                                    class="glyphicon glyphicon-print"></span>&nbsp;Print
+                            </button>
+                        </div>
                     </div>
-                    <div class="col-sm-3"></div>
                 </div>
                 <!--MLT 1 and 2, Manger   - end-->
             </div>
@@ -165,19 +177,5 @@
 </div>
 <footer class="page-footer" th:replace="fragments/footer"></footer>
 <script th:replace="fragments/script"></script>
-<!-- java Script function -->
-<script>
-    // el is variable that need to give when function call
-    function printContent(el) {
-        // restorepage = current document
-        let restorepage = document.body.innerHTML;
-        // printcontent = need to print area that area must enclosed with div
-        document.body.innerHTML = document.getElementById(el).innerHTML;
-        //called javascript print function
-        window.print();
-        //after print set current web page
-        document.body.innerHTML = restorepage;
-    }
-</script>
 </body>
 </html>

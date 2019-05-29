@@ -108,7 +108,7 @@ public class RefundController {
             return "refund/addRefund";
         }
         refund.setUser(userService.findByUserName(authentication.getName()));
-        refund.setCreatedAt(dateTimeAgeService.getCurrentDateTime());
+        refund.setCreatedAt(dateTimeAgeService.getCurrentDate());
         refundService.persist(refund);
 
         return "redirect:/refund";
@@ -125,7 +125,7 @@ public class RefundController {
             return "/refund/addRefund";
         }
         ref.setAmount(refund.getAmount());
-        ref.setCreatedAt(dateTimeAgeService.getCurrentDateTime());
+        ref.setCreatedAt(dateTimeAgeService.getCurrentDate());
         ref.setUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
         ref.setReason(refund.getReason());
         ref.setInvoice(invoiceService.findByNumber(refund.getInvoice().getNumber()));
