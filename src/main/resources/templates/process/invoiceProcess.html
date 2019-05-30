@@ -98,7 +98,7 @@
                                 <div class="row" id="labTestShowTable">
                                     <div class="container-fluid">
                                         <div class="panel panel-primary">
-                                            <div class="panel-heading">
+                                            <div class="panel-heading text-center">
                                                 <div class="row">
                                                     <div class="col-sm-6 text-left text-capitalize"><span
                                                             id="selectedLabTestCount"></span>
@@ -153,7 +153,7 @@
                                     </div>
                                     <div class="container-fluid">
                                         <div class="panel panel-primary">
-                                            <div class="panel-heading">
+                                            <div class="panel-heading text-center">
                                                 <h4 class="text text-center">Included Test Count&nbsp;
                                                     &nbsp; <span
                                                             id="includedLabTestCount"></span>
@@ -543,9 +543,6 @@
                 <li class="error" th:each="err: ${#fields.errors('*')}"
                     th:text="${err}"></li>
             </ul>
-        </div>
-        <div class="alert-warning" th:if="${error==true}">
-            <p class="text-warning">Please recheck invoice and fill all from start to end <br> You may have add details wrongly that why system love to you and give punishment to fill details again  </p>
         </div>
     </form>
 </div>

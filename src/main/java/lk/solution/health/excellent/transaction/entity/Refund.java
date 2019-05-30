@@ -2,10 +2,7 @@ package lk.solution.health.excellent.transaction.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lk.solution.health.excellent.resource.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -20,6 +17,7 @@ import java.util.Objects;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 //@JsonIgnoreProperties annotation is a Jackson annotation. Spring Boot uses Jackson for Serializing and Deserialize Java objects to and from JSON.
 @JsonIgnoreProperties(value = "createdAt", allowGetters = true)
 //implements Serializable
@@ -37,11 +35,11 @@ public class Refund {
                     CascadeType.DETACH})
     private Invoice invoice;
 
-    @Basic
+
     @Column(name = "amount", precision = 10, scale = 2)
     private BigDecimal amount;
 
-    @Basic
+
     @Column(name = "reason", length = 45)
     private String reason;
 

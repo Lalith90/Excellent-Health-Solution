@@ -9,14 +9,17 @@
 <div class="container-fluid" style="margin-top: 60px">
 <!-- /.container-fluid -->
     <div class="panel panel-primary">
-        <div class="panel panel-heading">
+        <div class="panel panel-heading text-center">
             <h4><b>Invoice Management</b></h4>
         </div>
         <div class="panel panel-body">
             <div class="row">
                 <div class="col-sm-12 ">
-                    <div class="form-group text-left">
+                    <div class="form-group text-left col-sm-6">
                         <a href="/invoiceProcess" class="btn btn-success"><span class="glyphicon glyphicon-list-alt"></span>&nbsp; New Invoice</a>
+                    </div>
+                    <div class="form-group text-right col-sm-6">
+                        <a href="/invoice/search" class="btn btn-success"><span class="glyphicon glyphicon-search"></span>&nbsp; Search Invoice</a>
                     </div>
                 </div>
             </div>
@@ -32,7 +35,7 @@
                                     <th> Amount</th>
                                     <th> Created By </th>
                                     <th> Date of Invoice  </th>
-                                    <th>Modify</th>
+                                    <th>View</th>
                                     <th th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}"> Delete Invoice</th>
                                 </tr>
                              </thead>

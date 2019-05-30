@@ -7,6 +7,7 @@ import lk.solution.health.excellent.lab.dao.LabTestDao;
 import lk.solution.health.excellent.lab.entity.Enum.LabTestStatus;
 import lk.solution.health.excellent.lab.entity.Enum.LabtestDoneHere;
 import lk.solution.health.excellent.lab.entity.LabTest;
+import lk.solution.health.excellent.resource.entity.User;
 import lk.solution.health.excellent.transaction.entity.Invoice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -128,6 +129,10 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
 
     public List<InvoiceHasLabTest> findByDate(LocalDate createdAt) {
         return invoiceHasLabTestDao.findByCreatedAt(createdAt);
+    }
+
+    public List<InvoiceHasLabTest> findByDateAndUser(LocalDate date, User user) {
+        return invoiceHasLabTestDao.findByCreatedAtAndUser(date, user);
     }
 }
 

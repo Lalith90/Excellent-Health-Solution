@@ -107,7 +107,7 @@ public class InvoiceProcessController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String newInvoice(@Valid @ModelAttribute InvoiceProcess invoiceProcess, BindingResult result, Model model, RedirectAttributes redirectAttributes,
+    public String newInvoice(@Valid @ModelAttribute InvoiceProcess invoiceProcess, BindingResult result, Model model,
                              HttpServletRequest request, HttpServletResponse response) {
         System.out.println(invoiceProcess.toString());
         // Second value is greater than one {< 0}, Both are equal { = 0}, First value is greater {>0}
@@ -127,7 +127,6 @@ public class InvoiceProcessController {
             model.addAttribute("discountRatios", discountRatioService.findAll());
             model.addAttribute("labTests", labTestService.findAll());
             model.addAttribute("medicalPackages", medicalPackageService.openMedicalPackage(MedicalPackageStatus.OPEN));
-            redirectAttributes.addFlashAttribute("error", true);
             return "process/invoiceProcess";
         }
 

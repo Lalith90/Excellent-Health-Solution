@@ -222,14 +222,14 @@ public class SummaryController {
         needToDeposit = operator.subtraction(totalCollection, operator.addition(operator.addition(totalRefund, totalCardAndCheque), discountedAmount));
 
 
-        model.addAttribute("labCollection", labCollection);
-        model.addAttribute("medicalPackageCollection", medicalPackageCollection);
-        model.addAttribute("totalCollection", totalCollection);
-        model.addAttribute("discountedAmount", discountedAmount);
-        model.addAttribute("totalCash", totalCash);
-        model.addAttribute("totalCard", totalCardAndCheque);
-        model.addAttribute("totalRefund", totalRefund);
-        model.addAttribute("needToDeposit", needToDeposit);
+        model.addAttribute("labCollection", labCollection.setScale(2, BigDecimal.ROUND_CEILING));
+        model.addAttribute("medicalPackageCollection", medicalPackageCollection.setScale(2, BigDecimal.ROUND_CEILING));
+        model.addAttribute("totalCollection", totalCollection.setScale(2, BigDecimal.ROUND_CEILING));
+        model.addAttribute("discountedAmount", discountedAmount.setScale(2, BigDecimal.ROUND_CEILING));
+        model.addAttribute("totalCash", totalCash.setScale(2, BigDecimal.ROUND_CEILING));
+        model.addAttribute("totalCard", totalCardAndCheque.setScale(2, BigDecimal.ROUND_CEILING));
+        model.addAttribute("totalRefund", totalRefund.setScale(2, BigDecimal.ROUND_CEILING));
+        model.addAttribute("needToDeposit", needToDeposit.setScale(2, BigDecimal.ROUND_CEILING));
         model.addAttribute("user", user.getEmployee().getName());
         model.addAttribute("search", new SearchProcess());
         model.addAttribute("print", true);
@@ -266,7 +266,18 @@ public class SummaryController {
             return "/process/summary";
         }
 
+        patientCount = invoiceService.countByDateAndUser(toDay, availableUser);
+                //invoiceService.countByCreatedAt(toDay);
+        invoices = invoiceService.findByDateAndUser(toDay, availableUser);
+                //invoiceService.findByDate(toDay);
+        invoiceHasLabTests = invoiceHasLabTestService.findByDateAndUser(toDay, availableUser);
+                //invoiceHasLabTestService.findByDate(toDay);
+        refunds = refundService.findByUserAndCreatedAt(availableUser,toDay);
+                //refundService.findByDate(toDay);
 
+
+        commonAttributeToFontEnd(model, availableUser, invoices, invoiceHasLabTests, refunds, patientCount);
+        model.addAttribute("search", new SearchProcess());
         model.addAttribute("date", dateTimeAgeService.getCurrentDate());
         return "/process/summary";
     }

@@ -9,7 +9,7 @@
 <nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
 <div class="container-fluid" style="margin-top: 60px">
     <div class="panel panel-primary" th:object="${doctorDetail}">
-        <div class="panel panel-heading ">
+        <div class="panel panel-heading  text-center">
            <h4> <span th:text="${doctorDetail.title.title}"></span> &nbsp; <span th:text="${doctorDetail.name}"></span></h4>
         </div>
         <div class="panel-body">

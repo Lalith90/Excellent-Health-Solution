@@ -84,7 +84,6 @@ let selectedMedicalPackageNameAndPrice;
 // get current url
 let currentURL = window.location.href;
 // regex
-let numberRegex = /^([eE][hH][sS][\d]+)$/;
 let creditVisaCardRegex = /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/;
 
 //Patient list from taken database
@@ -264,8 +263,9 @@ $("#btnNewPatient").on("click", function () {
     let previousPatientNumber = document.getElementById("previousPatientNumber").innerHTML;
     document.getElementById("patientNumber").value = "EHS".concat(Number(previousPatientNumber.slice(3)) + 1);
     //set all new patient value to empty
-    $("#id,#number,#patientName,#nic,#dateOfBirth,#email,#mobile,#land").val("");
-    $("#id,#number,#patientName,#nic,#dateOfBirth,#email,#mobile,#land").css('background-color', '');
+    $("#id,#number,#patientName,#nic,#dateOfBirth,#email,#mobile,#land").val("").css('background-color', '');
+    //$("#id,#number,#patientName,#nic,#dateOfBirth,#email,#mobile,#land").val(""); //this and below ones is the previous one
+    //$("#id,#number,#patientName,#nic,#dateOfBirth,#email,#mobile,#land");
 });
 
 // language=JQuery-CSS

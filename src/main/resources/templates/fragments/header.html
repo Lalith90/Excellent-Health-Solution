@@ -112,15 +112,15 @@
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#" sec:authorize="isAuthenticated()">Report<span class="caret"></span></a>
 						<!--CACHIER NAV BAR CONTENT -->
 						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_CHASHIER'')')}">
-							<li><a href="/summary">Summury </a></li>
+							<li><a href="/process/summary">Summury </a></li>
 						</ul>
 						<!--MLT1 NAV BAR CONTENT -->
 						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')')}">
-							<li><a href="/summary">Summary</a></li>
+							<li><a href="/process/summary">Summary</a></li>
 						</ul>
 						<!--MLT2 NAV BAR CONTENT -->
 						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_MLT2'')')}">
-							<li><a href="/summary">Summary  </a></li>
+							<li><a href="/process/summary">Summary  </a></li>
 						</ul>
 						<!--MANAGER NAV BAR CONTENT -->
 						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}">
@@ -130,7 +130,7 @@
 						</ul>
 						<!--PHLABOTO NAV BAR CONTENT -->
 						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">
-							<li><a href="/summary">Patient Count </a></li>
+							<li><a href="/process/summary">Patient Count </a></li>
 						</ul>
 					</li>
 				</ul>

@@ -9,7 +9,7 @@
 <nav class="navbar navbar-default" th:replace="fragments/header :: header" style="margin-bottom: 60px"></nav>
 <div class="container-fluid" style="margin-top: 60px">
     <div class="panel panel-primary">
-        <div class="panel panel-heading">
+        <div class="panel panel-heading text-center">
             <h5 class="text-center" th:if="${invoice1==true}"><b><i><span th:text="${invoice.patient.title.title}+ ${' '} + ${invoice.patient.name}"></span></i></b></h5>
         </div>
         <div class="panel panel-body">

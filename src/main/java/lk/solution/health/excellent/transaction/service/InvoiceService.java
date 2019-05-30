@@ -123,6 +123,10 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
     public Integer countByCreatedAtIsBetween(LocalDate from, LocalDate to) {
         return invoiceDao.countByCreatedAtIsBetween(from, to);
     }
+    public int countByDateAndUser(LocalDate date, User user) {
+        return invoiceDao.countByCreatedAtAndUser(date,user);
+    }
+    /* Pdf processing start */
 
     // common style for several phParagraph
     private void commonStyleForParagraph(Paragraph paragraph) {
@@ -192,7 +196,8 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             File file = new File(filePath);
             boolean exists = new File(filePath).exists();
             if (!exists) {
-                new File(filePath).mkdirs();
+                new File(filePath);
+               // new File(filePath).mkdirs(); // this is the actual code place on here but i removed .mkdirs()
             }
 
             Document document = new Document(PageSize.LETTER, 15, 15, 15, 0);
@@ -203,8 +208,7 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             //All front
             Font mainFont = FontFactory.getFont("Arial", 12, BaseColor.BLACK);
             Font secondaryFont = FontFactory.getFont("Arial", 9, BaseColor.BLACK);
-            Font highLiltedFont = FontFactory.getFont("Arial", 9, BaseColor.BLACK);
-             highLiltedFont = FontFactory.getFont(FontFactory.TIMES_BOLD);
+            Font highLiltedFont = FontFactory.getFont(FontFactory.TIMES_BOLD);
 
 
             Paragraph paragraph = new Paragraph("Excellent Health Solution", mainFont);
@@ -383,6 +387,8 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             return false;
         }
     }
+
+
 }
 /*
     // Creating a PdfDocument object

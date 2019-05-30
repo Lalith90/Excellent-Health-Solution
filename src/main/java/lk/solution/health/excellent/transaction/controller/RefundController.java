@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +64,8 @@ public class RefundController {
         model.addAttribute("addStatus", false);
         return "refund/addRefund";
     }
-//common attribute collect to one place
+
+    //common attribute collect to one place
     private void commonModel(Model model) {
         model.addAttribute("addStatus", true);
         model.addAttribute("invoiceError", false);
@@ -77,17 +79,29 @@ public class RefundController {
         return "refund/addRefund";
     }
 
+    //common save method
+    private void commonRefundSave(Refund refund) {
+        Refund ref = new Refund();
+        ref.setAmount(refund.getAmount());
+        ref.setCreatedAt(dateTimeAgeService.getCurrentDate());
+        ref.setUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
+        ref.setReason(refund.getReason());
+        ref.setInvoice(invoiceService.findByNumber(refund.getInvoice().getNumber()));
+        refundService.persist(ref);
+    }
     // Above method support to send data to front end - All List, update, edit
     //Bellow method support to do back end function save, delete, update, search
 
     @RequestMapping(value = {"/add", "/update"}, method = RequestMethod.POST)
     public String addRefund(@Valid @ModelAttribute Refund refund, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
+        System.out.println(refund.toString());
         if (result.hasErrors()) {
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());
             }
-           commonModel(model);
+            commonModel(model);
             return "/refund/addRefund";
         }
 
@@ -107,16 +121,12 @@ public class RefundController {
             redirectAttributes.addFlashAttribute("invoiceNumber", refund.getInvoice().getNumber());
             return "refund/addRefund";
         }
-        refund.setUser(userService.findByUserName(authentication.getName()));
-        refund.setCreatedAt(dateTimeAgeService.getCurrentDate());
-        refundService.persist(refund);
-
+        commonRefundSave(refund);
         return "redirect:/refund";
     }
 
     @RequestMapping(value = "/managerAdd", method = RequestMethod.POST)
     public String addRefund(@Valid @ModelAttribute Refund refund, BindingResult result, Model model) {
-        Refund ref = new Refund();
         if (result.hasErrors()) {
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());
@@ -124,13 +134,7 @@ public class RefundController {
             commonModel(model);
             return "/refund/addRefund";
         }
-        ref.setAmount(refund.getAmount());
-        ref.setCreatedAt(dateTimeAgeService.getCurrentDate());
-        ref.setUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
-        ref.setReason(refund.getReason());
-        ref.setInvoice(invoiceService.findByNumber(refund.getInvoice().getNumber()));
-
-        System.out.println(refundService.persist(ref).toString());
+        commonRefundSave(refund);
         return "redirect:/refund";
     }
 

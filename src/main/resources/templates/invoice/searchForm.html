@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>EHSL - List</title>
+    <style th:replace="fragments/style"></style>
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
+<div class="container-fluid" style="margin-top: 60px">
+    <div class="panel panel-primary">
+        <div class="panel panel-heading text-center">
+            <h4>Search Invoice Details</h4>
+        </div>
+        <div class="panel panel-body">
+            <div class="container text-center">
+                <form class="form-inline" th:action="@{/invoice/find}"
+                      th:method="POST" th:object="${invoice}">
+                    <div class="container">
+                        <div class="form-group col-sm-4">
+                            <label class="control-label col-sm-6" for="invoiceFindBy">Select Parameter :</label>
+                            <select class="form-control col-sm-6" id="invoiceFindBy">
+                                <option value="patient.number">Patient Register No</option>
+                                <option value="patient.nic">Patient NIC No</option>
+                                <option value="patient.mobile">Patient Mobile No</option>
+                                <option value="patient.name">Patient Name</option>
+                                <option value="number">Invoice Number</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label col-sm-6" for="invoiceFindValue">Enter Value :</label>
+                            <input class="form-control col-sm-6" id="invoiceFindValue" type="text"/>
+                        </div>
+                        <button class="btn btn-info">
+                            <span class="glyphicon glyphicon-search"></span>&nbsp;Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<script th:replace="fragments/script"></script>
+</body>
+</html>
+

@@ -37,7 +37,7 @@ $(document).ready(function () {
     $(function () {
         $('#btnSubmit').on("click", function (e) {
             let checked = $(':checkbox:checked').length;
-            if (checked == 0) {
+            if (checked === 0) {
                 swal("Oops", "At least One Lab Test Should Be Selected!", "error");
                 e.preventDefault();
             }
@@ -56,9 +56,11 @@ $(document).ready(function () {
 
 });
 // regex
-let nicRegex = /^([0-9]{9}[v|V|x|X])|^([0-9]{12})$/;
+let nicRegex = /^([0-9]{9}[vV|xX])|^([0-9]{12})$/;
 let mobileRegex = /^([0][7][\d]{8}$)|^([7][\d]{8})$/;
 let nameRegex = /^[a-zA-Z]{5}[ a-zA-Z]+$/;
+let numberRegex = /^([eE][hH][sS][\d]+)$/;
+let invoiceNumberRegex = /^[0-9]{10}$/;
 
 
 /*//Nic - data of birth - start//*/
@@ -82,7 +84,7 @@ function calculateDateOfBirth(nic) {
         //<editor-fold desc="if else block">
         if (day > 335) {
             day = day - 335;
-            day = day = dateLengthValidate(day);
+            day = dateLengthValidate(day);
             month = 12;
         } else if (day > 305) {
             day = day - 305;
@@ -270,9 +272,15 @@ function backgroundColourChangeGood(id) {
 function backgroundColourChangeBad(id) {
     $(id).css('background-color', '#FF00AA');
 }
+
+function backgroundColourChangeNothingToChange(id) {
+    $(id).css('background-color', '#ffffff');
+}
+
 //colour change function -- end
 
 /* some content need to print use this method */
+
 // el (id of content)is variable that need to give when function call
 function printContent(el) {
     // restorepage = current document
@@ -284,7 +292,6 @@ function printContent(el) {
     //after print set current web page
     document.body.innerHTML = restorepage;
 }
-
 
 //AJAX FUNCTION CALL
 async function getData(url) {
@@ -302,8 +309,8 @@ async function getData(url) {
 function conformationAndLoginWindow() {
     let r = confirm("There is no way to access to the system without re re-login \n Please click \'Ok\' to login");
     if (r === true) {
-        let loginUrl = window.location.protocol  + "/login";
-        window.open(loginUrl,'_self');
+        let loginUrl = window.location.protocol + "/login";
+        window.open(loginUrl, '_self');
     }
 }
 
@@ -317,3 +324,57 @@ function contentHide(contentName) {
 }
 
 // content show table show and hide - end
+
+//custom invoice search page validation - start
+$("#invoiceFindBy").bind("change", function () {
+    //set what is the parameter will search
+    $("#invoiceFindValue").attr('name', $("#invoiceFindBy").val());
+    document.getElementById("invoiceFindValue").style.setProperty('background-color', '#ffffff', 'important');
+    $("#invoiceFindValue").val("");
+});
+$("#invoiceFindValue").bind("keyup", function () {
+    let selectedInvoiceSearch = document.getElementById("invoiceFindBy").value;
+    let enterValue = $(this).val();
+    if (document.getElementById("invoiceFindValue").value.length === 0) {
+        backgroundColourChangeNothingToChange($(this));
+    } else {
+        switch (selectedInvoiceSearch) {
+            case ("patient.number") :
+                if (numberRegex.test(enterValue)) {
+                    backgroundColourChangeGood($(this));
+                } else {
+                    backgroundColourChangeBad($(this));
+                }
+                break;
+            case ("patient.nic") :
+                if (nicRegex.test(enterValue)) {
+                    backgroundColourChangeGood($(this));
+                } else {
+                    backgroundColourChangeBad($(this));
+                }
+                break;
+            case ("patient.mobile") :
+                if (mobileRegex.test(enterValue)) {
+                    backgroundColourChangeGood($(this));
+                } else {
+                    backgroundColourChangeBad($(this));
+                }
+                break;
+            case ("patient.name") :
+                if (nameRegex.test(enterValue)) {
+                    backgroundColourChangeGood($(this));
+                } else {
+                    backgroundColourChangeBad($(this));
+                }
+                break;
+            case ("number") :
+                if (invoiceNumberRegex.test(enterValue)) {
+                    backgroundColourChangeGood($(this));
+                } else {
+                    backgroundColourChangeBad($(this));
+                }
+                break;
+        }
+    }
+});
+//custom invoice search page validation - end
