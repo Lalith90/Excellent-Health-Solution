@@ -70,7 +70,6 @@ function dateLengthValidate(day) {
     }
     return day;
 }
-
 function calculateDateOfBirth(nic) {
 
     let dateOfBirth = null;
@@ -235,7 +234,6 @@ $("#mobile").bind("keyup", function () {
         backgroundColourChangeBad($(this));
     }
 });
-
 $("#land").bind("keyup", function () {
     let land = $(this).val();
     if (mobileRegex.test(land)) {
@@ -244,7 +242,6 @@ $("#land").bind("keyup", function () {
         backgroundColourChangeBad($(this));
     }
 });
-
 //NIC colour change
 $("#nic").bind("keyup", function () {
     let nic = $(this).val();
@@ -263,16 +260,22 @@ $("#patientName").bind("keyup", function () {
         backgroundColourChangeBad($(this));
     }
 });
-
+//invoiceNumber validation
+$("#invoiceNumber").bind("keyup", function () {
+    let invoiceNumber = $(this).val();
+    if (invoiceNumberRegex.test(invoiceNumber)) {
+        backgroundColourChangeGood($(this));
+    } else {
+        backgroundColourChangeBad($(this));
+    }
+});
 //colour change function --start
 function backgroundColourChangeGood(id) {
     $(id).css('background-color', '#00FFFF');
 }
-
 function backgroundColourChangeBad(id) {
     $(id).css('background-color', '#FF00AA');
 }
-
 function backgroundColourChangeNothingToChange(id) {
     $(id).css('background-color', '#ffffff');
 }
@@ -318,7 +321,6 @@ function conformationAndLoginWindow() {
 function contentShow(contentName) {
     contentName.removeAttribute("class");
 }
-
 function contentHide(contentName) {
     contentName.setAttribute("class", "display");
 }
@@ -378,3 +380,60 @@ $("#invoiceFindValue").bind("keyup", function () {
     }
 });
 //custom invoice search page validation - end
+
+//search form date validation - start
+$("#startDate").bind("input", function () {
+    let startDate = document.getElementById("startDate").value;
+    let milliSecondToDay = Date.parse(new Date());
+//only start date has value
+    if (startDate.length !== 0) {
+        let milliSecondStartDate = Date.parse(startDate);
+        if (milliSecondToDay > milliSecondStartDate) {
+            backgroundColourChangeGood($(this));
+        } else {
+            backgroundColourChangeBad($(this));
+        }
+    } else {
+        backgroundColourChangeNothingToChange($(this));
+    }
+});
+$("#endDate").bind("input", function () {
+    let endDate = document.getElementById("endDate").value;
+    let milliSecondToDay = Date.parse(new Date());
+//only start date has value
+    if (endDate.length !== 0) {
+        let milliSecondStartDate = Date.parse(endDate);
+        if (milliSecondToDay > milliSecondStartDate) {
+            backgroundColourChangeGood($(this));
+        } else {
+            backgroundColourChangeBad($(this));
+        }
+    } else {
+        backgroundColourChangeNothingToChange($(this));
+    }
+});
+$("#btnSummaryFind").bind("mouseover", function () {
+    let endDate = document.getElementById("endDate").value;
+    let startDate = document.getElementById("startDate").value;
+    let milliSecondToDay = Date.parse(new Date());
+    //if both date filed has some thing
+    if (endDate.length !== 0 && startDate.length !== 0) {
+
+        let milliSecondStartDate = Date.parse(startDate);
+        let milliSecondEndDate = Date.parse(endDate);
+
+        if (milliSecondToDay < milliSecondStartDate || milliSecondToDay < milliSecondEndDate) {
+
+            swal({
+                title: "Date range is not valid",
+                icon: "warning",
+            });
+        }
+    } else {
+        swal({
+            title: "Please re-check date filed",
+            icon: "warning",
+        });
+    }
+});
+//search form date validation - end

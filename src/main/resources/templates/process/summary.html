@@ -14,24 +14,29 @@
         </div>
         <div class="container text-center">
             <div class="panel panel-body">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="container-fluid text-center" th:if="${alerStatu==true}">
-                            <div class="alert alert-danger alert-dismissable fade in">
-                                <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
-                                Please enter two date to requested field otherwise there is no way to fulfil your
-                                requirement.
-                            </div>
+                <div class="row">
+                    <div class="container-fluid text-center" th:if="${alertStatus==true}">
+                        <div class="alert alert-danger alert-dismissable fade in">
+                            <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
+                            Please enter two date to requested field otherwise there is no way to fulfil your
+                            requirement.
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <div class="col-sm-6"><h3> Date : <span th:text="${{date}}"></span></h3></div>
+                        <div class="col-sm-6"><h3> User : <span th:text="${user}"></span></h3></div>
+                    </div>
+                </div>
+                <div class="container-fluid"
+                     th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')') || #authorization.expression('hasRole(''ROLE_MANAGER'')')}">
                     <div class="row">
-                        <!-- Manager and MLT - One can see - start-->
-                        <div class="container-fluid"
-                             th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')') || #authorization.expression('hasRole(''ROLE_MANAGER'')')}">
+                        <div class="container-fluid">
                             <div class="row">
                                 <div class="container-fluid">
                                     <h4 class="text-info"><b> Custom Search</b></h4>
-                                    <form class="form-inline" th:action="@{/searchSummary}" th:method="POST">
+                                    <form class="form-inline" th:action="@{/process/searchSummary}" th:method="POST">
                                         <div class="form-group">
                                             <label for="startDate">FROM :</label>
                                             <input class="form-control" id="startDate" name="startDate" type="date"/>
@@ -40,7 +45,7 @@
                                             <label for="endDate">TO :</label>
                                             <input class="form-control" id="endDate" name="endDate" type="date"/>
                                         </div>
-                                        <button class="btn btn-success" type="submit"><span
+                                        <button class="btn btn-success" id="btnSummaryFind" type="submit"><span
                                                 class="glyphicon glyphicon-search"></span>&nbsp;Search
                                         </button>
                                     </form>
@@ -48,17 +53,8 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Manager and MLT - One can see - start-->
-                    <!--every one can see - start-->
-                    <div class="row">
-                        <div class="container-fluid">
-                            <div class="col-sm-6"><h3> Date : <span th:text="${{date}}"></span></h3></div>
-                            <div class="col-sm-6"><h3> User : <span th:text="${user}"></span></h3></div>
-                        </div>
-                    </div>
                     <div class="row" id="summary">
-                        <div class="container-fluid"
-                             th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')') || #authorization.expression('hasRole(''ROLE_CHASHIER'')')}">
+                        <div class="container-fluid">
                             <div class="row">
                                 <div class="col-sm-offset-2 col-sm-8">
                                     <div class="table-responsive">
@@ -123,8 +119,6 @@
                         </div>
                     </div>
                 </div>
-                <!--every one can see - end-->
-                <!--MLT 1 and 2, Manger   - start-->
                 <div class="container-fluid "
                      th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')||#authorization.expression('hasRole(''ROLE_MLT2'')') ||#authorization.expression('hasRole(''ROLE_MLT1'')') || #authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')') }">
                     <div class="row" id="workLoad">
@@ -170,7 +164,6 @@
                         </div>
                     </div>
                 </div>
-                <!--MLT 1 and 2, Manger   - end-->
             </div>
         </div>
     </div>

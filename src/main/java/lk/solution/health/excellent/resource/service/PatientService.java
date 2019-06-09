@@ -39,7 +39,7 @@ public class PatientService implements AbstractService<Patient, Integer> {
         return patientDao.save(patient);
     }
 
-    @CacheEvict(value = "patient")
+    @CacheEvict(value = "patient", allEntries = true)
     public boolean delete(Integer id) {
         patientDao.deleteById(id);
         return false;

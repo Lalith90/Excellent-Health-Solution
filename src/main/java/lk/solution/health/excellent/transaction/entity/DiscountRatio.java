@@ -1,6 +1,8 @@
 package lk.solution.health.excellent.transaction.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +13,8 @@ import java.util.Objects;
 @Table(name = "discount_ratio")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class DiscountRatio {
     @Id
     @Column(name = "id", nullable = false)
@@ -29,13 +33,6 @@ public class DiscountRatio {
     @JoinColumn(name = "discount_ratio_id")
     private List<Invoice> invoices = new ArrayList<>();*/
 
-    public DiscountRatio() {
-    }
-
-    public DiscountRatio(String name, BigDecimal amount) {
-        this.name = name;
-        this.amount = amount;
-    }
 
     @Override
     public boolean equals(Object obj) {

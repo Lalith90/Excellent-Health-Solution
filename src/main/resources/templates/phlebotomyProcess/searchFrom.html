@@ -39,20 +39,28 @@
                 <form class="form-inline text-center"
                       th:action="${addStatus==true?'/phlaboto/searchPatient':'/phlaboto/repeatSamplePatient'}"
                       th:method="POST" th:object="${searchProcess}">
-                    <div class="form-group">
-                        <label th:for="invoiceId">Invoice Number : </label>
-                        <input class="form-control" name="number" placeholder="Enter invoice number" required
-                               type="text"/>
-
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="row">
+                                <label class="col-sm-5" th:for="invoiceId">Invoice Number : </label>
+                                <input class="form-control col-sm-7" id="invoiceNumber" name="number"
+                                       placeholder="Enter invoice number" required
+                                       type="text"/>
+                            </div>
+                        </div>
+                        <div class="col-sm-5" th:if="${repeatCollectStatus==true}">
+                            <div class="row">
+                                <label class="col-sm-5" th:for="invoiceId">Lab Test Code :</label>
+                                <input class="form-control col-sm-7" id="code" name="code"
+                                       placeholder="Enter Lab Test Code"
+                                       required
+                                       type="text"/>
+                            </div>
+                        </div>
+                        <button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-search"></span>&nbsp;
+                            &nbsp;Find
+                        </button>
                     </div>
-                    <div class="form-group" th:if="${repeatCollectStatus==true}">
-                        <label th:for="invoiceId">Lab Test Code :</label>
-                        <input class="form-control" id="code" name="code" placeholder="Enter Lab Test Code" required
-                               type="text"/>
-                    </div>
-                    <button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-search"></span>&nbsp;
-                        &nbsp;Find
-                    </button>
                 </form>
             </div>
         </div>

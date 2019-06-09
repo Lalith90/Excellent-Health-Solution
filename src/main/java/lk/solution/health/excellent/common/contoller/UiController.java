@@ -12,7 +12,7 @@ public class UiController {
     }
 
 
-    @GetMapping({"/home", "/fonts/glyphicons-halflings-regular.ttf"})
+    @GetMapping("/home")
     public String mainwindow() {
         return "mainwindow";
     }

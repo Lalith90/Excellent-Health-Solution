@@ -70,6 +70,8 @@
                                     <span class="error" th:if="${#fields.hasErrors('nic')}" th:errors="*{nic}">Error NIC</span>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-sm-6 text-center">
                             <div class="form-group">
                                 <label class="control-label col-md-4" for="dateOfBirth">Birth Date<span class="text-danger">*</span></label>
                                 <div class="col-md-8">
@@ -88,9 +90,6 @@
                                     <span class="error" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}">Error Gender</span>
                                 </div>
                             </div>
-                        </div>
-                        <!-- /.col-sm-6 -->
-                        <div class="col-sm-6 text-center">
                             <div class="form-group">
                                 <label class="control-label col-md-4" for="mobile">Email</label>
                                 <div class="col-md-8">
@@ -112,9 +111,9 @@
                                     <span class="error" th:if="${#fields.hasErrors('land')}" th:errors="*{land}">Error Land Number</span>
                                 </div>
                             </div>
-                            <div class="text-center row" >
-                                <button class="btn btn-success" type="submit" > <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp; &nbsp;<span th:text="${addStatus==true?'Save': 'Update'}" ></span></button>
-                            </div>
+                        </div>
+                        <div class="text-center row" >
+                            <button class="btn btn-success" type="submit" > <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp; &nbsp;<span th:text="${addStatus==true?'Save': 'Update'}" ></span></button>
                         </div>
                         <label th:if="${#fields.hasErrors('*')}" th:text="'Errors: '">Errors: </label>
                         <ul>

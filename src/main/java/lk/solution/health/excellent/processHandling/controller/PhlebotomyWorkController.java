@@ -21,7 +21,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/phlaboto")
@@ -60,63 +59,48 @@ public class PhlebotomyWorkController {
         return "phlebotomyProcess/searchFrom";
     }
 
-
-    @RequestMapping(value = "/searchPatient/{id}", method = RequestMethod.GET)
-    public String searchPatient(@PathVariable("id") int number, Model model) {
-        Invoice invoice = invoiceService.findByNumber(number);
-        List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByInvoiceAndLabTestStatus(invoice, LabTestStatus.NOSAMPLE);
+    private void commonMethodPatientSearch(Model model, Invoice invoice, List<InvoiceHasLabTest> invoiceHasLabTests) {
         List<LabTest> labTests = new ArrayList<>();
         for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
-            //System.out.println(invoiceHasLabTest.getLabTest().getId());
             labTests.add(invoiceHasLabTest.getLabTest());
         }
         model.addAttribute("invoice", invoice);
         model.addAttribute("patientAge", dateTimeAgeService.getAge(invoice.getPatient().getDateOfBirth()));
         model.addAttribute("labTests", labTests);
         model.addAttribute("searchProcess", new SearchProcess());
-        return "phlebotomyProcess/patientLabTestDetails";
+
     }
 
-    @RequestMapping(value = "/searchPatient", method = RequestMethod.POST)
-    public String searchPatient(@ModelAttribute SearchProcess searchProcess, Model model, RedirectAttributes attributes) {
-        // System.out.println(searchProcess.getId());
-        Invoice invoice = invoiceService.findById(searchProcess.getId());
-        List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByInvoiceAndLabTestStatus(invoice, LabTestStatus.NOSAMPLE);
-
-        if (invoiceHasLabTests.isEmpty() || invoice == null) {
-            // System.out.println("there is no lab test without taken sample");
-            attributes.addFlashAttribute("invoiceId", searchProcess.getId());
+    @RequestMapping(value = "/searchPatient/{id}", method = RequestMethod.GET)
+    public String searchPatient(@PathVariable("id") int id, Model model, RedirectAttributes attributes, SearchProcess searchProcess) {
+        List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByInvoiceAndLabTestStatus(invoiceService.findById(id), LabTestStatus.NOSAMPLE);
+        if (invoiceHasLabTests.isEmpty()) {
+            System.out.println("Not come here ");
+            attributes.addFlashAttribute("invoiceId", searchProcess.getNumber());
             attributes.addFlashAttribute("searchStatus", true);
             return "redirect:phlebotomyProcess/searchForm";
         }
-        List<LabTest> labTests = new ArrayList<>();
-        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
-            //System.out.println(invoiceHasLabTest.getLabTest().getId());
-            labTests.add(invoiceHasLabTest.getLabTest());
-        }
-        model.addAttribute("invoice", invoice);
-        model.addAttribute("patientAge", dateTimeAgeService.getAge(invoice.getPatient().getDateOfBirth()));
-        model.addAttribute("labTests", labTests);
-        model.addAttribute("searchProcess", new SearchProcess());
+        commonMethodPatientSearch(model, invoiceService.findById(id), invoiceHasLabTests);
         return "phlebotomyProcess/patientLabTestDetails";
     }
 
     @RequestMapping(value = "/saveSampledPatient", method = RequestMethod.POST)
     public String saveSampleTakenPatient(@ModelAttribute SearchProcess searchProcess, RedirectAttributes attributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Invoice invoice = invoiceService.findById(searchProcess.getId());
-        List<LabTest> newlabTests = searchProcess.getLabTests();
+        Invoice invoice = invoiceService.findByNumber(Integer.parseInt(searchProcess.getNumber()));
+        List<LabTest> newLabTests = searchProcess.getLabTests();
 
-        if (newlabTests.isEmpty()) {
-            // System.out.println("there is no lab test without taken sample");
+        if (newLabTests.isEmpty()) {
+             System.out.println("there is no lab test without taken sample");
             attributes.addFlashAttribute("invoiceId", searchProcess.getId());
             attributes.addFlashAttribute("sampleCollectStatus", true);
             return "redirect:phlaboto/searchForm";
         }
         List<InvoiceHasLabTest> invoiceHasLabTests = new ArrayList<>();
-        for (LabTest labTest : newlabTests) {
+        for (LabTest labTest : newLabTests) {
             invoiceHasLabTests.add(invoiceHasLabTestService.findByInvoiceAndLabTest(invoice, labTest));
         }
+
 
         for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
             invoiceHasLabTest.setLabTestStatus(LabTestStatus.SAMPLECOLLECT);
@@ -127,6 +111,30 @@ public class PhlebotomyWorkController {
 
         return "redirect:phlaboto";
     }
+
+    @RequestMapping(value = "/searchPatient", method = RequestMethod.POST)
+    public String searchPatient(@ModelAttribute SearchProcess searchProcess, Model model, RedirectAttributes attributes) {
+        Invoice invoice = invoiceService.findByNumber(Integer.parseInt(searchProcess.getNumber()));
+        List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByInvoiceAndLabTestStatus(invoice, LabTestStatus.NOSAMPLE);
+        if (invoiceHasLabTests.isEmpty() || invoice == null) {
+            attributes.addFlashAttribute("invoiceId", searchProcess.getNumber());
+            attributes.addFlashAttribute("searchStatus", true);
+            return "redirect:phlebotomyProcess/searchForm";
+        }
+        commonMethodPatientSearch(model, invoice, invoiceHasLabTests);
+        return "phlebotomyProcess/patientLabTestDetails";
+    }
+
+    //TODO
+    /*javax.persistence.NonUniqueResultException: query did not return a unique result: 2
+     *
+     * other thing ned to javascript validation to sample taken form validation
+     *
+     *
+     * Lab test find is not work
+     *
+     * repeat sample
+     * */
 
 
     @RequestMapping(value = "/repeatSamplePatientForm", method = RequestMethod.GET)
@@ -139,7 +147,7 @@ public class PhlebotomyWorkController {
 
     @RequestMapping(value = "/repeatSamplePatient", method = RequestMethod.POST)
     public String repeatSamplePatient(@ModelAttribute SearchProcess searchProcess, Model model, RedirectAttributes attributes) {
-        Invoice invoice = invoiceService.findById(searchProcess.getId());
+        Invoice invoice = invoiceService.findByNumber(Integer.parseInt(searchProcess.getNumber()));
 
         LabTest labTest = labTestService.findByCode(searchProcess.getCode());
 

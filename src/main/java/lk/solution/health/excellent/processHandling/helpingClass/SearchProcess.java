@@ -6,6 +6,7 @@ import lk.solution.health.excellent.lab.entity.LabTestParameter;
 import lk.solution.health.excellent.resource.entity.MedicalPackage;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -14,11 +15,12 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 public class SearchProcess {
     Integer id;
     String name, number, code, comment, nic;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    LocalDateTime startDate, endDate;
+    LocalDate startDate, endDate;
     List<LabTest> labTests;
     List<InvoiceHasLabTest> invoiceHasLabTests;
     List<LabTestParameter> labTestParameters;

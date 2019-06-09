@@ -134,6 +134,10 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
     public List<InvoiceHasLabTest> findByDateAndUser(LocalDate date, User user) {
         return invoiceHasLabTestDao.findByCreatedAtAndUser(date, user);
     }
+
+    public List<InvoiceHasLabTest> findByCreatedAtIsBetween(LocalDate from, LocalDate to) {
+        return invoiceHasLabTestDao.findByCreatedAtIsBetween(from,to);
+    }
 }
 
 

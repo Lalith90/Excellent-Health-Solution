@@ -36,19 +36,18 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
         System.out.println("Lab Test cache ok");
         return labTestDao.findAll();
     }
-    @CachePut(value = "lab")
+    @CachePut(value = "labTest")
     public LabTest findById(Integer id) {
         System.out.println("lat test find by id ");
         return labTestDao.getOne(id);
     }
 
     @CachePut(value = "labTest")
-    @Transactional
     public LabTest persist(LabTest labTest) {
         return labTestDao.save(labTest);
     }
 
-    @CacheEvict(value = "labTest")
+    @CacheEvict(value = "labTest", allEntries = true)
     public boolean delete(Integer id) {
         labTestDao.deleteById(id);
         return false;

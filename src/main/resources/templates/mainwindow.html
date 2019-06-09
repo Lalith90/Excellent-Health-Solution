@@ -10,7 +10,7 @@
 <nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
 <!-- Cashier Content - start -->
 <div class="col-sm-12 container" style="margin-top: 70px;">
-    <div th:if="${#authorization.expression('hasRole(''ROLE_CHASHIER'')')}" class="col-sm-12">
+    <div th:if="${#authorization.expression('hasRole(''ROLE_CASHIER'')')}" class="col-sm-12">
         <div class="row ">
             <div class="container-fluid col-sm-4">
                 <div class="container-fluid row">
@@ -335,8 +335,8 @@
         </div>
     </div>
     <!-- Manager Content - end  -->
-    <!--Phlebotomise content-->
-    <div th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}"
+    <!--PHLEBOTOMY content-->
+    <div th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMY'')')}"
          class="col-sm-12 container-fluid">
         <div class="row ">
             <div class="container-fluid col-sm-4">
@@ -377,7 +377,7 @@
                     </div>
                     <div class="container-fluid col-sm-4">
                         <div class="col-sm-6 mainWindImg">
-                            <a href="/invoiceProcess">
+                            <a href="/labTest">
                                 <img th:src="@{/img/plab/test finder cash 1.png}"
                                      class="img-circle img-responsive"/>
                             </a>

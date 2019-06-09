@@ -1,4 +1,4 @@
-	<nav class="navbar navbar-default navbar-fixed-top" th:fragment="header">
+<nav class="navbar navbar-default navbar-fixed-top" th:fragment="header" xmlns:th="http://www.w3.org/1999/xhtml">
 		<div class="container-fluid" >
 			<div class="navbar-header">
 				<h3 class="text-info mainWindowText navbar-header-text"><b> &nbsp; Excellent Health Solution</b> &nbsp;&nbsp;</h3>
@@ -15,7 +15,7 @@
 			 		<li class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#" sec:authorize="isAuthenticated()">General <span class="caret"></span></a>
 						<!--CACHIER NAV BAR CONTENT -->
-						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_CHASHIER'')')}">
+						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_CASHIER'')')}">
 							<li><a href="/patient">Patient Management</a></li>
 							<li><a href="/doctor">Doctor Management </a></li>
 						</ul>
@@ -44,14 +44,14 @@
 							<li><a href="/user">User Management </a></li>
 						</ul>
 						<!--PHLABOTO NAV BAR CONTENT -->
-						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">
+						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMY'')')}">
 							<li><a href="/phlaboto">Pending Patient</a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#" sec:authorize="isAuthenticated()">Transaction<span class="caret"></span></a>
 						<!--CACHIER NAV BAR CONTENT -->
-						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_CHASHIER'')')}">
+						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_CASHIER'')')}">
 							<li><a href="/invoiceProcess">Make Invoice</a></li>
 							<li><a href="/patient">Search Patient</a></li>
 							<!--<li><a href="#" >Search Invoice</a></li>-->
@@ -104,14 +104,14 @@
 							<li><a href="/refund/add">Refund Add</a></li>
 						</ul>
 						<!--PHLABOTO NAV BAR CONTENT -->
-						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">
+						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMY'')')}">
 							<li><a href="/phlaboto/repeatSamplePatientForm">Repeat Sample Taken Enter</a></li>
 						</ul>
 					</li>
 					<li class="dropdown" >
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#" sec:authorize="isAuthenticated()">Report<span class="caret"></span></a>
 						<!--CACHIER NAV BAR CONTENT -->
-						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_CHASHIER'')')}">
+						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_CASHIER'')')}">
 							<li><a href="/process/summary">Summury </a></li>
 						</ul>
 						<!--MLT1 NAV BAR CONTENT -->
@@ -129,7 +129,7 @@
 							<li><a href="#">Referral Doctor </a></li>
 						</ul>
 						<!--PHLABOTO NAV BAR CONTENT -->
-						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMISE'')')}">
+						<ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_PHLEBOTOMY'')')}">
 							<li><a href="/process/summary">Patient Count </a></li>
 						</ul>
 					</li>

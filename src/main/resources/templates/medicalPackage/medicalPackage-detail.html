@@ -1,76 +1,76 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8"/>
-<title th:text="${medicalPackageDetail.name}">EHSL</title>
-<style th:replace="fragments/style"></style>
+    <meta charset="UTF-8"/>
+    <title th:text="${medicalPackageDetail.name}">EHSL</title>
+    <style th:replace="fragments/style"></style>
 </head>
 <body>
 <nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
 <div class="container-fluid" style="margin-top: 60px">
-    <div class="col-sm-offset-3 col-sm-6">
-        <div class="panel panel-primary">
-            <div class="panel panel-heading  text-center">
-                <h3><b><span th:text="${medicalPackageDetail.name}"></span></b></h3>
-            </div>
-                <div class="panel plane-body">
+    <div class="panel panel-primary">
+        <div class="panel panel-heading  text-center">
+            <h3><b><span th:text="${medicalPackageDetail.name}"></span></b></h3>
+        </div>
+        <div class="panel plane-body">
+            <div class="container-fluid">
+                <div class="row">
                     <div class="container-fluid">
-                        <div class="row">
-                            <div class="container-fluid">
-                                <h3>Id :
-                                    <span th:text="${medicalPackageDetail.id}"></span>
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="container-fluid">
-                                 <h3> Medical Package Name :
-                                     <span th:text="${medicalPackageDetail.name}"></span>
-                                 </h3>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="container-fluid">
-                                <h3>Price :
-                                     <span th:text="${medicalPackageDetail.price}"></span>
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="row">
-                             <div class="container-fluid">
-                                 <h3> Medical Package Status :
-                                     <span th:text="${medicalPackageDetail.medicalPackageStatus.medicalPackageStatus}"></span>
-                                 </h3>
-                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="container-fluid">
-                               <h3>Created Date :
-                                   <span th:text="${medicalPackageDetail.createdDate}"></span>
-                               </h3>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="container-fluid">
-                                <label>Contain Laboratory Test :
-                                    <ol>
-                                        <li th:each="labTest : ${medicalPackageDetail.labTests}" th:text="${labTest.name}"></li>
-                                    </ol>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="container-fluid text-center">
-                                <a href="/medicalPackage">
-                                    <button class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span>&nbsp; Back</button>
-                                </a>
-                            </div>
-                        </div>
+                        <h3>Id :
+                            <span th:text="${medicalPackageDetail.id}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3> Medical Package Name :
+                            <span th:text="${medicalPackageDetail.name}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>Price :
+                            <span th:text="${medicalPackageDetail.price}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3> Medical Package Status :
+                            <span th:text="${medicalPackageDetail.medicalPackageStatus.medicalPackageStatus}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>Created Date :
+                            <span th:text="${medicalPackageDetail.createdDate}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <label>Contain Laboratory Test :
+                            <ol>
+                                <li th:each="labTest : ${medicalPackageDetail.labTests}" th:text="${labTest.name}"></li>
+                            </ol>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid text-center">
+                        <a href="/medicalPackage">
+                            <button class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span>&nbsp;
+                                Back
+                            </button>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 <footer class="page-footer" th:replace="fragments/footer"></footer>
 <script th:replace="fragments/script"></script>
 </body>

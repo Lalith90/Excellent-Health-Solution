@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8"/>
-<title th:text="${labTestDetail.name}">EHSL</title>
-<style th:replace="fragments/style"></style>
+    <meta charset="UTF-8"/>
+    <title th:text="${labTestDetail.name}">EHSL</title>
+    <style th:replace="fragments/style"></style>
 </head>
 <body>
 <nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
@@ -13,81 +13,84 @@
             <h4><b><span th:text="${labTestDetail.name}"></span></b></h4>
         </div>
         <div class="panel panel-body">
-            <div class="col-lg-offset-3">
+            <div class="col-sm-6">
                 <div class="row">
-                        <div class="container-fluid">
-                            <h3>Id :   <span th:text="${labTestDetail.id}"></span>
-                            </h3>
-                    </div>
-                </div>
-                <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Test Code :   <span th:text="${labTestDetail.code}"></span>
-                            </h3>
-                    </div>
-                </div>
-                <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Test Name :  <span th:text="${labTestDetail.name}"></span>
-                            </h3>
+                    <div class="container-fluid">
+                        <h3>Id : <span th:text="${labTestDetail.id}"></span>
+                        </h3>
                     </div>
                 </div>
                 <div class="row">
                     <div class="container-fluid">
                         <h3>
-                            Test Done Place :  <span th:text="${labTestDetail.labtestDoneHere}"></span>
+                            Test Code : <span th:text="${labTestDetail.code}"></span>
                         </h3>
                     </div>
-                <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Department :   <span th:text="${labTestDetail.department.department}"></span>
-                            </h3>
-                    </div>
                 </div>
                 <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Price :   <span th:text="${labTestDetail.price}"></span>
-                            </h3>
-                    </div>
-                </div>
-                <div class="row">
-                        <div class="container-fluid">
-                            <h3>
-                                Sample Collecting Tube :   <span th:text="${labTestDetail.sampleCollectingTube}"></span>
-                            </h3>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="container-fluid" th:if="${labTestDetail.description != null}" >
+                    <div class="container-fluid">
                         <h3>
-                            Description :   <span th:utext="${labTestDetail.description}"></span>
+                            Test Name : <span th:text="${labTestDetail.name}"></span>
                         </h3>
                     </div>
                 </div>
-             </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Test Done Place : <span th:text="${labTestDetail.labtestDoneHere}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Department : <span th:text="${labTestDetail.department.department}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Price : <span th:text="${labTestDetail.price}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <h3>
+                            Sample Collecting Tube : <span th:text="${labTestDetail.sampleCollectingTube}"></span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid" th:if="${labTestDetail.description != null}">
+                        <h3>
+                            Description : <span th:utext="${labTestDetail.description}"></span>
+                        </h3>
+                    </div>
+                </div>
+            </div>
             <div class="col-sm-6">
                 <div class="container-fluid">
                     <h3>Contain Laboratory Test Parameter:</h3>
-                        <ol>
-                            <li th:each="labTestParameters : ${labTestDetail.labTestParameters}" th:text="${labTestParameters.name}"></li>
-                        </ol>
+                    <ol>
+                        <li th:each="labTestParameters : ${labTestDetail.labTestParameters}"
+                            th:text="${labTestParameters.name}"></li>
+                    </ol>
                 </div>
             </div>
             <div class="row">
                 <div class="container-fluid text-center col-sm-12">
-                     <a href="/labTest">
-                        <button class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span>&nbsp; Back</button>
-                     </a>
+                    <a href="/labTest">
+                        <button class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span>&nbsp; Back
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-    <footer class="page-footer" th:replace="fragments/footer"></footer>
-    <script th:replace="fragments/script"></script>
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<script th:replace="fragments/script"></script>
 </body>
 </html>

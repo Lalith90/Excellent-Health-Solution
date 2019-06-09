@@ -11,6 +11,14 @@
 <nav class="navbar navbar-default" style="margin-bottom: 60px" th:replace="fragments/header :: header"></nav>
 
 <div class="container-fluid" style="margin-top: 60px">
+    <div class="alert alert-warning alert-dismissable text-center" th:if="${patientDetailsChange==true}">
+        <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
+        <p>Ohh...! you change some details of patient. <br> please re-enter patient details correctly if there is not
+            way to do it <br> click below button to add patient after be able to process invoice. <br> <a
+                    href="/patient/add"></a>
+            <button class="btn btn-info"><i class="fa fa-wheelchair "></i> Add</button>
+        </p>
+    </div>
     <form class="form-horizontal" th:action="@{invoiceProcess/add}" th:method="POST"
           th:object="${invoiceProcess}">
         <div class="container">
@@ -301,8 +309,6 @@
                                             />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-6 text-center">
                                     <div class="form-group">
                                         <label class="control-label col-md-4" for="dateOfBirth">Birth
                                             Date<span class="text-danger">*</span></label>
@@ -312,6 +318,9 @@
                                                    required type="date"/>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-sm-6 text-center">
+
                                     <div class="form-group">
                                         <label class="control-label col-md-4" for="gender">Gender</label>
                                         <div class="col-md-4">

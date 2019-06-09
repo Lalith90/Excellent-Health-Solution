@@ -267,13 +267,11 @@ $("#btnNewPatient").on("click", function () {
     //$("#id,#number,#patientName,#nic,#dateOfBirth,#email,#mobile,#land").val(""); //this and below ones is the previous one
     //$("#id,#number,#patientName,#nic,#dateOfBirth,#email,#mobile,#land");
 });
-
 // language=JQuery-CSS
 $("#btnRegisteredPatient").on("click", function () {
     contentShow(document.getElementById("patientSearchContent"));
     contentHide(document.getElementById("patientContent"));
 });
-
 //when patient find combo box value change
 $("#patientFind").on("change", function () {
     document.getElementById("patientFindValue").value = '';
@@ -315,7 +313,6 @@ $("#patientFindValue").on("keyup", function () {
 
     }
 });
-
 //search button function
 $("#btnSearchPatient").on("click", function () {
     contentShow(document.getElementById("patientListDisplay"));
@@ -510,7 +507,6 @@ function fillPatientDetailsForm(patientInArray) {
 $("#cmbDiscountRatio").on("change", function () {
     $("#amount").val($("#totalPrice").val() - ($("#totalPrice").val() * (parseFloat($("#cmbDiscountRatio option:selected").text()) / 100)));
 });
-
 //payment method show and hide
 $("#cmbPaymentMethod").on("change", function () {
     $("#cardNumber, #bankName").val("");
@@ -523,39 +519,36 @@ $("#cmbPaymentMethod").on("change", function () {
 
     }
 });
-
 //card number validate
 $("#cardNumber").on("keyup", function () {
-        if ($("#cmbPaymentMethod").val() === "CREDITCARD") {
-            $("#typedLength").html($("#cardNumber").val().length);
+    if ($("#cmbPaymentMethod").val() === "CREDITCARD") {
+        $("#typedLength").html($("#cardNumber").val().length);
 
-            document.getElementById("cardNumber").style.setProperty('background-color', '#ff88b3', 'important');
+        document.getElementById("cardNumber").style.setProperty('background-color', '#ff88b3', 'important');
 
-            if ($("#cardNumber").val().length === 15 && creditVisaCardRegex.test($("#cardNumber").val())) {
-                document.getElementById("cardNumber").style.setProperty('background-color', '#7ae899', 'important');
-                $("#cardType").html("American Express");
-            }
-
-            if ($("#cardNumber").val().length === 16 && creditVisaCardRegex.test($("#cardNumber").val())) {
-                document.getElementById("cardNumber").style.setProperty('background-color', '#7ae899', 'important');
-                $("#cardType").html("Visa, Master, Discover or JCB");
-            }
+        if ($("#cardNumber").val().length === 15 && creditVisaCardRegex.test($("#cardNumber").val())) {
+            document.getElementById("cardNumber").style.setProperty('background-color', '#7ae899', 'important');
+            $("#cardType").html("American Express");
         }
 
+        if ($("#cardNumber").val().length === 16 && creditVisaCardRegex.test($("#cardNumber").val())) {
+            document.getElementById("cardNumber").style.setProperty('background-color', '#7ae899', 'important');
+            $("#cardType").html("Visa, Master, Discover or JCB");
+        }
     }
-);
 
+});
 //balance settlement
 $("#amountTendered").on("keyup", function () {
     $("#balance").val($("#amountTendered").val() - $("#amount").val());
 
-    if($("#balance").val()<0){
+    if ($("#balance").val() < 0) {
         backgroundColourChangeBad($(this));
         contentHide(document.getElementById("btnSubmitInvoice"));
-    }else {
+    } else {
         backgroundColourChangeGood($(this));
         contentShow(document.getElementById("btnSubmitInvoice"));
-        $("#btnSubmitInvoice").attr('class','btn btn-success');
+        $("#btnSubmitInvoice").attr('class', 'btn btn-success');
 
     }
 
