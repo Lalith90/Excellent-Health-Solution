@@ -136,10 +136,9 @@ function addRow(labTest) {
     updateTotalPrice(labTest.price);
 
     row.insertCell(0).innerHTML = labTest.id;
-    row.insertCell(1).innerHTML = `<input type="text" name="labTests" class="form-control" value="${labTest.id}" readonly>`;
-    row.insertCell(2).innerHTML = labTest.code;
-    row.insertCell(3).innerHTML = labTest.name;
-    row.insertCell(4).innerHTML = '<input type="button" value = "Remove" onClick="deleteRow(this)" class="btn btn-danger">';
+    row.insertCell(1).innerHTML = `<input class="tableCell" type="text" name="labTests.code" value="${labTest.code}" readonly>`;
+    row.insertCell(2).innerHTML = labTest.name;
+    row.insertCell(3).innerHTML = '<button value="Remove" class="btn btn-danger" onClick="deleteRow(this)"><i style="font-size:24px" class="fa">&#xf00d;</i></button>';
 
 }
 

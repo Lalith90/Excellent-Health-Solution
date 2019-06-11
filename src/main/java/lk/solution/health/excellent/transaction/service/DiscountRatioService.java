@@ -1,6 +1,6 @@
 package lk.solution.health.excellent.transaction.service;
 
-import lk.solution.health.excellent.common.interfaces.AbstractService;
+import lk.solution.health.excellent.util.interfaces.AbstractService;
 import lk.solution.health.excellent.transaction.dao.DiscountRatioDao;
 import lk.solution.health.excellent.transaction.entity.DiscountRatio;
 import org.springframework.beans.factory.annotation.Autowired;

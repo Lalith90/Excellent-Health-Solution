@@ -96,16 +96,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
                 .and()
                 .exceptionHandling()
-/*              .and()
+            .and()
         //Session Management
                 .sessionManagement()
                 .invalidSessionUrl("/login")
                 .sessionFixation()
                 .changeSessionId()
-                .maximumSessions(10)
+                .maximumSessions(50)
                 .expiredUrl("/login")
                 .and()
-        //Cross site disable*/
+        //Cross site disable   */
                 .and()
                 .csrf()
                 .disable();

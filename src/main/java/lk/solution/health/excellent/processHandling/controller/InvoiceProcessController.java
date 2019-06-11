@@ -1,8 +1,5 @@
 package lk.solution.health.excellent.processHandling.controller;
 
-import lk.solution.health.excellent.common.service.DateTimeAgeService;
-import lk.solution.health.excellent.common.service.EmailService;
-import lk.solution.health.excellent.common.service.FileHandelService;
 import lk.solution.health.excellent.general.entity.Enum.Gender;
 import lk.solution.health.excellent.general.entity.Enum.Title;
 import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
@@ -21,11 +18,13 @@ import lk.solution.health.excellent.transaction.entity.Enum.PaymentMethod;
 import lk.solution.health.excellent.transaction.entity.Invoice;
 import lk.solution.health.excellent.transaction.service.DiscountRatioService;
 import lk.solution.health.excellent.transaction.service.InvoiceService;
-import lk.solution.health.excellent.util.ExceptionService;
+import lk.solution.health.excellent.util.service.DateTimeAgeService;
+import lk.solution.health.excellent.util.service.EmailService;
+import lk.solution.health.excellent.util.service.ExceptionService;
+import lk.solution.health.excellent.util.service.FileHandelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -113,11 +112,9 @@ public class InvoiceProcessController {
         // Second value is greater than one {< 0}, Both are equal { = 0}, First value is greater {>0}
         //boolean value = invoiceProcess.getAmount().compareTo(invoiceProcess.getAmountTendered()) < 0;
         if (result.hasErrors()) {
-
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());
             }
-
             model.addAttribute("paymentMethods", PaymentMethod.values());
             model.addAttribute("invoicePrintOrNot", InvoicePrintOrNot.values());
             model.addAttribute("patients", patientService.findAll());
@@ -130,22 +127,22 @@ public class InvoiceProcessController {
         }
 
         //To take user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = userService.findByUserName(authentication.getName());
+        User currentUser = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
         // to collect all selected lab test
         List<LabTest> labTests = new ArrayList<>();
         /* Make invoice number with current year 000_138_484 --> start*/
         // new invoice number (1_900_000_000)
         int newInvoiceNumber;
-        int previousNumber = invoiceService.findLastInvoice().getNumber();
-        int newNumberFirstTwoCharacters = Integer.parseInt(String.valueOf(previousNumber).substring(0, 2));
-        LocalDate currentDateTime = dateTimeAgeService.getCurrentDate();
-        int currentYearLastTwoNumber = Integer.parseInt(String.valueOf(currentDateTime.getYear()).substring(2, 4));
-
-
+        // if previous invoice number is null
+        int previousNumber = 0;
+        LocalDate currentDate = dateTimeAgeService.getCurrentDate();
+        int currentYearLastTwoNumber = Integer.parseInt(String.valueOf(currentDate.getYear()).substring(2, 4));
         if (invoiceService.findLastInvoice().getNumber() == null) {
-            newInvoiceNumber = Integer.parseInt(currentYearLastTwoNumber + "00000000");
-        } else if (currentYearLastTwoNumber == newNumberFirstTwoCharacters) {
+            previousNumber = Integer.parseInt(currentYearLastTwoNumber + "00000000");
+        }
+        int newNumberFirstTwoCharacters = Integer.parseInt(String.valueOf(previousNumber).substring(0, 2));
+
+        if (currentYearLastTwoNumber == newNumberFirstTwoCharacters) {
             newInvoiceNumber = previousNumber + 1;
         } else {
             newInvoiceNumber = previousNumber + 100_000_000;
@@ -257,7 +254,7 @@ public class InvoiceProcessController {
         invoice.setNumber(newInvoiceNumber);
         invoice.setPaymentMethod(invoiceProcess.getPaymentMethod());
         invoice.setRemarks(invoiceProcess.getRemarks());
-        invoice.setCreatedAt(currentDateTime);
+        invoice.setCreatedAt(currentDate);
         invoice.setPatient(invoiceProcess.getPatient());
         invoice.setCollectingCenter(invoiceProcess.getCollectingCenter());
         invoice.setDiscountRatio(invoiceProcess.getDiscountRatio());
@@ -272,7 +269,13 @@ public class InvoiceProcessController {
 
         /*To lab test count number - start */
         int labTestCountNumber;
-        int previousInvoiceHasLabTestNumber = invoiceHasLabTestService.findLastInvoiceHasLabTest().getNumber();
+        int previousInvoiceHasLabTestNumber = 0;
+        //todo
+        //if last lab Reference is null
+        if  (invoiceHasLabTestService.findLastInvoiceHasLabTest().getNumber() == null){
+            previousInvoiceHasLabTestNumber = Integer.parseInt(currentYearLastTwoNumber + "00000000");
+        }
+
         int newLabTestCountNumberFirstTwoCharacters = Integer.parseInt(String.valueOf(previousInvoiceHasLabTestNumber).substring(0, 2));
         /*To lab test count number - end */
 
@@ -285,7 +288,7 @@ public class InvoiceProcessController {
         InvoiceHasLabTest invoiceHasLabTest = new InvoiceHasLabTest();
         invoiceHasLabTest.setInvoice(invoice);
         invoiceHasLabTest.setLabTestStatus(LabTestStatus.NOSAMPLE);
-        invoiceHasLabTest.setCreatedAt(currentDateTime);
+        invoiceHasLabTest.setCreatedAt(currentDate);
         if (currentYearLastTwoNumber == newLabTestCountNumberFirstTwoCharacters) {
             labTestCountNumber = previousInvoiceHasLabTestNumber + 1;
         } else {
@@ -340,7 +343,8 @@ public class InvoiceProcessController {
             //to print invoice
             boolean isFlag = invoiceService.createPdf(invoice, context, request, response);
             if (isFlag) {
-                String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoice.getPatient().getTitle().getTitle() + " " + invoice.getPatient().getName() + "invoice" + ".pdf");
+                String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoice.getPatient().getTitle().getTitle() + "." + invoice.getPatient().getName() + "-invoice" + ".pdf");
+                System.out.println(fullPath + "this is from invoice process pdf file path");
                 boolean download = fileHandelService.fileDownload(fullPath, response, invoice.getPatient().getTitle().getTitle() + " " + invoice.getPatient().getName() + "invoice" + ".pdf");
                 if (download) {
                     return "redirect:/invoiceProcess";

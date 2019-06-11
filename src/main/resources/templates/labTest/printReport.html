@@ -6,29 +6,33 @@
     <style th:replace="fragments/style"></style>
 </head>
 <body>
-<nav class="navbar navbar-default" th:replace="fragments/header :: header" style="margin-bottom: 60px"></nav>
+<nav class="navbar navbar-default" style="margin-bottom: 60px" th:replace="fragments/header :: header"></nav>
 <div class="container-fluid" style="margin-top: 60px">
     <div class="panel panel-primary">
         <div class="panel panel-heading text-center">
-            <h5 class="text-center" th:if="${invoice1==true}"><b><i><span th:text="${invoice.patient.title.title}+ ${' '} + ${invoice.patient.name}"></span></i></b></h5>
+            <h5 class="text-center" th:if="${invoice1==true}"><b><i><span
+                    th:text="${invoice.patient.title.title}+ ${' '} + ${invoice.patient.name}"></span></i></b></h5>
         </div>
         <div class="panel panel-body">
-            <div class="alert alert-info alert-dismissable fade in text-center" th:if="${#lists.isEmpty(invoiceHasLabTest)}">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>  According to the <span th:text="${invoice.patient.title.title}+ ${' '} + ${invoice.patient.name}"></span>, There is no test.</strong>
+            <div class="alert alert-info alert-dismissable fade in text-center"
+                 th:if="${#lists.isEmpty(invoiceHasLabTest)}">
+                <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
+                <strong> According to the <span
+                        th:text="${invoice.patient.title.title}+ ${' '} + ${invoice.patient.name}"></span>, There is no
+                    test.</strong>
             </div>
             <!-- Lab test done here and ready to print -->
             <div class="container-fluid" th:if="${!#lists.isEmpty(authorized)}">
                 <h4 class="text-center text-info"><b><i>Ready To Print</i></b></h4>
-                <table class="table table-striped table-condensed" >
+                <table class="table table-striped table-condensed">
                     <thead>
                     <tr>
                         <th>Index</th>
-                        <th>Lab Refference </th>
+                        <th>Lab Reference</th>
                         <th>Patient Name</th>
                         <th>Test Name</th>
-                        <th> Report Authorized Time </th>
-                        <th> Action </th>
+                        <th> Report Authorized Time</th>
+                        <th> Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -37,8 +41,11 @@
                         <th th:text="${invoiceHasLabTests.id}"></th>
                         <th th:text="${invoiceHasLabTests.invoice.patient.title.title} +${' '}+${invoiceHasLabTests.invoice.patient.name}"></th>
                         <th th:text="${invoiceHasLabTests.labTest.name}"></th>
-                        <th th:text="${{invoiceHasLabTests.reportAuthorizeDateTime}}" ></th>
-                        <th><a  th:href="${'/lab/print/' + invoiceHasLabTests.id}"> <button  class="btn btn-success"> &nbsp;<span class="glyphicon glyphicon-print"> </span>&nbsp;Print</button></a></th>
+                        <th th:text="${{invoiceHasLabTests.reportAuthorizeDateTime}}"></th>
+                        <th><a th:href="${'/lab/print/' + invoiceHasLabTests.id}">
+                            <button class="btn btn-success"> &nbsp;<span class="glyphicon glyphicon-print"> </span>&nbsp;Print
+                            </button>
+                        </a></th>
                     </tr>
                     </tbody>
                 </table>
@@ -46,15 +53,15 @@
             <!-- Result enter but not authorized  -->
             <div class="container-fluid" th:if="${!#lists.isEmpty(resultEnter)}">
                 <h4 class="text-center text-info"><b><i>Test Result Entered List</i></b></h4>
-                <table class="table table-striped table-condensed" >
+                <table class="table table-striped table-condensed">
                     <thead>
                     <tr>
                         <th>Index</th>
-                        <th>Lab Refference </th>
+                        <th>Lab Refference</th>
                         <th>Patient Name</th>
                         <th>Test Name</th>
-                        <th> Result Enter Time </th>
-                        <th th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')')}"> Action </th>
+                        <th> Result Enter Time</th>
+                        <th th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')')}"> Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -63,8 +70,12 @@
                         <th th:text="${invoiceHasLabTests.id}"></th>
                         <th th:text="${invoiceHasLabTests.invoice.patient.title.title} +${' '}+${invoiceHasLabTests.invoice.patient.name}"></th>
                         <th th:text="${invoiceHasLabTests.labTest.name}"></th>
-                        <th th:text="${{invoiceHasLabTests.reportAuthorizeDateTime}}" ></th>
-                        <th><a th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')')}" th:href="${'/lab/authorize/labTestAuthorizedForm/' + invoiceHasLabTests.id}"> <button  class="btn btn-success">&nbsp;<span class="glyphicon glyphicon-open-file">&nbsp;Open </span></button></a></th>
+                        <th th:text="${{invoiceHasLabTests.reportAuthorizeDateTime}}"></th>
+                        <th><a th:href="${'/lab/authorize/labTestAuthorizedForm/' + invoiceHasLabTests.id}"
+                               th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')')}">
+                            <button class="btn btn-success">&nbsp;<span
+                                    class="glyphicon glyphicon-open-file">&nbsp;Open </span></button>
+                        </a></th>
                     </tr>
                     </tbody>
                 </table>
@@ -72,15 +83,15 @@
             <!-- Work sheet taken List  -->
             <div class="container-fluid" th:if="${!#lists.isEmpty(workSheetTake)}">
                 <h4 class="text-center text-info"><b><i>Work Sheet Taken List</i></b></h4>
-                <table class="table table-striped table-condensed" >
+                <table class="table table-striped table-condensed">
                     <thead>
                     <tr>
                         <th>Index</th>
-                        <th>Lab Refference </th>
+                        <th>Lab Refference</th>
                         <th>Patient Name</th>
                         <th>Test Name</th>
-                        <th> Report Authorized Time </th>
-                        <th> Action </th>
+                        <th> Report Authorized Time</th>
+                        <th> Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -89,8 +100,11 @@
                         <th th:text="${invoiceHasLabTests.id}"></th>
                         <th th:text="${invoiceHasLabTests.invoice.patient.title.title} +${' '}+${invoiceHasLabTests.invoice.patient.name}"></th>
                         <th th:text="${invoiceHasLabTests.labTest.name}"></th>
-                        <th th:text="${{invoiceHasLabTests.workSheetTakenDateTime}}" ></th>
-                        <th><a  th:href="${'/lab/labTestResultEnterForm/' + invoiceHasLabTests.id}"> <button  class="btn btn-success">&nbsp; <span class="glyphicon glyphicon-open-file"> </span>&nbsp;Open </button></a></th>
+                        <th th:text="${{invoiceHasLabTests.workSheetTakenDateTime}}"></th>
+                        <th><a th:href="${'/lab/labTestResultEnterForm/' + invoiceHasLabTests.id}">
+                            <button class="btn btn-success">&nbsp; <span class="glyphicon glyphicon-open-file"> </span>&nbsp;Open
+                            </button>
+                        </a></th>
                     </tr>
                     </tbody>
                 </table>
@@ -98,14 +112,14 @@
             <!-- sample collected List  -->
             <div class="container-fluid" th:if="${!#lists.isEmpty(workSheetTake)}">
                 <h4 class="text-center text-info"><b><i>Sample Taken List</i></b></h4>
-                <table class="table table-striped table-condensed" >
+                <table class="table table-striped table-condensed">
                     <thead>
                     <tr>
                         <th>Index</th>
-                        <th>Lab Refference </th>
+                        <th>Lab Refference</th>
                         <th>Patient Name</th>
                         <th>Test Name</th>
-                        <th> Sample Collected Time </th>
+                        <th> Sample Collected Time</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -114,7 +128,7 @@
                         <th th:text="${invoiceHasLabTests.id}"></th>
                         <th th:text="${invoiceHasLabTests.invoice.patient.title.title} +${' '}+${invoiceHasLabTests.invoice.patient.name}"></th>
                         <th th:text="${invoiceHasLabTests.labTest.name}"></th>
-                        <th th:text="${{invoiceHasLabTests.sampleCollectedDateTime}}" ></th>
+                        <th th:text="${{invoiceHasLabTests.sampleCollectedDateTime}}"></th>
                     </tr>
                     </tbody>
                 </table>
@@ -122,14 +136,14 @@
             <!-- Already Printed List  -->
             <div class="container-fluid" th:if="${!#lists.isEmpty(printed)}">
                 <h4 class="text-center text-info"><b><i>Sample Taken List</i></b></h4>
-                <table class="table table-striped table-condensed" >
+                <table class="table table-striped table-condensed">
                     <thead>
                     <tr>
                         <th>Index</th>
-                        <th>Lab Refference </th>
+                        <th>Lab Refference</th>
                         <th>Patient Name</th>
                         <th>Test Name</th>
-                        <th> Printed Time </th>
+                        <th> Printed Time</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -138,7 +152,7 @@
                         <th th:text="${invoiceHasLabTests.id}"></th>
                         <th th:text="${invoiceHasLabTests.invoice.patient.title.title} +${' '}+${invoiceHasLabTests.invoice.patient.name}"></th>
                         <th th:text="${invoiceHasLabTests.labTest.name}"></th>
-                        <th th:text="${{invoiceHasLabTests.reportPrintedDateTime}}" ></th>
+                        <th th:text="${{invoiceHasLabTests.reportPrintedDateTime}}"></th>
                     </tr>
                     </tbody>
                 </table>
@@ -146,14 +160,14 @@
             <!-- sample collected and not done List  -->
             <div class="container-fluid" th:if="${!#lists.isEmpty(sampleCollectAndNotDone)}">
                 <h4 class="text-center text-info"><b><i>Sample Taken List</i></b></h4>
-                <table class="table table-striped table-condensed" >
+                <table class="table table-striped table-condensed">
                     <thead>
                     <tr>
                         <th>Index</th>
-                        <th>Lab Refference </th>
+                        <th>Lab Refference</th>
                         <th>Patient Name</th>
                         <th>Test Name</th>
-                        <th> Sample Collected Time </th>
+                        <th> Sample Collected Time</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -162,7 +176,7 @@
                         <th th:text="${invoiceHasLabTests.id}"></th>
                         <th th:text="${invoiceHasLabTests.invoice.patient.title.title} +${' '}+${invoiceHasLabTests.invoice.patient.name}"></th>
                         <th th:text="${invoiceHasLabTests.labTest.name}"></th>
-                        <th th:text="${{invoiceHasLabTests.sampleCollectedDateTime}}" ></th>
+                        <th th:text="${{invoiceHasLabTests.sampleCollectedDateTime}}"></th>
                     </tr>
                     </tbody>
                 </table>

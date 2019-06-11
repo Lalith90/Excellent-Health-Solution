@@ -1,6 +1,6 @@
 package lk.solution.health.excellent.resource.controller;
 
-import lk.solution.health.excellent.common.service.DateTimeAgeService;
+import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import lk.solution.health.excellent.general.entity.Enum.Gender;
 import lk.solution.health.excellent.general.entity.Enum.Title;
 import lk.solution.health.excellent.general.service.ConsultationService;

@@ -1,11 +1,0 @@
-
-Ksquid:S1068"/Remove this unused "userService" private field.(ÇêŞ¢ıÿÿÿÿ
-^squid:S00107 "AConstructor has 9 parameters, which is greater than 7 authorized.(ëÏµâúÿÿÿÿ
-Rsquid:S1068"6Remove this unused "dateTimeAgeService" private field.(Ùİ™âúÿÿÿÿ
-`squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Ä¯×
-Psquid:S1068"9Remove this unused "medicalPackageService" private field.(©¬È•
-bsquid:CommentedOutCodeLineD"<This block of commented-out lines of code should be removed.(ÁîÄ÷
-dsquid:S4488{"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(¤¯­åÿÿÿÿÿ
-Xsquid:S4684‚"@Replace this persistent entity with a simple POJO or DTO object.(©¼÷
-_squid:S44887"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ñ¯‡¬
-_squid:S44881"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ğÄâÿ

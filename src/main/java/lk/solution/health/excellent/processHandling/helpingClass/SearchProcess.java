@@ -4,9 +4,7 @@ import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.lab.entity.LabTestParameter;
 import lk.solution.health.excellent.resource.entity.MedicalPackage;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -15,6 +13,9 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @ToString
 public class SearchProcess {
     Integer id;

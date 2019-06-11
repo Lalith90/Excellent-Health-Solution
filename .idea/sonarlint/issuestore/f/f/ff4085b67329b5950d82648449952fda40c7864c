@@ -1,15 +1,0 @@
-
-_squid:S4488("HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ğÄâÿ
-_squid:S4488."HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ñ¯‡¬
-dsquid:S44888"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Û•ôûÿÿÿÿ
-fsquid:S4488E"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(î½¾âùÿÿÿÿ
-dsquid:S4488X"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(¤¯­åÿÿÿÿÿ
-_squid:S4488^"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Ä¯×
-gsquid:S11922"PDefine a constant instead of duplicating this literal "labTestDoneHere" 3 times.(«Õ‘„
-asquid:S11923"JDefine a constant instead of duplicating this literal "addStatus" 3 times.(›÷œ²
-bsquid:S11921"KDefine a constant instead of duplicating this literal "department" 3 times.(ÊÔ«Ş
-isquid:S11924"RDefine a constant instead of duplicating this literal "labTestParameters" 3 times.(¾óºÏ
-O
-squid:S106I"9Replace this use of System.out or System.err by a logger.(úÎá¯
-\squid:S4684F"@Replace this persistent entity with a simple POJO or DTO object.(ØÆÚşÿÿÿÿ
-Wsquid:S4684_"@Replace this persistent entity with a simple POJO or DTO object.(íÜ­†

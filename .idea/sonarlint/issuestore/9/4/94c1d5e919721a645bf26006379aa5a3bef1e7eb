@@ -1,23 +1,0 @@
-
-`squid:S4488¥"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Ä¯×
-dsquid:S4488B"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Û•ôûÿÿÿÿ
-_squid:S1192n"HDefine a constant instead of duplicating this literal "message" 4 times.(ºãÚ¶
-_squid:S44882"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ğÄâÿ
-esquid:S4488Ÿ"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(¤¯­åÿÿÿÿÿ
-csquid:S1192o"LDefine a constant instead of duplicating this literal "alertStatus" 4 times.(Á ªÍ
-nsquid:S1192q"RDefine a constant instead of duplicating this literal "redirect:/patient" 7 times.(ù®Ôóüÿÿÿÿ
-Vsquid:S1854W":Remove this useless assignment to local variable "userId".(™Ëªöøÿÿÿÿ
-asquid:S1192<"JDefine a constant instead of duplicating this literal "addStatus" 3 times.(›÷œ²
-fsquid:S4488T"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(î½¾âùÿÿÿÿ
-isquid:S00117F"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÖÂ¿×
-_squid:S1192:"HDefine a constant instead of duplicating this literal "patient" 3 times.(“ªì
-bsquid:S1192="FDefine a constant instead of duplicating this literal "title" 3 times.(‘˜¿Çşÿÿÿÿ
-\squid:S4684U"@Replace this persistent entity with a simple POJO or DTO object.(—ÅŒ³ÿÿÿÿÿ
-_squid:S44888"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ñ¯‡¬
-Xsquid:S4684¦"@Replace this persistent entity with a simple POJO or DTO object.(µøĞş
-csquid:S1192>"GDefine a constant instead of duplicating this literal "gender" 3 times.(ÀüŒøşÿÿÿÿ
-O
-squid:S106X"9Replace this use of System.out or System.err by a logger.(„òå
-O
-squid:S106["9Replace this use of System.out or System.err by a logger.(úÎá¯
-Gsquid:S1481W"+Remove this unused "userId" local variable.(™Ëªöøÿÿÿÿ

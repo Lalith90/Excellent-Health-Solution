@@ -1,7 +1,7 @@
 package lk.solution.health.excellent.resource.controller;
 
-import lk.solution.health.excellent.common.service.DateTimeAgeService;
-import lk.solution.health.excellent.common.service.EmailService;
+import lk.solution.health.excellent.util.service.DateTimeAgeService;
+import lk.solution.health.excellent.util.service.EmailService;
 import lk.solution.health.excellent.general.entity.Enum.Gender;
 import lk.solution.health.excellent.general.entity.Enum.Title;
 import lk.solution.health.excellent.resource.entity.Patient;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/patient")

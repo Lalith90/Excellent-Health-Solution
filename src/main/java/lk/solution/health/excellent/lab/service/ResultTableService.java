@@ -1,6 +1,6 @@
 package lk.solution.health.excellent.lab.service;
 
-import lk.solution.health.excellent.common.interfaces.AbstractService;
+import lk.solution.health.excellent.util.interfaces.AbstractService;
 import lk.solution.health.excellent.lab.dao.ResultTableDao;
 import lk.solution.health.excellent.lab.entity.ResultTable;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,22 +1,0 @@
-
-hsquid:S4488\"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(¡Û…À8åä³¯ú,
-Osquid:S1481E"1Remove this unused "patientCount" local variable.(Ó–•ý8Ê½·¯ú,
-Zsquid:S1854L"<Remove this useless assignment to local variable "invoices".(ýáâª8Ê½·¯ú,
-nsquid:CommentedOutCodeLineq"<This block of commented-out lines of code should be removed.(—¥–ýÿÿÿÿ8åä³¯ú,
-Osquid:S1481C",Remove this unused "refunds" local variable.(ˆÖÔøûÿÿÿÿ8Ê½·¯ú,
-ksquid:S44889"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ºÇ Íúÿÿÿÿ8åä³¯ú,
-psquid:S3776]"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(“¡ÂÝ8åä³¯ú,
-^squid:S1854E"@Remove this useless assignment to local variable "patientCount".(Ó–•ý8Ê½·¯ú,
-_squid:S1854R"<Remove this useless assignment to local variable "invoices".(ò–íÇøÿÿÿÿ8Ê½·¯ú,
-usquid:S00117o"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ªÄ±Øúÿÿÿÿ8åä³¯ú,
-Tsquid:S1481F"1Remove this unused "LabTestCount" local variable.(¬¹œãùÿÿÿÿ8Ê½·¯ú,
-Wsquid:S1068""9Remove this unused "medicalPackageService" private field.(©¬È•8åä³¯ú,
-wsquid:S00120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¥Çˆ¹øÿÿÿÿ
-]squid:UnusedPrivateMethod5"1Remove this unused private "commonMethod" method.(ÕøûÃ8ˆŽ¶¯ú,
-usquid:S00117F"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¬¹œãùÿÿÿÿ8åä³¯ú,
-Zsquid:S1481G"7Remove this unused "medicalPackgeCount" local variable.(·ç¨¢ýÿÿÿÿ8Ê½·¯ú,
-Ysquid:S1854N";Remove this useless assignment to local variable "refunds".(‡“ùŒ8Ê½·¯ú,
-Psquid:S1481B"-Remove this unused "invoices" local variable.(Êõ“–ûÿÿÿÿ8Ê½·¯ú,
-Ÿsquid:S11865"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÕøûÃ8Ôì¾¯ú,
-csquid:S1854F"@Remove this useless assignment to local variable "LabTestCount".(¬¹œãùÿÿÿÿ8Ê½·¯ú,
-^squid:S1854T";Remove this useless assignment to local variable "refunds".(ÁÌÐ‰ÿÿÿÿÿ8Ê½·¯ú,

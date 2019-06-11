@@ -5,7 +5,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import lk.solution.health.excellent.common.interfaces.AbstractService;
+import lk.solution.health.excellent.util.interfaces.AbstractService;
 import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
 import lk.solution.health.excellent.general.service.InvoiceHasLabTestService;
 import lk.solution.health.excellent.lab.entity.LabTest;
@@ -31,7 +31,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
@@ -94,10 +93,6 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
 
     public List<Invoice> findByPatient(Patient patient) {
         return invoiceDao.findByPatient(patient);
-    }
-
-    public Invoice findByPatientAndCreateDate(Patient patient, LocalDate date) {
-        return invoiceDao.findByPatientAndCreatedAt(patient, date);
     }
 
     public List<Invoice> findByDateAndUser(LocalDate currentDate, User byUserName) {

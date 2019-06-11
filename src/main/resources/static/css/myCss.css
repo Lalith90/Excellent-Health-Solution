@@ -333,6 +333,13 @@ label{
 }
 /* enter filed validation - end*/
 
+/*table cell */
+.tableCell{
+    border: none;
+    padding: 5px;
+    width: 50%;
+}
+
 input{
     font-size: 18px !important;
 }

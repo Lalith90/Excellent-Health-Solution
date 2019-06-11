@@ -4,10 +4,5 @@
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="excellent_main" target="1.8" />
-      <module name="excellent_test" target="1.8" />
-      <module name="lk.solution.health-excellent_main" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

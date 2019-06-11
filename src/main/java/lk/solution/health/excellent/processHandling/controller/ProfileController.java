@@ -22,13 +22,11 @@ import java.security.Principal;
 public class ProfileController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final EmployeeService  employeeService;
 
     @Autowired
-    public ProfileController(UserService userService, PasswordEncoder passwordEncoder, EmployeeService employeeService) {
+    public ProfileController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
-        this.employeeService = employeeService;
     }
 /*Profile changes = start */
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
@@ -45,9 +43,7 @@ public class ProfileController {
     }
     @RequestMapping(value = "/user/passwordChange", method = RequestMethod.POST)
     public String passwordChange(@Valid @ModelAttribute PasswordChange passwordChange, Model model, BindingResult result){
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findById(userService.findByUserIdByUserName(auth.getName()));
+        User user = userService.findById(userService.findByUserIdByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
 
         if (!result.hasErrors() && passwordEncoder.matches(passwordChange.getOpsw(),user.getPassword()) && passwordChange.getNpsw().equals(passwordChange.getNrepsw())){
             user.setPassword(passwordChange.getNpsw());

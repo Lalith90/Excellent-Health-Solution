@@ -58,7 +58,7 @@ public class InvoiceProcessRestController {
         return mappingJacksonValue;
     }
 
-    //send patient details  send to fonts end
+    //send patient details  send to front end
     @GetMapping("/patientFind")
     public MappingJacksonValue getPatient(@PathParam("Patient") Patient patient) {
         //Get All Patient

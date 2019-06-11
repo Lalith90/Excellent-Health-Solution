@@ -1,6 +1,6 @@
 package lk.solution.health.excellent.general.service;
 
-import lk.solution.health.excellent.common.interfaces.AbstractService;
+import lk.solution.health.excellent.util.interfaces.AbstractService;
 import lk.solution.health.excellent.general.dao.ConsultationDao;
 import lk.solution.health.excellent.general.entity.Consultation;
 import org.springframework.beans.factory.annotation.Autowired;

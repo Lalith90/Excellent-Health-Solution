@@ -5,10 +5,7 @@ import lk.solution.health.excellent.lab.entity.Enum.LabTestStatus;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.resource.entity.User;
 import lk.solution.health.excellent.transaction.entity.Invoice;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -16,21 +13,19 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "invoice_has_Labtest")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(value = {"workSheetTakenDateTime", "resultEnteredDateTime", "sampleCollectedDateTime","reportAuthorizeDateTime","reportPrintedDateTime","reportRePrintedDateTime",
-        "sampleCollectingUser", "workSheetTakenUser", "resultEnteredUser", "reportAuthorizedUser", "reportPrintedUser", "reportRePrintedUser"},allowGetters = true)
+@JsonIgnoreProperties(value = {"workSheetTakenDateTime", "resultEnteredDateTime", "sampleCollectedDateTime","reportAuthorizeDateTime","reportPrintedDateTime", "reportRePrintedDateTime", "sampleCollectingUser", "workSheetTakenUser", "resultEnteredUser", "reportAuthorizedUser", "reportPrintedUser", "reportRePrintedUser"},allowGetters = true)
+@ToString
 public class InvoiceHasLabTest {
 
     @Id
-    @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "number", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private Integer number;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -41,11 +36,11 @@ public class InvoiceHasLabTest {
     @JoinColumn(name = "labtest_id")
     private LabTest labTest;
 
-    @Column(name = "lab_test_status", nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private LabTestStatus labTestStatus=LabTestStatus.NOSAMPLE;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createdAt;
 

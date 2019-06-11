@@ -17,21 +17,21 @@
                 <div class="alert alert-warning alert-dismissable fade in">
                     <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
                     <h4 class="text-center"> According to this <strong class="text-danger">Invoice Number :&nbsp;<span
-                            th:text="${invoiceId}"></span></strong> There was no investigation to take sample !</h4>
+                            th:text="${invoiceNumber}"></span></strong> There was no investigation to take sample !</h4>
                 </div>
             </div>
             <div class="container-fluid" th:if="${sampleCollectStatus==true}">
                 <div class="alert alert-warning alert-dismissable fade in">
                     <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
                     <h4 class="text-center"> According to this <strong class="text-danger">Invoice Number :&nbsp;<span
-                            th:text="${invoiceId}"></span></strong> You did not take any sample for the patient!</h4>
+                            th:text="${invoiceNumber}"></span></strong> You did not take any sample for the patient!</h4>
                 </div>
             </div>
             <div class="container-fluid" th:if="${repeatSampleStatus==true}">
                 <div class="alert alert-warning alert-dismissable fade in">
                     <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
                     <h4 class="text-center"> According to this <strong class="text-danger">Invoice Number :&nbsp;<span
-                            th:text="${invoiceId}"></span></strong> We can not take other sample free.<br/> Because
+                            th:text="${invoiceNumber}"></span></strong> We can not take other sample free.<br/> Because
                         patient test is already done!</h4>
                 </div>
             </div>

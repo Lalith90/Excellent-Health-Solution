@@ -70,6 +70,7 @@ function dateLengthValidate(day) {
     }
     return day;
 }
+
 function calculateDateOfBirth(nic) {
 
     let dateOfBirth = null;
@@ -269,13 +270,16 @@ $("#invoiceNumber").bind("keyup", function () {
         backgroundColourChangeBad($(this));
     }
 });
+
 //colour change function --start
 function backgroundColourChangeGood(id) {
     $(id).css('background-color', '#00FFFF');
 }
+
 function backgroundColourChangeBad(id) {
     $(id).css('background-color', '#FF00AA');
 }
+
 function backgroundColourChangeNothingToChange(id) {
     $(id).css('background-color', '#ffffff');
 }
@@ -310,17 +314,28 @@ async function getData(url) {
 
 // conformation message and to login page
 function conformationAndLoginWindow() {
-    let r = confirm("There is no way to access to the system without re re-login \n Please click \'Ok\' to login");
-    if (r === true) {
-        let loginUrl = window.location.protocol + "/login";
-        window.open(loginUrl, '_self');
-    }
+    let message = "There is no way to access to the system without  re-login \n Please click \'Ok\' to login";
+    swal({
+        title: "Attention !",
+        icon: "warning",
+        text: message,
+        buttons: {
+            cancel: true,
+            confirm: true,
+        },
+    }).then(value => {
+        if (value) {
+            let loginUrl = window.location.protocol + "/login";
+            window.open(loginUrl, '_self');
+        }
+    });
 }
 
 // content show table show and hide - start
 function contentShow(contentName) {
     contentName.removeAttribute("class");
 }
+
 function contentHide(contentName) {
     contentName.setAttribute("class", "display");
 }

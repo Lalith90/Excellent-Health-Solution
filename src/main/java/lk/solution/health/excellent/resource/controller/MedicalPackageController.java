@@ -1,6 +1,6 @@
 package lk.solution.health.excellent.resource.controller;
 
-import lk.solution.health.excellent.common.service.DateTimeAgeService;
+import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.lab.service.LabTestService;
 import lk.solution.health.excellent.resource.entity.Enum.MedicalPackageStatus;

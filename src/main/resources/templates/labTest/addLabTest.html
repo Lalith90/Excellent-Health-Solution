@@ -43,7 +43,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-4">Test Code</label>
                                 <div class="col-md-8">
-                                    <input th:if="${addStatus==true}" type="text"  placeholder="Enter Test Code Here" class="form-control" name="code" th:field="*{code}" required/>
+                                    <input th:if="${addStatus==true}" type="text"  placeholder="Enter Unic Test Code for Test" class="form-control" name="code" th:field="*{code}" required autofocus/>
                                     <input th:if="${addStatus==false}" type="text"   class="form-control" name="code" th:field="*{code}" readonly="readonly"/>
                                     <span class="error" th:if="${#fields.hasErrors('code')}" th:errors="*{code}">Error Test Code</span>
                                 </div>
@@ -140,8 +140,9 @@
                                 </div>
                                 <div class="alert alert-warning alert-dismissable fade in" th:if="${addStatus==false}">
                                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                    <br>
                                     <h4 class="text-center"> If you are edit some thing on this lab test !!! <br/>
-                                        &nbsp;<i class="material-icons" style="font-size:16px; color:red">warning</i> Please set all parameter/s which is/are belonged this test, before click the update button. </h4>
+                                        &nbsp;<span class="glyphicon glyphicon-warning-sign"></span> Please set all parameter/s which is/are belonged this test, before click the update button. </h4>
                                 </div>
                                <!-- labtest parameter table - end-->
                                 <div class="text-center row" >

@@ -1,6 +1,6 @@
 package lk.solution.health.excellent.resource.controller;
 
-import lk.solution.health.excellent.common.service.DateTimeAgeService;
+import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import lk.solution.health.excellent.resource.entity.User;
 import lk.solution.health.excellent.resource.service.EmployeeService;
 import lk.solution.health.excellent.resource.service.RoleService;

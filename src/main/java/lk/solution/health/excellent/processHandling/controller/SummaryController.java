@@ -1,6 +1,6 @@
 package lk.solution.health.excellent.processHandling.controller;
 
-import lk.solution.health.excellent.common.service.DateTimeAgeService;
+import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
 import lk.solution.health.excellent.general.service.InvoiceHasLabTestService;
 import lk.solution.health.excellent.processHandling.helpingClass.SearchProcess;
@@ -12,7 +12,7 @@ import lk.solution.health.excellent.transaction.entity.Invoice;
 import lk.solution.health.excellent.transaction.entity.Refund;
 import lk.solution.health.excellent.transaction.service.InvoiceService;
 import lk.solution.health.excellent.transaction.service.RefundService;
-import lk.solution.health.excellent.util.Operator;
+import lk.solution.health.excellent.util.service.OperatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -37,16 +37,16 @@ public class SummaryController {
     private final InvoiceHasLabTestService invoiceHasLabTestService;
     private final DateTimeAgeService dateTimeAgeService;
     private final UserService userService;
-    private final Operator operator;
+    private final OperatorService operatorService;
 
     @Autowired
-    public SummaryController(InvoiceService invoiceService, RefundService refundService, InvoiceHasLabTestService invoiceHasLabTestService, DateTimeAgeService dateTimeAgeService, UserService userService, Operator operator) {
+    public SummaryController(InvoiceService invoiceService, RefundService refundService, InvoiceHasLabTestService invoiceHasLabTestService, DateTimeAgeService dateTimeAgeService, UserService userService, OperatorService operatorService) {
         this.invoiceService = invoiceService;
         this.refundService = refundService;
         this.invoiceHasLabTestService = invoiceHasLabTestService;
         this.dateTimeAgeService = dateTimeAgeService;
         this.userService = userService;
-        this.operator = operator;
+        this.operatorService = operatorService;
     }
 
     private void commonAttributeToFontEnd(Model model, User user,
@@ -73,13 +73,13 @@ public class SummaryController {
                 .collect(Collectors.toList());
 //Medical packages amount
         for (Invoice medicalPackageInvoice : medicalPackageIncludeInvoice)
-            medicalPackageCollection = operator.addition(medicalPackageCollection, medicalPackageInvoice.getMedicalPackage().getPrice());
+            medicalPackageCollection = operatorService.addition(medicalPackageCollection, medicalPackageInvoice.getMedicalPackage().getPrice());
 //Collection
         for (Invoice totalCollectionInvoice : invoices) {
             //Total Collection
-            totalCollection = operator.addition(totalCollection, totalCollectionInvoice.getTotalprice());
+            totalCollection = operatorService.addition(totalCollection, totalCollectionInvoice.getTotalprice());
             //Total Discount Collection
-            discountedAmount = operator.addition(discountedAmount, totalCollectionInvoice.getDiscountAmount());
+            discountedAmount = operatorService.addition(discountedAmount, totalCollectionInvoice.getDiscountAmount());
             //Add patient to hash set to find invoiced patient count
             patients.add(totalCollectionInvoice.getPatient());
             //if payment cash, add invoice to cash payment method
@@ -88,16 +88,16 @@ public class SummaryController {
             }
         }
 // lab Collection
-        labCollection = operator.subtraction(totalCollection, medicalPackageCollection);
+        labCollection = operatorService.subtraction(totalCollection, medicalPackageCollection);
 // total cash collection
         for (Invoice cashPayment : cashPaymentInvoices)
-            totalCash = operator.addition(totalCash, cashPayment.getAmount());
+            totalCash = operatorService.addition(totalCash, cashPayment.getAmount());
 //card and cheque collection
-        totalCardAndCheque = operator.subtraction(totalCollection, operator.addition(totalCash, discountedAmount));
+        totalCardAndCheque = operatorService.subtraction(totalCollection, operatorService.addition(totalCash, discountedAmount));
 //total refund collection
-        for (Refund refund : refunds) totalRefund = operator.addition(totalRefund, refund.getAmount());
+        for (Refund refund : refunds) totalRefund = operatorService.addition(totalRefund, refund.getAmount());
 //cash to be deposit
-        needToDeposit = operator.subtraction(totalCollection, operator.addition(operator.addition(totalRefund, totalCardAndCheque), discountedAmount));
+        needToDeposit = operatorService.subtraction(totalCollection, operatorService.addition(operatorService.addition(totalRefund, totalCardAndCheque), discountedAmount));
 
 
         model.addAttribute("labCollection", labCollection.setScale(2, BigDecimal.ROUND_CEILING));

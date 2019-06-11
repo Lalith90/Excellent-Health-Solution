@@ -1,7 +1,7 @@
 package lk.solution.health.excellent.lab.service;
 
-import lk.solution.health.excellent.common.interfaces.AbstractService;
-import lk.solution.health.excellent.common.service.DateTimeAgeService;
+import lk.solution.health.excellent.util.interfaces.AbstractService;
+import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import lk.solution.health.excellent.lab.dao.LabTestDao;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.lab.entity.LabTestParameter;
@@ -14,7 +14,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
