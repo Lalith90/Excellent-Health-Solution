@@ -78,9 +78,6 @@ public class UserService implements AbstractService<User, Integer> {
         if(passwordEncoder.matches(passwordChange.getOpsw(),user.getPassword()) && passwordChange.getNpsw().equals(passwordChange.getNrepsw())){
             user.setPassword(passwordEncoder.encode(passwordChange.getNpsw()));
             user.setEnabled(true);
-            System.out.println("lalalalala");
-            System.out.println(user.getPassword());
-            System.out.println("change password");
             userDao.save(user);
         }
         return "Successfully Password Changed";

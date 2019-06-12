@@ -27,7 +27,6 @@ public class DoctorService implements AbstractService<Doctor, Integer> {
 
     @Cacheable(value = "doctor")
     public List<Doctor> findAll() {
-        System.out.println("doctor cache ok");
         return doctorDao.findAll();
     }
 

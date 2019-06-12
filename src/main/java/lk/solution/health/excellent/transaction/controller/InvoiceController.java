@@ -74,11 +74,9 @@ public class InvoiceController {
         int invoiceId = 0;
 
         if (invoices.isEmpty()) {
-            System.out.println("invoice is empty");
             return "redirect:/search";
         }
         if (invoices.size() == 1) {
-            System.out.println("come here");
             for (Invoice onlyOne : invoices) {
                 invoiceId = onlyOne.getId();
             }

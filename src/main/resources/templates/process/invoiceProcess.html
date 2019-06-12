@@ -11,8 +11,8 @@
 <nav class="navbar navbar-default" style="margin-bottom: 60px" th:replace="fragments/header :: header"></nav>
 
 <div class="container-fluid" style="margin-top: 60px">
-    <div class="alert alert-warning alert-dismissable text-center" th:if="${patientDetailsChange==true}">
-        <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
+    <div class="alert alert-warning alert-dismissable fade in" th:if="${patientDetailsChange==true}">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         <p>Ohh...! you change some details of patient. <br> please re-enter patient details correctly if there is not
             way to do it <br> click below button to add patient after be able to process invoice. <br> <a
                     href="/patient/add"></a>
@@ -120,8 +120,9 @@
                                                     <table class="table table-bordered table-hover"
                                                            id="myTableData">
                                                         <tr>
-                                                            <th>Test No</th>
-                                                            <th>Test Code</th>
+                                                            <th>No</th>
+                                                            <th class="tableCell"></th>
+                                                            <th>Code</th>
                                                             <th>Test Name</th>
                                                             <th>Action</th>
                                                         </tr>
@@ -153,8 +154,8 @@
                                 </div>
                                 <!--medical package included lab test-->
                                 <div class="row" id="medicalPackageDetails">
-                                    <div class="alert alert-warning alert-dismissible text-center">
-                                        <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
+                                    <div class="alert alert-warning alert-dismissable fade in">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                         <strong>Alert!</strong>
                                         <p><i>CHECK SELECTED LAB TEST AND MEDICAL PACKAGE INCLUDED LAB TEST</i></p>
                                     </div>
@@ -462,6 +463,7 @@
                                         <input class="form-control" id="amountTendered"
                                                name="amountTendered"
                                                placeholder="Enter Amount Here"
+                                               autocomplete="off"
                                                type="text"/>
                                     </div>
                                 </div>

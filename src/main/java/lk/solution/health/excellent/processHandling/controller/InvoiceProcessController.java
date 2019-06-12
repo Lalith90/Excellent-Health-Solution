@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Controller
@@ -128,26 +129,30 @@ public class InvoiceProcessController {
 
         //To take user
         User currentUser = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
-        // to collect all selected lab test
-        List<LabTest> labTests = new ArrayList<>();
         /* Make invoice number with current year 000_138_484 --> start*/
         // new invoice number (1_900_000_000)
         int newInvoiceNumber;
         // if previous invoice number is null
         int previousNumber = 0;
+        int newNumberFirstTwoCharacters = 0;
         LocalDate currentDate = dateTimeAgeService.getCurrentDate();
         int currentYearLastTwoNumber = Integer.parseInt(String.valueOf(currentDate.getYear()).substring(2, 4));
-        if (invoiceService.findLastInvoice().getNumber() == null) {
-            previousNumber = Integer.parseInt(currentYearLastTwoNumber + "00000000");
-        }
-        int newNumberFirstTwoCharacters = Integer.parseInt(String.valueOf(previousNumber).substring(0, 2));
+        if (invoiceService.findLastInvoice() != null) {
+            previousNumber = invoiceService.findLastInvoice().getNumber();
+            newNumberFirstTwoCharacters = Integer.parseInt(String.valueOf(invoiceService.findLastInvoice().getNumber()).substring(0, 2));
 
-        if (currentYearLastTwoNumber == newNumberFirstTwoCharacters) {
-            newInvoiceNumber = previousNumber + 1;
+            if (currentYearLastTwoNumber == newNumberFirstTwoCharacters) {
+                newInvoiceNumber = previousNumber + 1;
+            } else {
+                newInvoiceNumber = previousNumber + 100_000_000;
+            }
         } else {
-            newInvoiceNumber = previousNumber + 100_000_000;
+            newInvoiceNumber = Integer.parseInt(currentYearLastTwoNumber + "00000000");
         }
         /* Make invoice number with current year 1_900_000_000 --> start*/
+
+        // to collect all selected lab test
+        HashSet<LabTest> labTests = new HashSet<>();
 
         /*medical package and lab tests -- start*/
         // all lab test medical package and normal lab test
@@ -268,40 +273,43 @@ public class InvoiceProcessController {
         invoice = invoiceService.persist(invoice);
 
         /*To lab test count number - start */
-        int labTestCountNumber;
-        int previousInvoiceHasLabTestNumber = 0;
-        //todo
-        //if last lab Reference is null
-        if  (invoiceHasLabTestService.findLastInvoiceHasLabTest().getNumber() == null){
-            previousInvoiceHasLabTestNumber = Integer.parseInt(currentYearLastTwoNumber + "00000000");
-        }
-
-        int newLabTestCountNumberFirstTwoCharacters = Integer.parseInt(String.valueOf(previousInvoiceHasLabTestNumber).substring(0, 2));
+        int newInvoiceHasLabTestNumber;
+        int lastInvoiceHasLabTestId;
         /*To lab test count number - end */
 
-        int lastInvoiceHasId;
-        if (invoiceHasLabTestService.findLastInvoiceHasLabTest().getId() == null) {
-            lastInvoiceHasId = Integer.parseInt(currentYearLastTwoNumber + "00000000");
+        if (invoiceHasLabTestService.findLastInvoiceHasLabTest() == null) {
+            newInvoiceHasLabTestNumber = Integer.parseInt(currentYearLastTwoNumber + "00000000");
+            lastInvoiceHasLabTestId = 0;
         } else {
-            lastInvoiceHasId = invoiceHasLabTestService.findLastInvoiceHasLabTest().getId();
+            lastInvoiceHasLabTestId = invoiceHasLabTestService.findLastInvoiceHasLabTest().getId();
+            int previousInvoiceHasLabTestNumber = invoiceHasLabTestService.findLastInvoiceHasLabTest().getNumber();
+
+            int newLabTestCountNumberFirstTwoCharacters = Integer.parseInt(String.valueOf(previousInvoiceHasLabTestNumber).substring(0, 2));
+
+            if (currentYearLastTwoNumber == newLabTestCountNumberFirstTwoCharacters) {
+                newInvoiceHasLabTestNumber = previousInvoiceHasLabTestNumber + 1;
+            } else {
+                newInvoiceHasLabTestNumber = previousInvoiceHasLabTestNumber + 100_000_000;
+            }
         }
+
+        //System.out.println(newInvoiceHasLabTestNumber+" lab test number");
+
+
+        // create new object and save
         InvoiceHasLabTest invoiceHasLabTest = new InvoiceHasLabTest();
+
         invoiceHasLabTest.setInvoice(invoice);
         invoiceHasLabTest.setLabTestStatus(LabTestStatus.NOSAMPLE);
         invoiceHasLabTest.setCreatedAt(currentDate);
-        if (currentYearLastTwoNumber == newLabTestCountNumberFirstTwoCharacters) {
-            labTestCountNumber = previousInvoiceHasLabTestNumber + 1;
-        } else {
-            labTestCountNumber = previousInvoiceHasLabTestNumber + 100_000_000;
-        }
 //save until all lab Test array finished
         for (LabTest labtest : labTests) {
-            invoiceHasLabTest.setNumber(labTestCountNumber);
-            invoiceHasLabTest.setId(lastInvoiceHasId + 1);
+            invoiceHasLabTest.setNumber(newInvoiceHasLabTestNumber);
+            invoiceHasLabTest.setId(lastInvoiceHasLabTestId + 1);
             invoiceHasLabTest.setLabTest(labtest);
             invoiceHasLabTestService.persist(invoiceHasLabTest);
-            lastInvoiceHasId++;
-            labTestCountNumber++;
+            lastInvoiceHasLabTestId++;
+            newInvoiceHasLabTestNumber++;
         }
 //if patient not asked what printed bill nut he has email therefor bill would be send through email
         if (invoice.getInvoicePrintOrNot() == InvoicePrintOrNot.NOT && !invoice.getPatient().getEmail().isEmpty()) {

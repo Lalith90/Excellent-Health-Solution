@@ -89,9 +89,6 @@ public class RefundController {
 
     @RequestMapping(value = {"/add", "/update"}, method = RequestMethod.POST)
     public String addRefund(@Valid @ModelAttribute Refund refund, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
-
-
-        System.out.println(refund.toString());
         if (result.hasErrors()) {
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());

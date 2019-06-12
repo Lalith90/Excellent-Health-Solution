@@ -36,7 +36,7 @@ public class ConsultationController {
     }*/
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-    public String editConsultationFrom(@PathVariable("id") Integer id,Model model) {
+    public String editConsultationFrom(@PathVariable("id") Integer id, Model model) {
         model.addAttribute("consultation", consultationService.findById(id));
         model.addAttribute("addStatus", false);
         return "consultation/addConsultation";
@@ -52,9 +52,8 @@ public class ConsultationController {
     // Above method support to send data to front end - All List, update, edit
     //Bellow method support to do back end function save, delete, update, search
 
-    @RequestMapping(value = {"/add","/update"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/add", "/update"}, method = RequestMethod.POST)
     public String addConsultation(@Valid @ModelAttribute Consultation consultation, BindingResult result, Model model) {
-        System.out.println(consultation);
         if (result.hasErrors()) {
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());

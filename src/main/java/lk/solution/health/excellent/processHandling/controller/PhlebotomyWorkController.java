@@ -1,6 +1,5 @@
 package lk.solution.health.excellent.processHandling.controller;
 
-import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
 import lk.solution.health.excellent.general.service.InvoiceHasLabTestService;
 import lk.solution.health.excellent.lab.entity.Enum.LabTestStatus;
@@ -10,8 +9,8 @@ import lk.solution.health.excellent.processHandling.helpingClass.SearchProcess;
 import lk.solution.health.excellent.resource.service.UserService;
 import lk.solution.health.excellent.transaction.entity.Invoice;
 import lk.solution.health.excellent.transaction.service.InvoiceService;
+import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +41,7 @@ public class PhlebotomyWorkController {
         this.labTestService = labTestService;
     }
 
-    @RequestMapping(value = "/phlaboto", method = RequestMethod.GET)
+    @RequestMapping(value = {"/phlaboto", "/phlaboto/getAll"}, method = RequestMethod.GET)
     public String billedPatient(Model model) {
         // create patient list those are billed but not take sample
         HashSet<Invoice> invoices = new HashSet<>();
@@ -76,10 +75,9 @@ public class PhlebotomyWorkController {
     public String searchPatient(@PathVariable("id") int id, Model model, RedirectAttributes attributes, SearchProcess searchProcess) {
         List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByInvoiceAndLabTestStatus(invoiceService.findById(id), LabTestStatus.NOSAMPLE);
         if (invoiceHasLabTests.isEmpty()) {
-            System.out.println("Not come here ");
             attributes.addFlashAttribute("invoiceId", searchProcess.getNumber());
             attributes.addFlashAttribute("searchStatus", true);
-            return "redirect:phlebotomyProcess/searchForm";
+            return "redirect:/phlebotomyProcess/searchForm";
         }
         commonMethodPatientSearch(model, invoiceService.findById(id), invoiceHasLabTests);
         return "phlebotomyProcess/patientLabTestDetails";
@@ -87,27 +85,24 @@ public class PhlebotomyWorkController {
 
     @RequestMapping(value = "/phlaboto/saveSampledPatient", method = RequestMethod.POST)
     public String saveSampleTakenPatient(@ModelAttribute SearchProcess searchProcess, RedirectAttributes attributes) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Invoice invoice = invoiceService.findByNumber(Integer.parseInt(searchProcess.getNumber()));
-        List<LabTest> newLabTests = searchProcess.getLabTests();
-
-        if (newLabTests.isEmpty()) {
+// if there is not any lab test sample collected
+        if (searchProcess.getLabTests().isEmpty()) {
             attributes.addFlashAttribute("invoiceId", searchProcess.getId());
             attributes.addFlashAttribute("sampleCollectStatus", true);
-            return "redirect:phlaboto/searchForm";
-        }
-        List<InvoiceHasLabTest> invoiceHasLabTests = new ArrayList<>();
-        for (LabTest labTest : newLabTests) {
-            invoiceHasLabTests.add(invoiceHasLabTestService.findByInvoiceAndLabTest(invoice, labTest));
-        }
-        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
-            invoiceHasLabTest.setLabTestStatus(LabTestStatus.SAMPLECOLLECT);
-            invoiceHasLabTest.setSampleCollectedDateTime(dateTimeAgeService.getCurrentDateTime());
-            invoiceHasLabTest.setSampleCollectingUser(userService.findByUserName(authentication.getName()));
-            invoiceHasLabTestService.persist(invoiceHasLabTest);
+            return "redirect:/phlaboto/searchForm";
         }
 
-        return "redirect:phlaboto";
+        List<InvoiceHasLabTest> invoiceHasLabTests = new ArrayList<>();
+
+        for (LabTest labTest : searchProcess.getLabTests()) {
+            InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findByInvoiceAndLabTest(invoiceService.findByNumber(Integer.parseInt(searchProcess.getNumber())), labTest);
+            invoiceHasLabTest.setLabTestStatus(LabTestStatus.SAMPLECOLLECT);
+            invoiceHasLabTest.setSampleCollectedDateTime(dateTimeAgeService.getCurrentDateTime());
+            invoiceHasLabTest.setSampleCollectingUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
+            invoiceHasLabTests.add(invoiceHasLabTest);
+        }
+        invoiceHasLabTestService.persistBulk(invoiceHasLabTests);
+        return "redirect:/phlaboto/getAll";
     }
 
     @RequestMapping(value = "/phlaboto/searchPatient", method = RequestMethod.POST)
@@ -117,7 +112,7 @@ public class PhlebotomyWorkController {
         if (invoiceHasLabTests.isEmpty() || invoice == null) {
             attributes.addFlashAttribute("invoiceId", searchProcess.getNumber());
             attributes.addFlashAttribute("searchStatus", true);
-            return "redirect:phlebotomyProcess/searchForm";
+            return "redirect:/phlebotomyProcess/searchForm";
         }
         commonMethodPatientSearch(model, invoice, invoiceHasLabTests);
         return "phlebotomyProcess/patientLabTestDetails";
@@ -143,7 +138,7 @@ public class PhlebotomyWorkController {
         if (invoiceHasLabTest.getLabTestStatus().equals(LabTestStatus.RESULTENTER)) {
             attributes.addFlashAttribute("invoiceId", invoice.getId());
             attributes.addFlashAttribute("repeatSampleStatus", true);
-            return "redirect:phlaboto/repeatSamplePatientForm";
+            return "redirect:/phlaboto/repeatSamplePatientForm";
         }
 
         model.addAttribute("invoice", invoiceHasLabTest.getInvoice());

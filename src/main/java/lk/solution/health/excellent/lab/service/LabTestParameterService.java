@@ -25,7 +25,6 @@ public class LabTestParameterService implements AbstractService<LabTestParameter
 
     @Cacheable(value = "labtestParameter")
     public List<LabTestParameter> findAll() {
-        System.out.println("Lab Test paameter cache ok");
         return labtestParameterDao.findAll();
     }
 

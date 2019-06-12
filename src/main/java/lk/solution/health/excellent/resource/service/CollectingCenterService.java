@@ -27,7 +27,6 @@ public class CollectingCenterService implements AbstractService<CollectingCenter
 
     @Cacheable(value = "collectingCenter")
     public List<CollectingCenter> findAll() {
-        System.out.println("collecting cache ok");
         return collectingCenterDao.findAll();
     }
 

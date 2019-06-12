@@ -26,7 +26,6 @@ public class ResultTableService implements AbstractService<ResultTable, Integer>
 
     @Cacheable(value = "resultTable")
     public List<ResultTable> findAll() {
-        System.out.println("result table cache ok");
         return resultTableDao.findAll();
     }
 
@@ -36,7 +35,6 @@ public class ResultTableService implements AbstractService<ResultTable, Integer>
     }
 
     @CachePut(value = "resultTable")
-    @Transactional
     public ResultTable persist(ResultTable resultTable) {
         return resultTableDao.save(resultTable);
     }

@@ -48,7 +48,6 @@ public class ProfileController {
         if (!result.hasErrors() && passwordEncoder.matches(passwordChange.getOpsw(),user.getPassword()) && passwordChange.getNpsw().equals(passwordChange.getNrepsw())){
             user.setPassword(passwordChange.getNpsw());
             userService.persist(user);
-            System.out.println(passwordChange.getNpsw());
             model.addAttribute("message", "Successfully Change Your Password");
             model.addAttribute("alert", true);
             return "fragments/alert";

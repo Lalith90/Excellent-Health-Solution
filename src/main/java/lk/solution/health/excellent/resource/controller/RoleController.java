@@ -56,8 +56,7 @@ public class RoleController {
 
     @RequestMapping(value = {"/add","/update"}, method = RequestMethod.POST)
     public String addRole(@Valid @ModelAttribute Role role, BindingResult result, Model model) {
-        System.out.println(role);
-        if (result.hasErrors()) {
+          if (result.hasErrors()) {
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());
             }

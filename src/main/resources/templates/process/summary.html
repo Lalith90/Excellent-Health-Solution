@@ -23,12 +23,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="container-fluid">
-                        <div class="col-sm-6"><h3> Date : <span th:text="${{date}}"></span></h3></div>
-                        <div class="col-sm-6"><h3> User : <span th:text="${user}"></span></h3></div>
-                    </div>
-                </div>
                 <div class="container-fluid"
                      th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')') || #authorization.expression('hasRole(''ROLE_MANAGER'')')}">
                     <div class="row">
@@ -53,8 +47,16 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="container-fluid" th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')') || #authorization.expression('hasRole(''ROLE_MANAGER'')') || #authorization.expression('hasRole(''ROLE_CASHIER'')')}">
                     <div class="row" id="summary">
                         <div class="container-fluid">
+                            <div class="row">
+                                <div class="container-fluid">
+                                    <div class="col-sm-6"><h4> Date : <span th:text="${{date}}"></span></h4></div>
+                                    <div class="col-sm-6"><h4> User : <span th:text="${user}"></span></h4></div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-sm-offset-2 col-sm-8">
                                     <div class="table-responsive">

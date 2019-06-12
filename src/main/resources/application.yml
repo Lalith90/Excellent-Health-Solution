@@ -1,0 +1,48 @@
+
+logging:
+  level:
+    org:
+      springframework: ERROR
+
+spring:
+  port: 8090
+  datasource:
+    data-url: jdbc:mysql://localhost:3306/excellent_health?autoReconnect=true&useSSL=false
+    data-password: 12345
+    data-username: root
+  main:
+    banner-mode: "off"
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: excellenthealthsolution@gmail.com
+    password: dinesh2018
+    properties:
+      mail:
+        smtp:
+          auth: true
+        starttls:
+          enable: true
+
+  thymeleaf:
+    cache: false
+    check-template-location: false
+
+  jackson:
+    serialization:
+      fail-on-empty-beans : false
+
+server:
+  servlet:
+    session:
+      timeout: 1500s
+      cookie:
+        max-age: 1500s

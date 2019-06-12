@@ -32,12 +32,10 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
 
     @Cacheable("labTest")
     public List<LabTest> findAll() {
-        System.out.println("Lab Test cache ok");
         return labTestDao.findAll();
     }
     @CachePut(value = "labTest")
     public LabTest findById(Integer id) {
-        System.out.println("lat test find by id ");
         return labTestDao.getOne(id);
     }
 

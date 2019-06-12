@@ -27,7 +27,6 @@ public class DiscountRatioService implements AbstractService<DiscountRatio, Inte
 
     @Cacheable(value = "discount")
     public List<DiscountRatio> findAll() {
-        System.out.println("discount cache ok");
         return discountRatioDao.findAll();
     }
 

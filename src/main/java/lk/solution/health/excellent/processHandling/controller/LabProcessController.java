@@ -4,7 +4,6 @@ import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
 import lk.solution.health.excellent.general.service.InvoiceHasLabTestService;
 import lk.solution.health.excellent.lab.entity.Enum.LabTestStatus;
 import lk.solution.health.excellent.lab.entity.Enum.LabtestDoneHere;
-import lk.solution.health.excellent.lab.entity.LabTestParameter;
 import lk.solution.health.excellent.lab.entity.ResultTable;
 import lk.solution.health.excellent.lab.service.LabTestParameterService;
 import lk.solution.health.excellent.lab.service.LabTestService;
@@ -69,7 +68,13 @@ public class LabProcessController {
     //Sample Collected Investigation List for taken work sheet
     @RequestMapping(value = "/lab/sampleCollect", method = RequestMethod.GET)
     public String sampleCollectedPatient(Model model) {
-        model.addAttribute("invoiceHasLabTest", invoiceHasLabTestService.findByLabTestStateAndTestDonePlace(LabTestStatus.SAMPLECOLLECT, LabtestDoneHere.YES));
+        List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.
+                findByLabTestState(LabTestStatus.SAMPLECOLLECT)
+                .stream()
+                .filter((x) -> x.getLabTest().getLabtestDoneHere().equals(LabtestDoneHere.YES))
+                .collect(Collectors.toList());
+invoiceHasLabTests.forEach(System.out::println);
+        model.addAttribute("invoiceHasLabTest", invoiceHasLabTests);
         model.addAttribute("addLabSampleCollect", true);
         model.addAttribute("buttonStatus", true);
         model.addAttribute("inputStatus", true);
@@ -81,24 +86,25 @@ public class LabProcessController {
     @RequestMapping(value = "/lab/saveWorkSheetPatient", method = RequestMethod.POST)
     public String saveWorksheetTakenPatient(@ModelAttribute SearchProcess searchProcess) {
 
+        List<InvoiceHasLabTest> invoiceHasLabTests = searchProcess.getInvoiceHasLabTests();
         //TODO
         // any how need to find how to print pdf through web browser using java servlet
         // NEED TO CREATE WORK SHEET USING I-TEXT BUDDY --> //USING INVOICE NUMBER AND LAB TEST LIST
 
         //all work sheet taken test add to list
-        for (InvoiceHasLabTest invoiceHasLabTest : searchProcess.getInvoiceHasLabTests()) {
+        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
             invoiceHasLabTest.setLabTestStatus(LabTestStatus.WORKSHEET);
             invoiceHasLabTest.setWorkSheetTakenUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
             invoiceHasLabTest.setWorkSheetTakenDateTime(dateTimeAgeService.getCurrentDateTime());
-            invoiceHasLabTestService.persist(invoiceHasLabTest);
         }
+        invoiceHasLabTestService.persistBulk(invoiceHasLabTests);
         return "redirect:/lab/sampleCollect";
     }
 
     //worksheet taken list for result enter
     @RequestMapping(value = "/lab/worksheetPrinted", method = RequestMethod.GET)
     public String sampleWorksheetPatient(Model model) {
-        List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByLabTestStateAndTestDonePlace(LabTestStatus.WORKSHEET, LabtestDoneHere.YES);
+        List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByLabTestState(LabTestStatus.WORKSHEET);
         model.addAttribute("buttonStatus", false);
         model.addAttribute("invoiceHasLabTest", invoiceHasLabTests);
         model.addAttribute("addLabTestWorkStatus", true);
@@ -118,9 +124,9 @@ public class LabProcessController {
 
     // need to save result
     @RequestMapping(value = "/lab/saveResultPatient", method = RequestMethod.POST)
-    public String saveLabTestResult(@ModelAttribute SearchProcess searchProcess) {
+    public String saveLabTestResult(@ModelAttribute ResultTable searchProcess) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("result save "+ searchProcess.toString());
+        System.out.println("result save " + searchProcess.toString());
 //todo --> save result to lab test result table
 
 
@@ -365,7 +371,6 @@ public class LabProcessController {
 
             }
             if (patient == null) {
-                System.out.println("invoice is empty");
                 redirectAttributes.addFlashAttribute("searchLab", true);
                 redirectAttributes.addFlashAttribute("searchText", message);
                 return "redirect:/lab/searchReportFrom";

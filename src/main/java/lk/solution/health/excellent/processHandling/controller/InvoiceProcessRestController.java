@@ -6,7 +6,8 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.lab.service.LabTestService;
 import lk.solution.health.excellent.resource.entity.Patient;
-import lk.solution.health.excellent.resource.service.*;
+import lk.solution.health.excellent.resource.service.MedicalPackageService;
+import lk.solution.health.excellent.resource.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
@@ -75,10 +76,8 @@ public class InvoiceProcessRestController {
             patientList.addAll(patientService.findByMobile(patient.getMobile()));
         }
         if (patientList.isEmpty()) {
-            System.out.println(patient.getName());
             patientList.addAll(patientService.search(patient));
         }
-        // patientList.forEach((e)-> System.out.println(e.getName()));
 
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(patientList);
         SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "number", "title", "name", "gender", "nic", "dateOfBirth", "email", "mobile", "land");
@@ -92,7 +91,6 @@ public class InvoiceProcessRestController {
     public MappingJacksonValue search1(@PathParam("LabTest") LabTest labTest) {
         //LabTest labTest2 = new LabTest();
         //labTest2.setName("lipid");
-        System.out.println("im here lab test one");
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(labTestService.search(labTest));
         SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "name");
         FilterProvider filters = new SimpleFilterProvider().addFilter("LabTest", simpleBeanPropertyFilter);
@@ -109,10 +107,7 @@ public class InvoiceProcessRestController {
         labTest.setId(id);
         List<LabTest> labTests = labTestService.search(labTest);
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(labTests);
-        for (LabTest lab : labTests
-        ) {
-            System.out.println(lab.getId());
-
+        for (LabTest lab : labTests) {
             SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "labtestDoneHere");
             FilterProvider filters = new SimpleFilterProvider().addFilter("LabTest", simpleBeanPropertyFilter);
 

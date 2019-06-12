@@ -18,7 +18,16 @@
                     <a class="btn btn-primary" href="/home"> Return Home</a>
                 </div>
                 <div style="text-align: center;" class="col-sm-4">
-                    <h4 class="text-info"></h4>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${addStatus==true}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>Please Create Lab Test Code without conflict already created one</strong>
+                    </div>
+
+                    <script>
+                        $(".alert").alert();
+                    </script>
                 </div>
                 <div class="col-sm-4 text-right">
                     <a href="/labTest"><button class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-list">&nbsp; View List </span></button> </a>

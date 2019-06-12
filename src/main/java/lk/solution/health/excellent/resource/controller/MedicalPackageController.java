@@ -69,7 +69,7 @@ public class MedicalPackageController {
 
     @RequestMapping(value = {"/add","/update"}, method = RequestMethod.POST)
     public String addMedicalPackage(@Valid MedicalPackage medicalPackage, BindingResult result, Model model) {
-        System.out.println(medicalPackage);
+
         if (result.hasErrors()) {
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());

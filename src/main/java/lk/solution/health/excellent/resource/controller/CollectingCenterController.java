@@ -64,7 +64,6 @@ public class CollectingCenterController {
 
     @RequestMapping(value = {"/add","/update"}, method = RequestMethod.POST)
     public String addCollectingCenter(@Valid @ModelAttribute CollectingCenter collectingCenter, BindingResult result, Model model) {
-        System.out.println(collectingCenter);
         if (result.hasErrors()) {
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());

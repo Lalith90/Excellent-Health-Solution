@@ -8,8 +8,9 @@ public class ExceptionService {
         int userEnteredNumber = 0;
         try {
             userEnteredNumber = Integer.parseInt(paramter);
-        } catch (NumberFormatException ne) {
+        } catch (NumberFormatException e) {
             System.out.println("You have entered wrong number");
+            System.out.println(e.toString());
         }
         return userEnteredNumber;
     }

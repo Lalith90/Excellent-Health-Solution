@@ -136,9 +136,10 @@ function addRow(labTest) {
     updateTotalPrice(labTest.price);
 
     row.insertCell(0).innerHTML = labTest.id;
-    row.insertCell(1).innerHTML = `<input class="tableCell" type="text" name="labTests.code" value="${labTest.code}" readonly>`;
-    row.insertCell(2).innerHTML = labTest.name;
-    row.insertCell(3).innerHTML = '<button value="Remove" class="btn btn-danger" onClick="deleteRow(this)"><i style="font-size:24px" class="fa">&#xf00d;</i></button>';
+    row.insertCell(1).innerHTML = `<input class="tableCell" type="text" name="labTests" value="${labTest.id}" readonly>`;
+    row.insertCell(2).innerHTML = labTest.code;
+    row.insertCell(3).innerHTML = labTest.name;
+    row.insertCell(4).innerHTML = '<button value="Remove" class="btn btn-danger" onClick="deleteRow(this)"><i style="font-size:24px" class="fa">&#xf00d;</i></button>';
 
 }
 
@@ -500,11 +501,39 @@ function fillPatientDetailsForm(patientInArray) {
 }
 
 /*Patient details taken - end*/
+//balance settlement
+$("#amountTendered").on("keyup", function () {
+    $("#balance").val($("#amountTendered").val() - $("#amount").val());
+
+    if ($("#balance").val() < 0) {
+        backgroundColourChangeBad($(this));
+        contentHide(document.getElementById("btnSubmitInvoice"));
+    } else {
+        backgroundColourChangeGood($(this));
+        contentShow(document.getElementById("btnSubmitInvoice"));
+        $("#btnSubmitInvoice").attr('class', 'btn btn-success');
+
+    }
+
+});
 
 
 //discount ratio apply or not
 $("#cmbDiscountRatio").on("change", function () {
     $("#amount").val($("#totalPrice").val() - ($("#totalPrice").val() * (parseFloat($("#cmbDiscountRatio option:selected").text()) / 100)));
+
+    if  ($("#amountTendered").val()!==""){
+
+            $("#balance").val($("#amountTendered").val() - $("#amount").val());
+
+            if ($("#balance").val() < 0) {
+                contentHide(document.getElementById("btnSubmitInvoice"));
+            } else {
+                contentShow(document.getElementById("btnSubmitInvoice"));
+                $("#btnSubmitInvoice").attr('class', 'btn btn-success');
+
+            }
+    }
 });
 //payment method show and hide
 $("#cmbPaymentMethod").on("change", function () {
@@ -512,6 +541,7 @@ $("#cmbPaymentMethod").on("change", function () {
     if ($("#cmbPaymentMethod").val() === "CREDITCARD" || $("#cmbPaymentMethod").val() === "CHEQUE") {
         contentHide(document.getElementById("cash"));
         contentShow(document.getElementById("card"));
+        $("#amountTendered, #balance").val(" ");
     } else {
         contentHide(document.getElementById("card"));
         contentShow(document.getElementById("cash"));
@@ -534,21 +564,6 @@ $("#cardNumber").on("keyup", function () {
             document.getElementById("cardNumber").style.setProperty('background-color', '#7ae899', 'important');
             $("#cardType").html("Visa, Master, Discover or JCB");
         }
-    }
-
-});
-//balance settlement
-$("#amountTendered").on("keyup", function () {
-    $("#balance").val($("#amountTendered").val() - $("#amount").val());
-
-    if ($("#balance").val() < 0) {
-        backgroundColourChangeBad($(this));
-        contentHide(document.getElementById("btnSubmitInvoice"));
-    } else {
-        backgroundColourChangeGood($(this));
-        contentShow(document.getElementById("btnSubmitInvoice"));
-        $("#btnSubmitInvoice").attr('class', 'btn btn-success');
-
     }
 
 });

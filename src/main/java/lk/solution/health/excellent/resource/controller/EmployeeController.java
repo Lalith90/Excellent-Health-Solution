@@ -106,14 +106,12 @@ public class EmployeeController {
                 return "/employee/addEmployee";
             }
         if (employeeService.isEmployeePresent(employee)){
-            System.out.println("already on ");
             User user = userService.findById(userService.findByEmployeeId(employee.getId()));
             if(employee.getEmployeeStatus() != EmployeeStatus.WORKING){
                 user.setEnabled(false);
                 employee.setUpdatedAt(dateTimeAgeService.getCurrentDate());
                 employeeService.persist(employee);
             }
-            System.out.println("update working");
             user.setEnabled(true);
             employee.setUpdatedAt(dateTimeAgeService.getCurrentDate());
             employeeService.persist(employee);
@@ -177,7 +175,6 @@ public class EmployeeController {
                 employeeService.persist(employee);
             }
         }
-        System.out.println("save no id");
             employee.setCreatedAt(dateTimeAgeService.getCurrentDate());
             employeeService.persist(employee);
                 return "redirect:/employee";

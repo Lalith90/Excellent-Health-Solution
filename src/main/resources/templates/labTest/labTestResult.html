@@ -36,7 +36,7 @@
                                th:value="${invoiceHasLabTest.invoice.patient.title.title} +${'  '}+${invoiceHasLabTest.invoice.patient.name}"
                                type="text"/>
                     </div>
-                    <label class="control-label col-sm-2">Mobile Number :</label>
+                    <label class="control-label col-sm-2">Mobile :</label>
                     <div class="col-sm-2">
                         <input class="form-control" readonly="readonly"
                                th:value="${invoiceHasLabTest.invoice.patient.mobile}"
@@ -55,7 +55,7 @@
                                th:value="${invoiceHasLabTest.invoice.doctor.title.title} +${'  '}+${invoiceHasLabTest.invoice.doctor.name}"
                                type="text"/>
                     </div>
-                    <label class="control-label col-sm-2">Mobile Number :</label>
+                    <label class="control-label col-sm-2">Mobile :</label>
                     <div class="col-sm-2">
                         <input class="form-control" readonly="readonly"
                                th:value="${invoiceHasLabTest.invoice.doctor.mobile}"
@@ -78,8 +78,8 @@
                         <div class="row">
                             <div class="form-group ">
                                 <label class="control-label col-sm-4">Lab Reference Number :</label>
-                                <div class="col-sm-4">
-                                    <input class="form-control" name="id" readonly="readonly"
+                                <div class="col-sm-2">
+                                    <input class="form-control" name="invoiceHasLabTest.number" readonly="readonly"
                                            th:value="${invoiceHasLabTest.number}" type="text"/>
                                 </div>
                             </div>
@@ -97,18 +97,38 @@
                                         AB. Count
                                     </th>
                                     <th> Ref. Range</th>
+                                    <th class="tableCell"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="labTestParameter : ${invoiceHasLabTest.getLabTest().getLabTestParameters()}">
-                                    <th th:classappend="${labTestParameter.parameterHeader.parameterHeader == 'Yes'} ? 'text-center'" th:text="${labTestParameter.name}"></th>
-                                    <th th:if="${labTestParameter.parameterHeader.parameterHeader == 'No'}">
-                                        <input class="form-control " name="result" placeholder="Enter Result" required th:classappend="${addStatus==false} ? disabled : active" type="text"/>
+                                    <th th:classappend="${labTestParameter.parameterHeader.parameterHeader == 'Yes'} ? 'text-center'"
+                                        th:text="${labTestParameter.name}">
+
                                     </th>
-                                    <th th:if="${labTestParameter.parameterHeader.parameterHeader == 'Yes'}"></th>
-                                    <th th:text="${labTestParameter.unit}"></th>
-                                    <th th:if="${invoiceHasLabTest.getLabTest().getCode() == 'HM21' || invoiceHasLabTest.getLabTest().getCode() == 'HM45'}"></th>
-                                    <th th:text="${labTestParameter.min} + ${' - '} + ${labTestParameter.max}"></th>
+                                    <th th:if="${labTestParameter.parameterHeader.parameterHeader == 'No'}">
+                                        <input class="form-control " name="result" placeholder="Enter Result" required
+                                               th:classappend="${addStatus==false} ? disabled : active" type="text"/>
+                                    </th>
+                                    <th th:if="${labTestParameter.parameterHeader.parameterHeader == 'Yes'}">
+
+                                    </th>
+                                    <th th:text="${labTestParameter.unit}">
+
+                                    </th>
+                                    <th th:if="${invoiceHasLabTest.getLabTest().getCode() == 'HM21' || invoiceHasLabTest.getLabTest().getCode() == 'HM45'}">
+                                        <input name="absoluteCount"
+                                               readonly
+                                               th:classappend="${labTestParameter.parameterHeader.parameterHeader == 'Yes'} ? 'tableCell':'form-control'"
+                                               th:if="${labTestParameter.code == 'FBC2' || labTestParameter.code == 'FBC3'|| labTestParameter.code == 'FBC4'|| labTestParameter.code == 'FBC5'|| labTestParameter.code == 'FBC6'|| labTestParameter.code == 'FBC7'}"
+                                               type="text"/>
+                                    </th>
+                                    <th th:text="${labTestParameter.min} + ${' - '} + ${labTestParameter.max}">
+
+                                    </th>
+                                    <th><input class="tableCell" name="labTestParameter" readonly
+                                               th:value="${labTestParameter.id}" type="text">
+                                    </th>
                                 </tr>
                                 </tbody>
                             </table>
@@ -158,5 +178,6 @@
 </div>
 <footer class="page-footer" th:replace="fragments/footer"></footer>
 <script th:replace="fragments/script"></script>
+
 </body>
 </html>

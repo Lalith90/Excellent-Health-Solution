@@ -20,7 +20,6 @@ import java.util.Objects;
 @Table(name = "medical_package")
 @Getter
 @Setter
-@ToString
 @JsonIgnoreProperties(value = "createdDate",allowGetters = true)
 @JsonFilter("MedicalPackage")
 public class MedicalPackage {
