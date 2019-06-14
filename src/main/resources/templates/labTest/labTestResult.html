@@ -79,94 +79,91 @@
                             <div class="form-group ">
                                 <label class="control-label col-sm-4">Lab Reference Number :</label>
                                 <div class="col-sm-2">
-                                    <input class="form-control" name="invoiceHasLabTest.number" readonly="readonly"
+                                    <input class="form-control" name="number" readonly
                                            th:value="${invoiceHasLabTest.number}" type="text"/>
                                 </div>
                             </div>
                         </div>
                         <div class="container-fluid">
-                            <h3 class="text-left"><b><u><i><span
-                                    th:text="${invoiceHasLabTest.getLabTest().getName()}"></span></i></u></b></h3>
-                            <table class="table table-striped table-condensed">
-                                <thead>
-                                <tr>
-                                    <th>Test Name</th>
-                                    <th>Result</th>
-                                    <th>Units</th>
-                                    <th th:if="${invoiceHasLabTest.getLabTest().getCode() == 'HM21' || invoiceHasLabTest.getLabTest().getCode() == 'HM45'}">
-                                        AB. Count
-                                    </th>
-                                    <th> Ref. Range</th>
-                                    <th class="tableCell"></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="labTestParameter : ${invoiceHasLabTest.getLabTest().getLabTestParameters()}">
-                                    <th th:classappend="${labTestParameter.parameterHeader.parameterHeader == 'Yes'} ? 'text-center'"
-                                        th:text="${labTestParameter.name}">
-
-                                    </th>
-                                    <th th:if="${labTestParameter.parameterHeader.parameterHeader == 'No'}">
-                                        <input class="form-control " name="result" placeholder="Enter Result" required
-                                               th:classappend="${addStatus==false} ? disabled : active" type="text"/>
-                                    </th>
-                                    <th th:if="${labTestParameter.parameterHeader.parameterHeader == 'Yes'}">
-
-                                    </th>
-                                    <th th:text="${labTestParameter.unit}">
-
-                                    </th>
-                                    <th th:if="${invoiceHasLabTest.getLabTest().getCode() == 'HM21' || invoiceHasLabTest.getLabTest().getCode() == 'HM45'}">
-                                        <input name="absoluteCount"
-                                               readonly
-                                               th:classappend="${labTestParameter.parameterHeader.parameterHeader == 'Yes'} ? 'tableCell':'form-control'"
-                                               th:if="${labTestParameter.code == 'FBC2' || labTestParameter.code == 'FBC3'|| labTestParameter.code == 'FBC4'|| labTestParameter.code == 'FBC5'|| labTestParameter.code == 'FBC6'|| labTestParameter.code == 'FBC7'}"
-                                               type="text"/>
-                                    </th>
-                                    <th th:text="${labTestParameter.min} + ${' - '} + ${labTestParameter.max}">
-
-                                    </th>
-                                    <th><input class="tableCell" name="labTestParameter" readonly
-                                               th:value="${labTestParameter.id}" type="text">
-                                    </th>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="container-fluid">
-                            <div class="row" th:if="${invoiceHasLabTest.getLabTest().getDescription() != null}">
+                            <div class="table-responsive">
+                                <h3 class="text-left"><b><u><i><span
+                                        th:text="${invoiceHasLabTest.getLabTest().getName()}"></span></i></u></b></h3>
+                                <table class="table table-striped table-condensed">
+                                    <thead>
+                                    <tr>
+                                        <th>Test Name</th>
+                                        <th>Result</th>
+                                        <th>Units</th>
+                                        <th th:if="${invoiceHasLabTest.getLabTest().getCode() == 'HM21' || invoiceHasLabTest.getLabTest().getCode() == 'HM45'}">
+                                            AB. Count
+                                        </th>
+                                        <th> Ref. Range</th>
+                                        <th class="tableCell"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="labTestParameter,rowCount : ${invoiceHasLabTest.getLabTest().getLabTestParameters()}">
+                                        <th th:classappend="${labTestParameter.parameterHeader.parameterHeader == 'Yes'} ? 'text-center'" th:text="${labTestParameter.name}">
+                                        </th>
+                                        <th th:if="${labTestParameter.parameterHeader.parameterHeader == 'No'}">
+                                            <input class="form-control " name="result" placeholder="Enter Result"
+                                                   required
+                                                   th:classappend="${addStatus==false} ? disabled : active"
+                                                   th:id="${labTestParameter.id}"
+                                                   th:tabindex="${rowCount.count}"
+                                                   type="text"/></th>
+                                        <th th:if="${labTestParameter.parameterHeader.parameterHeader == 'Yes'}"></th>
+                                        <th th:text="${labTestParameter.unit}"></th>
+                                        <th th:if="${invoiceHasLabTest.getLabTest().getCode() == 'HM21' || invoiceHasLabTest.getLabTest().getCode() == 'HM45'}">
+                                            <input name="absoluteCount" readonly
+                                                   th:classappend="${labTestParameter.parameterHeader.parameterHeader == 'Yes'} ? 'tableCell':'form-control'"
+                                                   th:id="${labTestParameter.code}"
+                                                   th:if="${labTestParameter.code == 'FBC3'|| labTestParameter.code == 'FBC4'|| labTestParameter.code == 'FBC5'|| labTestParameter.code == 'FBC6'|| labTestParameter.code == 'FBC7'}"
+                                                   type="text"/>
+                                        </th>
+                                        <th th:text="${labTestParameter.min} + ${' - '} + ${labTestParameter.max}"></th>
+                                        <th><input th:if="${labTestParameter.parameterHeader.parameterHeader == 'No'}" class="tableCell"  name="labTestParameters" readonly
+                                                   th:value="${labTestParameter.id}" type="text"/>
+                                        </th>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="container-fluid">
+                                <div class="row" th:if="${invoiceHasLabTest.getLabTest().getDescription() != null}">
                                 <span style="font-max-size: 12px;"
                                       th:utext="${invoiceHasLabTest.getLabTest().getDescription()}"></span>
-                            </div>
-                            <div class="row">
-                                <br/>
-                                <label class="control-label col-sm-2">Comment :</label>
-                                <div class="col-sm-6">
-                                    <input class="form-control" name="comment"
-                                           th:object="${invoiceHasLabTest.getLabTest()}" type="text"/>
+                                </div>
+                                <div class="row">
+                                    <br/>
+                                    <label class="control-label col-sm-2">Comment :</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" name="comment" tabindex="16"
+                                               th:object="${invoiceHasLabTest.getLabTest()}" type="text"/>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="container-fluid">
-                            &nbsp; &nbsp;
-                            <div class="container-fluid text-center" th:if="${addStatus==true}">
-                                <button class="btn btn-success" type="submit"><span
-                                        class="glyphicon glyphicon-ok-sign"></span>&nbsp; &nbsp; Result
-                                </button>
-                            </div>
-                            <div th:if="${addStatus==false}">
-                                <div class="text-right col-sm-4">
-                                    <a class="btn btn-primary " href="/lab/resultAuthorizeList"> <span
-                                            class="glyphicon glyphicon-new-window"> </span><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back </b></a>
+                            <div class="container-fluid">
+                                &nbsp; &nbsp;
+                                <div class="container-fluid text-center" th:if="${addStatus==true}">
+                                    <button class="btn btn-success" tabindex="17" type="submit"><span
+                                            class="glyphicon glyphicon-ok-sign"></span>&nbsp; &nbsp; Result
+                                    </button>
                                 </div>
-                                <div class="text-center col-sm-4">
-                                    <button class="btn btn-success " type="submit"><span
-                                            class="glyphicon glyphicon-ok"> </span><b>&nbsp;Authorized </b></button>
-                                </div>
-                                <div class="text-left col-sm-4">
-                                    <a class="btn btn-danger "
-                                       th:href="${'/lab/authorize/rejectAuthorized/'+ invoiceHasLabTest.id }"> <span
-                                            class="glyphicon glyphicon-edit"> </span><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reject </b></a>
+                                <div th:if="${addStatus==false}">
+                                    <div class="text-right col-sm-4">
+                                        <a class="btn btn-primary " href="/lab/resultAuthorizeList"> <span
+                                                class="glyphicon glyphicon-new-window"> </span><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back </b></a>
+                                    </div>
+                                    <div class="text-center col-sm-4">
+                                        <button class="btn btn-success " type="submit"><span
+                                                class="glyphicon glyphicon-ok"> </span><b>&nbsp;Authorized </b></button>
+                                    </div>
+                                    <div class="text-left col-sm-4">
+                                        <a class="btn btn-danger "
+                                           th:href="${'/lab/authorize/rejectAuthorized/'+ invoiceHasLabTest.id }"> <span
+                                                class="glyphicon glyphicon-edit"> </span><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reject </b></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -178,6 +175,6 @@
 </div>
 <footer class="page-footer" th:replace="fragments/footer"></footer>
 <script th:replace="fragments/script"></script>
-
+<script th:src="@{/js/labTestResult.js}"></script>
 </body>
 </html>

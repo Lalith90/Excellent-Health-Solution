@@ -4,7 +4,6 @@ import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
 import lk.solution.health.excellent.general.service.InvoiceHasLabTestService;
 import lk.solution.health.excellent.lab.entity.Enum.LabTestStatus;
 import lk.solution.health.excellent.lab.entity.Enum.LabtestDoneHere;
-import lk.solution.health.excellent.lab.entity.ResultTable;
 import lk.solution.health.excellent.lab.service.LabTestParameterService;
 import lk.solution.health.excellent.lab.service.LabTestService;
 import lk.solution.health.excellent.lab.service.ResultTableService;
@@ -124,7 +123,7 @@ invoiceHasLabTests.forEach(System.out::println);
 
     // need to save result
     @RequestMapping(value = "/lab/saveResultPatient", method = RequestMethod.POST)
-    public String saveLabTestResult(@ModelAttribute ResultTable searchProcess) {
+    public String saveLabTestResult(@ModelAttribute SearchProcess searchProcess) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("result save " + searchProcess.toString());
 //todo --> save result to lab test result table
@@ -214,7 +213,7 @@ invoiceHasLabTests.forEach(System.out::println);
             String message = "Following report is ready " + invoiceHasLabTest.getLabTest().getName() + ". \n Now you can collect it." +
                     "\n Thanks" +
                     "\n Excellent Health Solution";
-            boolean authorizedEmail = emailService.sendPatientRegistrationEmail(invoiceHasLabTest.getInvoice().getPatient().getEmail(), "Your report is ready", message);
+            boolean authorizedEmail = emailService.sendPatientRegistrationEmail(invoiceHasLabTest.getInvoice().getPatient().getEmail(), "Your report is ready - (not reply)", message);
             if (authorizedEmail) {
                 invoiceHasLabTestService.persist(invoiceHasLabTest);
             }

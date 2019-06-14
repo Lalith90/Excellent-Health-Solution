@@ -14,8 +14,9 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 /*
- * @EnableGlobalMethodSecurity(prePostEnabled = true)
+ *
  * using this we can manage method access
+ * @EnableGlobalMethodSecurity(prePostEnabled = true)
  *   @PreAuthorize("hasAnyRole('ADMIN')") ..........like
  * */
 
@@ -70,10 +71,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //Need to login for access those are
                 .antMatchers("/employee/**").hasRole("MANAGER")
                 .antMatchers("/user/**").hasRole("MANAGER")
+                .antMatchers("/invoice/search").hasAnyRole("MLT1", "MLT2")
+                .antMatchers("/invoice/{id}").hasAnyRole("MLT1", "MLT2")
+                .antMatchers("/invoice/find").hasAnyRole("MLT1", "MLT2")
                 .antMatchers("/invoiceProcess").hasAnyRole("CASHIER", "MANAGER")
                 .antMatchers("/invoice/**").hasAnyRole("CASHIER", "MANAGER")
-                .antMatchers("/invoice/search").hasAnyRole("MLT1", "MLT2")
-                .antMatchers("/invoice/find").hasAnyRole("MLT1", "MLT2")
                 .antMatchers("/doctor/**").hasAnyRole("CASHIER", "MANAGER")
                 .antMatchers("/patient/**").hasAnyRole("MANAGER", "CASHIER")
                 .antMatchers("/lab/authorize/**").hasRole("MLT1")
@@ -98,8 +100,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
                 .and()
                 .exceptionHandling()
-            .and()
-        //Session Management
+                .and()
+                //Session Management
                 .sessionManagement()
                 .invalidSessionUrl("/login")
                 .sessionFixation()
@@ -107,7 +109,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .maximumSessions(50)
                 .expiredUrl("/login")
                 .and()
-        //Cross site disable   */
+                //Cross site disable   */
                 .and()
                 .csrf()
                 .disable();

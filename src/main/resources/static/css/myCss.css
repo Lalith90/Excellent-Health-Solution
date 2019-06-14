@@ -341,6 +341,10 @@ label{
 }
 
 input{
-    font-size: 18px !important;
+    font-size: 16px !important;
 }
 
+input[type=checkbox]{
+    size: 16px !important;
+    border-radius:5px !important;
+}
