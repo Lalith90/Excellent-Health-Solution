@@ -30,40 +30,41 @@
             <div class="form-horizontal">
                 <div class="form-group">
                     <label class="control-label col-sm-2">Patient Name :</label>
-                    <div class="col-sm-2">
-                        <input class="form-control"
+                    <div class="col-sm-3">
+                        <input class="form-control borderNull"
                                readonly="readonly"
                                th:value="${invoiceHasLabTest.invoice.patient.title.title} +${'  '}+${invoiceHasLabTest.invoice.patient.name}"
                                type="text"/>
                     </div>
-                    <label class="control-label col-sm-2">Mobile :</label>
+                    <label class="control-label col-sm-1">Mobile :</label>
                     <div class="col-sm-2">
-                        <input class="form-control" readonly="readonly"
+                        <input class="form-control borderNull" readonly="readonly"
                                th:value="${invoiceHasLabTest.invoice.patient.mobile}"
                                type="text"/>
                     </div>
-                    <label class="control-label col-sm-2">Patient Age :</label>
+                    <label class="control-label col-sm-2">Age :</label>
                     <div class="col-sm-2">
-                        <input class="form-control" readonly="readonly" th:value="${patientAge}" type="text"/>
+                        <input class="form-control borderNull" readonly="readonly" th:value="${patientAge}"
+                               type="text"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-2">Doctor Name :</label>
-                    <div class="col-sm-2">
-                        <input class="form-control"
+                    <div class="col-sm-3">
+                        <input class="form-control borderNull"
                                readonly="readonly"
                                th:value="${invoiceHasLabTest.invoice.doctor.title.title} +${'  '}+${invoiceHasLabTest.invoice.doctor.name}"
                                type="text"/>
                     </div>
-                    <label class="control-label col-sm-2">Mobile :</label>
+                    <label class="control-label col-sm-1">Mobile :</label>
                     <div class="col-sm-2">
-                        <input class="form-control" readonly="readonly"
+                        <input class="form-control borderNull" readonly="readonly"
                                th:value="${invoiceHasLabTest.invoice.doctor.mobile}"
                                type="text"/>
                     </div>
                     <label class="control-label col-sm-2">Consultation :</label>
                     <div class="col-sm-2">
-                        <input class="form-control" readonly="readonly"
+                        <input class="form-control borderNull" readonly="readonly"
                                th:value="${invoiceHasLabTest.invoice.doctor.consultation.name}" type="text"/>
                     </div>
                 </div>
@@ -79,7 +80,7 @@
                             <div class="form-group ">
                                 <label class="control-label col-sm-4">Lab Reference Number :</label>
                                 <div class="col-sm-2">
-                                    <input class="form-control" name="number" readonly
+                                    <input class="form-control borderNull" name="number" readonly
                                            th:value="${invoiceHasLabTest.number}" type="text"/>
                                 </div>
                             </div>
@@ -94,39 +95,39 @@
                                         <th>Test Name</th>
                                         <th>Result</th>
                                         <th>Units</th>
-                                        <th th:if="${invoiceHasLabTest.getLabTest().getCode() == 'HM21' || invoiceHasLabTest.getLabTest().getCode() == 'HM45'}">
-                                            AB. Count
-                                        </th>
+                                        <th th:if="${invoiceHasLabTest.getLabTest().getCode() == 'HM21' || invoiceHasLabTest.getLabTest().getCode() == 'HM45'}">AB. Count</th>
                                         <th> Ref. Range</th>
                                         <th class="tableCell"></th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <!-- to take result to inside-->
+                                    <tbody th:if="${addStatus==true}">
                                     <tr th:each="labTestParameter,rowCount : ${invoiceHasLabTest.getLabTest().getLabTestParameters()}">
-                                        <th th:classappend="${labTestParameter.parameterHeader.parameterHeader == 'Yes'} ? 'text-center'" th:text="${labTestParameter.name}">
-                                        </th>
-                                        <th th:if="${labTestParameter.parameterHeader.parameterHeader == 'No'}">
-                                            <input class="form-control " name="result" placeholder="Enter Result"
-                                                   required
-                                                   th:classappend="${addStatus==false} ? disabled : active"
-                                                   th:id="${labTestParameter.id}"
-                                                   th:tabindex="${rowCount.count}"
-                                                   type="text"/></th>
+                                        <th th:classappend="${labTestParameter.parameterHeader.parameterHeader == 'Yes'} ? 'text-center'"  th:text="${labTestParameter.name}"></th>
+                                        <th th:if="${labTestParameter.parameterHeader.parameterHeader == 'No'}"><input autocomplete="off" class="form-control " name="result" placeholder="Enter Result" required th:classappend="${addStatus==false} ? disabled : active" th:id="${labTestParameter.id}" th:tabindex="${rowCount.count}" type="text"/></th>
                                         <th th:if="${labTestParameter.parameterHeader.parameterHeader == 'Yes'}"></th>
                                         <th th:text="${labTestParameter.unit}"></th>
-                                        <th th:if="${invoiceHasLabTest.getLabTest().getCode() == 'HM21' || invoiceHasLabTest.getLabTest().getCode() == 'HM45'}">
-                                            <input name="absoluteCount" readonly
-                                                   th:classappend="${labTestParameter.parameterHeader.parameterHeader == 'Yes'} ? 'tableCell':'form-control'"
-                                                   th:id="${labTestParameter.code}"
-                                                   th:if="${labTestParameter.code == 'FBC3'|| labTestParameter.code == 'FBC4'|| labTestParameter.code == 'FBC5'|| labTestParameter.code == 'FBC6'|| labTestParameter.code == 'FBC7'}"
-                                                   type="text"/>
-                                        </th>
+                                        <th th:if="${invoiceHasLabTest.getLabTest().getCode() == 'HM21' || invoiceHasLabTest.getLabTest().getCode() == 'HM45'}"> <input name="absoluteCount" readonly  th:classappend="${labTestParameter.parameterHeader.parameterHeader == 'Yes'} ? 'tableCell':'form-control borderNull'"  th:id="${labTestParameter.code}"  th:if="${labTestParameter.code == 'FBC3'|| labTestParameter.code == 'FBC4'|| labTestParameter.code == 'FBC5'|| labTestParameter.code == 'FBC6'|| labTestParameter.code == 'FBC7'}" type="text"/> </th>
                                         <th th:text="${labTestParameter.min} + ${' - '} + ${labTestParameter.max}"></th>
-                                        <th><input th:if="${labTestParameter.parameterHeader.parameterHeader == 'No'}" class="tableCell"  name="labTestParameters" readonly
-                                                   th:value="${labTestParameter.id}" type="text"/>
+                                        <th><input class="tableCell" name="labTestParameters" readonly th:if="${labTestParameter.parameterHeader.parameterHeader == 'No'}" th:value="${labTestParameter.id}" type="text"/> </th>
+                                    </tr>
+                                    </tbody>
+                                    <!-- to display result to authorized-->
+                                    <tbody th:if="${addStatus==false}">
+                                    <tr th:each="resultTable : ${invoiceHasLabTest.resultTables}">
+
+                                        <th th:classappend="${resultTable.labTestParameter.parameterHeader == 'Yes'} ? 'text-center'" th:text="${resultTable.labTestParameter.name}"></th>
+                                        <th th:text="${resultTable.result}"> </th>
+                                        <th th:text="${resultTable.labTestParameter.unit}"> </th>
+                                        <th th:if="${resultTable.absoluteCount != null && resultTable.labTestParameter.getCode() == 'HM21'}" th:text="${resultTable.absoluteCount}"></th>
+                                        <th th:if="${resultTable.absoluteCount != null && resultTable.labTestParameter.getCode() == 'HM45'}" th:text="${resultTable.absoluteCount}"></th>
+                                        <th th:text="${resultTable.labTestParameter.min} + ${' - '} + ${resultTable.labTestParameter.max}"></th>
+                                        <th></th>
+                                        <th>
                                         </th>
                                     </tr>
                                     </tbody>
+
                                 </table>
                             </div>
                             <div class="container-fluid">
@@ -139,7 +140,7 @@
                                     <label class="control-label col-sm-2">Comment :</label>
                                     <div class="col-sm-6">
                                         <input class="form-control" name="comment" tabindex="16"
-                                               th:object="${invoiceHasLabTest.getLabTest()}" type="text"/>
+                                               th:value="${invoiceHasLabTest.comment}" type="text"/>
                                     </div>
                                 </div>
                             </div>

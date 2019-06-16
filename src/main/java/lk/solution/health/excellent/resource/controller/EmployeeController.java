@@ -118,7 +118,6 @@ public class EmployeeController {
             return "redirect:/employee";
         }
         if (employee.getId() != null){
-            //System.out.println("email employrr");
             String message = "Welcome to Excellent Health Solution \n " +
                     "Your registration number is "+employee.getNumber()+
                     "\nYour Details are " +
@@ -147,7 +146,6 @@ public class EmployeeController {
             }
         }
         if (employee.getEmail()!=null){
-            //System.out.println("email employrr");
             String message = "Welcome to Excellent Health Solution \n " +
                     "Your registration number is "+employee.getNumber()+
                     "\nYour Details are " +

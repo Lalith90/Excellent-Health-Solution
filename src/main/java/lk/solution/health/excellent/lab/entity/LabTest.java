@@ -18,7 +18,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @JsonFilter("LabTest")
 public class LabTest {
     @Id

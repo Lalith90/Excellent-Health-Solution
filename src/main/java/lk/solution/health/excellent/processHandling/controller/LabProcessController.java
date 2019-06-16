@@ -4,6 +4,9 @@ import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
 import lk.solution.health.excellent.general.service.InvoiceHasLabTestService;
 import lk.solution.health.excellent.lab.entity.Enum.LabTestStatus;
 import lk.solution.health.excellent.lab.entity.Enum.LabtestDoneHere;
+import lk.solution.health.excellent.lab.entity.Enum.ParameterHeader;
+import lk.solution.health.excellent.lab.entity.LabTestParameter;
+import lk.solution.health.excellent.lab.entity.ResultTable;
 import lk.solution.health.excellent.lab.service.LabTestParameterService;
 import lk.solution.health.excellent.lab.service.LabTestService;
 import lk.solution.health.excellent.lab.service.ResultTableService;
@@ -72,7 +75,7 @@ public class LabProcessController {
                 .stream()
                 .filter((x) -> x.getLabTest().getLabtestDoneHere().equals(LabtestDoneHere.YES))
                 .collect(Collectors.toList());
-invoiceHasLabTests.forEach(System.out::println);
+
         model.addAttribute("invoiceHasLabTest", invoiceHasLabTests);
         model.addAttribute("addLabSampleCollect", true);
         model.addAttribute("buttonStatus", true);
@@ -124,55 +127,65 @@ invoiceHasLabTests.forEach(System.out::println);
     // need to save result
     @RequestMapping(value = "/lab/saveResultPatient", method = RequestMethod.POST)
     public String saveLabTestResult(@ModelAttribute SearchProcess searchProcess) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("result save " + searchProcess.toString());
-//todo --> save result to lab test result table
+        //take last lab test result table id
+        int lastResultTableId;
+        if (resultTableService.findLastResult() != null) {
+            lastResultTableId = resultTableService.findLastResult().getId();
+        } else {
+            lastResultTableId = 0;
+        }
+// all thing taken from invoice process
+        // lab test parameter set without parameter header
+        List<LabTestParameter> labTestParameters = searchProcess.getLabTestParameters();
+        // all result
+        List<String> result = searchProcess.getResult();
+        // all absolute count
+        List<String> absoluteCount = searchProcess.getAbsoluteCount();
+        // invoiceHasLabTest.number = lab reference
+        int labReference = Integer.parseInt(searchProcess.getNumber());
 
+// to verify lab test result take invoiceHasLabTest
+        InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findByNumber(labReference);
 
-
-       /* // find last result id from result table
-        Integer id = resultTableService.findLastResult().getId() + 1;
-
+// take lab test parameter list without parameter header
+        List<LabTestParameter> labTestParameterListWithoutHeader = invoiceHasLabTest.getLabTest().getLabTestParameters()
+                .stream()
+                .filter(labTestParameter -> labTestParameter.getParameterHeader().equals(ParameterHeader.No))
+                .collect(Collectors.toList());
+// result table create new result  to save
         ResultTable resultTable = new ResultTable();
 
-        InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findById(searchProcess.getId());
+        if (labTestParameterListWithoutHeader.equals(labTestParameters)) {
+            int resultIndex = 0;
 
-        // List<String> codes = searchProcess.getCode1();
-        List<String> results = searchProcess.getResult();
-
-
-        for (LabTestParameter labTestParameter : invoiceHasLabTest.getLabTest().getLabTestParameters()) {
-
-            resultTable.setId(id);
-            resultTable.setInvoiceHasLabTest(invoiceHasLabTest);
-            resultTable.setLabTest(invoiceHasLabTest.getLabTest());
-            resultTable.setLabTestParameter(labTestParameter);
-            for (String result : results) {
-
-
-                System.out.println(labTestParameter.getName() + "\n parameter name");
-
-                resultTable.setResult(result);
-
-                System.out.println(result + "\n entered result for relevant filed");
-
-
+            for (LabTestParameter labTestParameter : labTestParameterListWithoutHeader) {
+                resultTable.setId(lastResultTableId + 1);
+                resultTable.setInvoiceHasLabTest(invoiceHasLabTest);
+                resultTable.setLabTest(invoiceHasLabTest.getLabTest());
+                resultTable.setResult(result.get(resultIndex));
+//if lab test parameter is equal
+                if (labTestParameter.equals(labTestParameters.get(resultIndex))) {
+                    resultTable.setLabTestParameter(labTestParameters.get(resultIndex));
+                }
+// there is absolute count value is belongs to FBC and WBC
+                if (invoiceHasLabTest.getLabTest().getId() == 311 || invoiceHasLabTest.getLabTest().getId() == 287 && resultIndex > 0) {
+                    if (resultIndex <= absoluteCount.size()) {
+                        resultTable.setAbsoluteCount(absoluteCount.get(resultIndex - 1));
+                    } else {
+                        resultTable.setAbsoluteCount(null);
+                    }
+                }
+                resultTableService.persist(resultTable);
+                resultIndex++;
+                lastResultTableId++;
             }
-            resultTableService.persist(resultTable);
-            id++;
-            System.out.println(id + " id for next");
         }
-        invoiceHasLabTest.setResultEnteredDateTime(dateTimeAgeService.getCurrentDateTime());
-        invoiceHasLabTest.setResultEnteredUser(userService.findByUserName(authentication.getName()));
         invoiceHasLabTest.setLabTestStatus(LabTestStatus.RESULTENTER);
+        invoiceHasLabTest.setResultEnteredUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
+        invoiceHasLabTest.setResultEnteredDateTime(dateTimeAgeService.getCurrentDateTime());
+        invoiceHasLabTest.setComment(searchProcess.getComment());
+
         invoiceHasLabTestService.persist(invoiceHasLabTest);
-        // to check the save result
-        */
-       /*System.out.println("to check the save result");
-            for (LabTestParameter labTestParameter: invoiceHasLabTest.getLabTest().getLabTestParameters()){
-                System.out.println(labTestParameter.getName());
-                System.out.println(labTestParameter.getResult());
-            }*/
         return "redirect:/lab/worksheetPrinted";
     }
 
@@ -190,8 +203,7 @@ invoiceHasLabTests.forEach(System.out::println);
 
     // result authorize from
     @RequestMapping(value = "/lab/authorize/labTestAuthorizedForm/{id}", method = RequestMethod.GET)
-    public String labTestAuthorizedForm(@PathVariable("id") Integer id, Model model) {
-        //BEFORE SEND THE DATA CHECK LAB TEST NAME FULL BLOOD COUNT OR = it ok done 12/11/2018
+   public String labTestAuthorizedForm(@PathVariable("id") Integer id, Model model) {
         InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findById(id);
         model.addAttribute("addStatus", false);
         model.addAttribute("invoiceHasLabTest", invoiceHasLabTest);
@@ -202,6 +214,9 @@ invoiceHasLabTests.forEach(System.out::println);
     // Authorization is  ok - lab Test
     @RequestMapping(value = "/lab/authorize/saveAuthorized", method = RequestMethod.POST)
     public String saveAuthorized(@ModelAttribute SearchProcess searchProcess) {
+        System.out.println(searchProcess);
+        //todo
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findById(searchProcess.getId());
         //System.out.println("Authorized save");
@@ -245,7 +260,6 @@ invoiceHasLabTests.forEach(System.out::println);
         List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByLabTestState(LabTestStatus.AUTHORIZED);
         List<Invoice> invoices = new ArrayList<>();
         for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
-            //System.out.println();
             // add patient to array list
             invoices.add(invoiceHasLabTest.getInvoice());
         }
@@ -364,7 +378,6 @@ invoiceHasLabTests.forEach(System.out::println);
             } else {
                 //search by patient's Number
                 message = "There is no any report given Patient's number: " + pNumber + ".";
-                System.out.println(patient);
                 pNic = "";
                 invoiceId = "";
 

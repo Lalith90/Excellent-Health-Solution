@@ -4,7 +4,6 @@ import lk.solution.health.excellent.general.dao.InvoiceHasLabTestDao;
 import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
 import lk.solution.health.excellent.lab.dao.LabTestDao;
 import lk.solution.health.excellent.lab.entity.Enum.LabTestStatus;
-import lk.solution.health.excellent.lab.entity.Enum.LabtestDoneHere;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.resource.entity.User;
 import lk.solution.health.excellent.transaction.entity.Invoice;
@@ -22,21 +21,19 @@ import java.util.List;
 public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTest, Integer> {
 
     private final InvoiceHasLabTestDao invoiceHasLabTestDao;
-    private final LabTestDao labTestDao;
 
 
     @Autowired
     public InvoiceHasLabTestService(InvoiceHasLabTestDao invoiceHasLabTestDao, LabTestDao labTestDao) {
         this.invoiceHasLabTestDao = invoiceHasLabTestDao;
-        this.labTestDao = labTestDao;
     }
 
     public List<InvoiceHasLabTest> findAll() {
         return invoiceHasLabTestDao.findAll();
     }
 
-    public List<InvoiceHasLabTest> persistBulk(List<InvoiceHasLabTest> invoiceHasLabTests){
-        return invoiceHasLabTestDao.saveAll(invoiceHasLabTests);
+    public void persistBulk(List<InvoiceHasLabTest> invoiceHasLabTests) {
+        invoiceHasLabTestDao.saveAll(invoiceHasLabTests);
     }
 
     public InvoiceHasLabTest findById(Integer id) {
@@ -73,8 +70,8 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
     }
 
 
-    public List<InvoiceHasLabTest> findByInvoiceAndLabTestStatus(Invoice invoice, LabTestStatus nosample) {
-        return invoiceHasLabTestDao.findByInvoiceAndLabTestStatus(invoice, nosample);
+    public List<InvoiceHasLabTest> findByInvoiceAndLabTestStatus(Invoice invoice, LabTestStatus labTestStatus) {
+        return invoiceHasLabTestDao.findByInvoiceAndLabTestStatus(invoice, labTestStatus);
     }
 
 
@@ -83,31 +80,8 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
     }
 
 
-    public List<InvoiceHasLabTest> findByInvoiceAndLabTestStatusAndLabtestDoneHere(Invoice invoice, LabTestStatus nosample, LabtestDoneHere doneHere) {
-        return invoiceHasLabTestDao.findByInvoiceAndLabTestStatusAndLabTest_LabtestDoneHere(invoice, nosample, doneHere);
-    }
-
-
     public List<InvoiceHasLabTest> findByInvoice(Invoice invoice) {
         return invoiceHasLabTestDao.findByInvoice(invoice);
-    }
-
-
-
-
-
-    public Integer countByCreatedAt(LocalDate today) {
-        return invoiceHasLabTestDao.countByCreatedAt(today);
-    }
-
-
-    public Integer countByCreatedAtIsBetween(LocalDate from, LocalDate to) {
-        return invoiceHasLabTestDao.countByCreatedAtIsBetween(from, to);
-    }
-
-
-    public List<InvoiceHasLabTest> findByLabTest(LabTest labTest) {
-        return invoiceHasLabTestDao.findByLabTest(labTest);
     }
 
     public List<LabTest> findLabTestByInvoice(Invoice invoice) {
@@ -121,12 +95,17 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
         return invoiceHasLabTestDao.findByCreatedAt(createdAt);
     }
 
-    public List<InvoiceHasLabTest> findByDateAndUser(LocalDate date, User user) {
-        return invoiceHasLabTestDao.findByCreatedAtAndUser(date, user);
-    }
 
     public List<InvoiceHasLabTest> findByCreatedAtIsBetween(LocalDate from, LocalDate to) {
         return invoiceHasLabTestDao.findByCreatedAtIsBetween(from, to);
+    }
+
+    public InvoiceHasLabTest findByNumber(int number) {
+        return invoiceHasLabTestDao.findByNumber(number);
+    }
+
+    public List<InvoiceHasLabTest> findByDateAndUser(LocalDate date, User user) {
+        return invoiceHasLabTestDao.findByCreatedAtAndUser(date, user);
     }
 }
 

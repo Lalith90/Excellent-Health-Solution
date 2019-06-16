@@ -212,7 +212,10 @@ function calculateGender(nic) {
     let gender = null;
     if (nic.length === 10 && nic[9] === "V" || nic[9] === "v" || nic[9] === "x" || nic[9] === "X") {
         if (nic[9] === "v" || nic[9] === "x") {
-            alert(` Please change "v" or "x" to "V" or "X" `);
+            swal({
+                title: ` Please change "v" or "x" to "V" or "X" `,
+                icon:"warning",
+            });
         }
         if (+nic.substr(2, 3) < 500) gender = 'MALE';
         else gender = 'FEMALE';
@@ -277,7 +280,7 @@ function backgroundColourChangeGood(id) {
 }
 
 function backgroundColourChangeBad(id) {
-    $(id).css('background-color', '#FF00AA');
+    $(id).css('background-color', '#ff99d6');
 }
 
 function backgroundColourChangeNothingToChange(id) {

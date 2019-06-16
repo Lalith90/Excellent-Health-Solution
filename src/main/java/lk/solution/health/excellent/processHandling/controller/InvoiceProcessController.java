@@ -125,8 +125,7 @@ public class InvoiceProcessController {
             return "process/invoiceProcess";
         }
 
-        //To take user
-        User currentUser = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+
         /* Make invoice number with current year 000_138_484 --> start*/
         // new invoice number (1_900_000_000)
         int newInvoiceNumber;
@@ -235,8 +234,10 @@ public class InvoiceProcessController {
         if (backEndAmount.equals(invoiceProcess.getAmount())) {
             return "redirect:/invoiceProcess";
         }
-
+// to make new invoice
         Invoice invoice = new Invoice();
+//To take user
+        User currentUser = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
 
         //Payment method is CASH
         if (invoiceProcess.getPaymentMethod() != PaymentMethod.CASH) {
@@ -266,6 +267,7 @@ public class InvoiceProcessController {
         invoice.setInvoicePrintOrNot(invoiceProcess.getInvoicePrintOrNot());
         invoice.setDiscountAmount(discountPrice);
         invoice.setInvoicedAt(dateTimeAgeService.getCurrentDateTime());
+
 
 //save invoice and get its details to save invoice has lab test
         invoice = invoiceService.persist(invoice);
@@ -300,6 +302,7 @@ public class InvoiceProcessController {
         invoiceHasLabTest.setInvoice(invoice);
         invoiceHasLabTest.setLabTestStatus(LabTestStatus.NOSAMPLE);
         invoiceHasLabTest.setCreatedAt(currentDate);
+        invoiceHasLabTest.setUser(currentUser);
 //save until all lab Test array finished
         for (LabTest labtest : labTests) {
             invoiceHasLabTest.setNumber(newInvoiceHasLabTestNumber);

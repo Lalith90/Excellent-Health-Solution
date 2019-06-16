@@ -8,7 +8,6 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -27,6 +26,7 @@ public class SearchProcess {
     List<LabTestParameter> labTestParameters;
     List<MedicalPackage> medicalPackages;
     List<String>result;
+    List<String>absoluteCount;
     List<CustomTestFind> customTestFinds;
 
 

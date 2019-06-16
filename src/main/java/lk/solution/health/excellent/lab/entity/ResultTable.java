@@ -6,13 +6,12 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "result_table")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @EqualsAndHashCode
+@ToString
 public class ResultTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

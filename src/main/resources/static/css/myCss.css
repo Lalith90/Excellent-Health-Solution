@@ -348,3 +348,7 @@ input[type=checkbox]{
     size: 16px !important;
     border-radius:5px !important;
 }
+.borderNull{
+    border: none !important;
+    background: white !important;
+}

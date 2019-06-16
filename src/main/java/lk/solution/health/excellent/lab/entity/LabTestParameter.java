@@ -39,7 +39,6 @@ public class LabTestParameter {
     @Enumerated(EnumType.STRING)
     private ParameterHeader parameterHeader;
 
-
     @ManyToMany(mappedBy = "labTestParameters",fetch=FetchType.LAZY)
     private List<LabTest> labTests = new ArrayList<>();
 

@@ -59,7 +59,7 @@ public class LabTestParameterController {
 
     @RequestMapping(value = {"/add","/update"}, method = RequestMethod.POST)
     public String addLabTestParameter(@Valid @ModelAttribute LabTestParameter labTestParameter, BindingResult result, Model model) {
-        System.out.println(labTestParameter);
+
         if (result.hasErrors()) {
             for (FieldError error : result.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());
