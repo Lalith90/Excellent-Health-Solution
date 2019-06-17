@@ -115,12 +115,11 @@
                                     <!-- to display result to authorized-->
                                     <tbody th:if="${addStatus==false}">
                                     <tr th:each="resultTable : ${invoiceHasLabTest.resultTables}">
-
                                         <th th:classappend="${resultTable.labTestParameter.parameterHeader == 'Yes'} ? 'text-center'" th:text="${resultTable.labTestParameter.name}"></th>
                                         <th th:text="${resultTable.result}"> </th>
                                         <th th:text="${resultTable.labTestParameter.unit}"> </th>
-                                        <th th:if="${resultTable.absoluteCount != null && resultTable.labTestParameter.getCode() == 'HM21'}" th:text="${resultTable.absoluteCount}"></th>
-                                        <th th:if="${resultTable.absoluteCount != null && resultTable.labTestParameter.getCode() == 'HM45'}" th:text="${resultTable.absoluteCount}"></th>
+                                        <th th:if="${invoiceHasLabTest.getLabTest().getCode() == 'HM21' || invoiceHasLabTest.getLabTest().getCode() == 'HM45'}">
+                                            <span th:if="${resultTable.absoluteCount != null}" th:text="${resultTable.absoluteCount}"></span></th>
                                         <th th:text="${resultTable.labTestParameter.min} + ${' - '} + ${resultTable.labTestParameter.max}"></th>
                                         <th></th>
                                         <th>
@@ -139,7 +138,7 @@
                                     <br/>
                                     <label class="control-label col-sm-2">Comment :</label>
                                     <div class="col-sm-6">
-                                        <input class="form-control" name="comment" tabindex="16"
+                                        <input class="form-control" name="comment" tabindex="16" autocomplete="off"
                                                th:value="${invoiceHasLabTest.comment}" type="text"/>
                                     </div>
                                 </div>
@@ -153,7 +152,7 @@
                                 </div>
                                 <div th:if="${addStatus==false}">
                                     <div class="text-right col-sm-4">
-                                        <a class="btn btn-primary " href="/lab/resultAuthorizeList"> <span
+                                        <a class="btn btn-primary " href="/lab/authorize/resultAuthorizeList"> <span
                                                 class="glyphicon glyphicon-new-window"> </span><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back </b></a>
                                     </div>
                                     <div class="text-center col-sm-4">

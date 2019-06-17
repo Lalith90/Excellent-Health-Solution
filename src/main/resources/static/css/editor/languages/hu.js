@@ -1,3 +1,8 @@
+/**
+ * @author Ángyán László <lacavale55@gmail.com>
+ * @license [MIT](http://www.opensource.org/licenses/mit-license.php)
+ * @date 2013-08-11
+ */
 (function () {
 	'use strict';
 

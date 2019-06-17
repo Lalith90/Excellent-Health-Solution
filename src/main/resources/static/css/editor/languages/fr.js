@@ -1,3 +1,6 @@
+
+// add locale:'fr', to your config options.
+
 (function () {
 	'use strict';
 

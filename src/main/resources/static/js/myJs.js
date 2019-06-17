@@ -45,14 +45,6 @@ $(document).ready(function () {
     });
 //prevent checkbox==null before submit - end
 
-    //WYSIWYG add to text area
-    //let textarea =document.getElementById("description");
-    // sceditor.create(textarea);
-    //     , {
-    //     format: 'bbcode',
-    //         icons: 'monocons',
-    //         style: '../minified/themes/content/default.min.css'
-    // });
 
 });
 // regex
@@ -268,6 +260,15 @@ $("#patientName").bind("keyup", function () {
 $("#invoiceNumber").bind("keyup", function () {
     let invoiceNumber = $(this).val();
     if (invoiceNumberRegex.test(invoiceNumber)) {
+        backgroundColourChangeGood($(this));
+    } else {
+        backgroundColourChangeBad($(this));
+    }
+});
+//patient validation
+$("#patientNumber").bind("keyup", function () {
+    let patientNumber = $(this).val();
+    if (invoiceNumberRegex.test(patientNumber)) {
         backgroundColourChangeGood($(this));
     } else {
         backgroundColourChangeBad($(this));

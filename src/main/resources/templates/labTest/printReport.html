@@ -21,6 +21,17 @@
                         th:text="${invoice.patient.title.title}+ ${' '} + ${invoice.patient.name}"></span>, There is no
                     test.</strong>
             </div>
+            <div class="alert alert-info text-center"
+                 th:if="${toPrint==true}">
+                <strong> Belongs to the <span class="text-success"
+                                              th:text="${invoice.patient.title.title}+ ${' '} + ${invoice.patient.name}"></span>,
+                    display three month detail's history. </strong> if you need to see more please click the below link
+                <br>
+                <a th:href="@{/lab/searchReportFrom}">
+                    <button class="btn btn-info btn-sm"><span class="glyphicon glyphicon-search"></span>&nbsp;Detail's
+                    </button>
+                </a>
+            </div>
             <!-- Lab test done here and ready to print -->
             <div class="container-fluid" th:if="${!#lists.isEmpty(authorized)}">
                 <h4 class="text-center text-info"><b><i>Ready To Print</i></b></h4>
@@ -29,7 +40,6 @@
                     <tr>
                         <th>Index</th>
                         <th>Lab Reference</th>
-                        <th>Patient Name</th>
                         <th>Test Name</th>
                         <th> Report Authorized Time</th>
                         <th> Action</th>
@@ -38,8 +48,7 @@
                     <tbody>
                     <tr th:each="invoiceHasLabTests, row : ${authorized}">
                         <th th:text="${row.count}"></th>
-                        <th th:text="${invoiceHasLabTests.id}"></th>
-                        <th th:text="${invoiceHasLabTests.invoice.patient.title.title} +${' '}+${invoiceHasLabTests.invoice.patient.name}"></th>
+                        <th th:text="${invoiceHasLabTests.number}"></th>
                         <th th:text="${invoiceHasLabTests.labTest.name}"></th>
                         <th th:text="${{invoiceHasLabTests.reportAuthorizeDateTime}}"></th>
                         <th><a th:href="${'/lab/print/' + invoiceHasLabTests.id}">
@@ -57,8 +66,7 @@
                     <thead>
                     <tr>
                         <th>Index</th>
-                        <th>Lab Refference</th>
-                        <th>Patient Name</th>
+                        <th>Lab Reference</th>
                         <th>Test Name</th>
                         <th> Result Enter Time</th>
                         <th th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')')}"> Action</th>
@@ -67,10 +75,9 @@
                     <tbody>
                     <tr th:each="invoiceHasLabTests, row : ${resultEnter}">
                         <th th:text="${row.count}"></th>
-                        <th th:text="${invoiceHasLabTests.id}"></th>
-                        <th th:text="${invoiceHasLabTests.invoice.patient.title.title} +${' '}+${invoiceHasLabTests.invoice.patient.name}"></th>
+                        <th th:text="${invoiceHasLabTests.number}"></th>
                         <th th:text="${invoiceHasLabTests.labTest.name}"></th>
-                        <th th:text="${{invoiceHasLabTests.reportAuthorizeDateTime}}"></th>
+                        <th th:text="${{invoiceHasLabTests.resultEnteredDateTime}}"></th>
                         <th><a th:href="${'/lab/authorize/labTestAuthorizedForm/' + invoiceHasLabTests.id}"
                                th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')')}">
                             <button class="btn btn-success">&nbsp;<span
@@ -87,18 +94,16 @@
                     <thead>
                     <tr>
                         <th>Index</th>
-                        <th>Lab Refference</th>
-                        <th>Patient Name</th>
+                        <th>Lab Reference</th>
                         <th>Test Name</th>
-                        <th> Report Authorized Time</th>
+                        <th> WorkSheet Taken Time</th>
                         <th> Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="invoiceHasLabTests, row : ${workSheetTake}">
                         <th th:text="${row.count}"></th>
-                        <th th:text="${invoiceHasLabTests.id}"></th>
-                        <th th:text="${invoiceHasLabTests.invoice.patient.title.title} +${' '}+${invoiceHasLabTests.invoice.patient.name}"></th>
+                        <th th:text="${invoiceHasLabTests.number}"></th>
                         <th th:text="${invoiceHasLabTests.labTest.name}"></th>
                         <th th:text="${{invoiceHasLabTests.workSheetTakenDateTime}}"></th>
                         <th><a th:href="${'/lab/labTestResultEnterForm/' + invoiceHasLabTests.id}">
@@ -116,8 +121,7 @@
                     <thead>
                     <tr>
                         <th>Index</th>
-                        <th>Lab Refference</th>
-                        <th>Patient Name</th>
+                        <th>Lab Reference</th>
                         <th>Test Name</th>
                         <th> Sample Collected Time</th>
                     </tr>
@@ -125,8 +129,29 @@
                     <tbody>
                     <tr th:each="invoiceHasLabTests, row : ${workSheetTake}">
                         <th th:text="${row.count}"></th>
+                        <th th:text="${invoiceHasLabTests.number}"></th>
+                        <th th:text="${invoiceHasLabTests.labTest.name}"></th>
+                        <th th:text="${{invoiceHasLabTests.sampleCollectedDateTime}}"></th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- sample collected and not done List  -->
+            <div class="container-fluid" th:if="${!#lists.isEmpty(sampleCollectAndNotDone)}">
+                <h4 class="text-center text-info"><b><i>Sample Taken List</i></b></h4>
+                <table class="table table-striped table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Index</th>
+                        <th>Lab Reference</th>
+                        <th>Test Name</th>
+                        <th> Sample Collected Time</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="invoiceHasLabTests, row : ${sampleCollectAndNotDone}">
+                        <th th:text="${row.count}"></th>
                         <th th:text="${invoiceHasLabTests.id}"></th>
-                        <th th:text="${invoiceHasLabTests.invoice.patient.title.title} +${' '}+${invoiceHasLabTests.invoice.patient.name}"></th>
                         <th th:text="${invoiceHasLabTests.labTest.name}"></th>
                         <th th:text="${{invoiceHasLabTests.sampleCollectedDateTime}}"></th>
                     </tr>
@@ -140,8 +165,7 @@
                     <thead>
                     <tr>
                         <th>Index</th>
-                        <th>Lab Refference</th>
-                        <th>Patient Name</th>
+                        <th>Lab Reference</th>
                         <th>Test Name</th>
                         <th> Printed Time</th>
                     </tr>
@@ -149,34 +173,9 @@
                     <tbody>
                     <tr th:each="invoiceHasLabTests, row : ${printed}">
                         <th th:text="${row.count}"></th>
-                        <th th:text="${invoiceHasLabTests.id}"></th>
-                        <th th:text="${invoiceHasLabTests.invoice.patient.title.title} +${' '}+${invoiceHasLabTests.invoice.patient.name}"></th>
+                        <th th:text="${invoiceHasLabTests.number}"></th>
                         <th th:text="${invoiceHasLabTests.labTest.name}"></th>
                         <th th:text="${{invoiceHasLabTests.reportPrintedDateTime}}"></th>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!-- sample collected and not done List  -->
-            <div class="container-fluid" th:if="${!#lists.isEmpty(sampleCollectAndNotDone)}">
-                <h4 class="text-center text-info"><b><i>Sample Taken List</i></b></h4>
-                <table class="table table-striped table-condensed">
-                    <thead>
-                    <tr>
-                        <th>Index</th>
-                        <th>Lab Refference</th>
-                        <th>Patient Name</th>
-                        <th>Test Name</th>
-                        <th> Sample Collected Time</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="invoiceHasLabTests, row : ${sampleCollectAndNotDone}">
-                        <th th:text="${row.count}"></th>
-                        <th th:text="${invoiceHasLabTests.id}"></th>
-                        <th th:text="${invoiceHasLabTests.invoice.patient.title.title} +${' '}+${invoiceHasLabTests.invoice.patient.name}"></th>
-                        <th th:text="${invoiceHasLabTests.labTest.name}"></th>
-                        <th th:text="${{invoiceHasLabTests.sampleCollectedDateTime}}"></th>
                     </tr>
                     </tbody>
                 </table>

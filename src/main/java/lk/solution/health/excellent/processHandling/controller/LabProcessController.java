@@ -20,7 +20,6 @@ import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import lk.solution.health.excellent.util.service.EmailService;
 import lk.solution.health.excellent.util.service.FileHandelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +33,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,8 +44,6 @@ public class LabProcessController {
     private final UserService userService;
     private final InvoiceService invoiceService;
     private final DateTimeAgeService dateTimeAgeService;
-    private final LabTestService labTestService;
-    private final LabTestParameterService labTestParameterService;
     private final PatientService patientService;
     private final FileHandelService fileHandelService;
     private final ResultTableService resultTableService;
@@ -58,8 +56,6 @@ public class LabProcessController {
         this.userService = userService;
         this.invoiceService = invoiceService;
         this.dateTimeAgeService = dateTimeAgeService;
-        this.labTestService = labTestService;
-        this.labTestParameterService = labTestParameterService;
         this.patientService = patientService;
         this.fileHandelService = fileHandelService;
         this.resultTableService = resultTableService;
@@ -203,7 +199,7 @@ public class LabProcessController {
 
     // result authorize from
     @RequestMapping(value = "/lab/authorize/labTestAuthorizedForm/{id}", method = RequestMethod.GET)
-   public String labTestAuthorizedForm(@PathVariable("id") Integer id, Model model) {
+    public String labTestAuthorizedForm(@PathVariable("id") Integer id, Model model) {
         InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findById(id);
         model.addAttribute("addStatus", false);
         model.addAttribute("invoiceHasLabTest", invoiceHasLabTest);
@@ -214,18 +210,13 @@ public class LabProcessController {
     // Authorization is  ok - lab Test
     @RequestMapping(value = "/lab/authorize/saveAuthorized", method = RequestMethod.POST)
     public String saveAuthorized(@ModelAttribute SearchProcess searchProcess) {
-        System.out.println(searchProcess);
-        //todo
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findById(searchProcess.getId());
-        //System.out.println("Authorized save");
+        InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findByNumber(Integer.parseInt(searchProcess.getNumber()));
         invoiceHasLabTest.setReportAuthorizeDateTime(dateTimeAgeService.getCurrentDateTime());
-        invoiceHasLabTest.setReportAuthorizedUser(userService.findByUserName(authentication.getName()));
+        invoiceHasLabTest.setReportAuthorizedUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
         invoiceHasLabTest.setLabTestStatus(LabTestStatus.AUTHORIZED);
 
         if (invoiceHasLabTest.getInvoice().getPatient().getEmail() != null) {
-            String message = "Following report is ready " + invoiceHasLabTest.getLabTest().getName() + ". \n Now you can collect it." +
+            String message = "Following report is ready " + invoiceHasLabTest.getLabTest().getName() + ". \n available to collect ." +
                     "\n Thanks" +
                     "\n Excellent Health Solution";
             boolean authorizedEmail = emailService.sendPatientRegistrationEmail(invoiceHasLabTest.getInvoice().getPatient().getEmail(), "Your report is ready - (not reply)", message);
@@ -243,12 +234,10 @@ public class LabProcessController {
     // Authorization is  not - lab Test
     @RequestMapping(value = "/lab/authorize/rejectAuthorized/{id}", method = RequestMethod.GET)
     public String rejectAuthorized(@PathVariable("id") Integer id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findById(id);
-        System.out.println("rejected Save");
-        invoiceHasLabTest.setResultEnteredDateTime(dateTimeAgeService.getCurrentDateTime());
-        invoiceHasLabTest.setResultEnteredUser(userService.findByUserName(authentication.getName()));
-        invoiceHasLabTest.setLabTestStatus(LabTestStatus.RESULTENTER);
+        invoiceHasLabTest.setResultEnteredDateTime(null);
+        invoiceHasLabTest.setResultEnteredUser(null);
+        invoiceHasLabTest.setLabTestStatus(LabTestStatus.WORKSHEET);
         invoiceHasLabTestService.persist(invoiceHasLabTest);
 
         return "redirect:/lab/authorize/resultAuthorizeList";
@@ -257,19 +246,14 @@ public class LabProcessController {
     // result authorized patient display
     @RequestMapping(value = "/lab/afterResultAuthorizeList", method = RequestMethod.GET)
     public String afterResultAuthorizedList(Model model) {
-        List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByLabTestState(LabTestStatus.AUTHORIZED);
-        List<Invoice> invoices = new ArrayList<>();
-        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
+        HashSet<Invoice> invoices = new HashSet<>();
+        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTestService.findByLabTestState(LabTestStatus.AUTHORIZED)) {
             // add patient to array list
             invoices.add(invoiceHasLabTest.getInvoice());
         }
-        //remove duplicate from he list
-        List<Invoice> noDuplicateInvoice = invoices.stream()
-                .distinct()
-                .collect(Collectors.toList());
         model.addAttribute("noNeed", false);
         model.addAttribute("addLabTestAuthorized", true);
-        model.addAttribute("invoiceHasLabTest", noDuplicateInvoice);
+        model.addAttribute("invoiceHasLabTest", invoices);
         model.addAttribute("buttonStatus", false);
 
         return "/labTest/labTestList";
@@ -277,59 +261,62 @@ public class LabProcessController {
 
     //need to show ready to print report and also need to need to authorized, result enter, not sample collect and out side send sample report
     // can used to find patient all report
-    @RequestMapping(value = "/lab/labTestPrintForm/{id}", method = RequestMethod.GET)
-    public String labTestPrintFrom(@PathVariable("id") Integer id, Model model) {
-        List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByInvoice(invoiceService.findById(id));
 
-        List<InvoiceHasLabTest> sampleCollectAndNotDone = new ArrayList<>();
-        List<InvoiceHasLabTest> sampleCollectLabTest = new ArrayList<>();
-        List<InvoiceHasLabTest> workSheetTake = new ArrayList<>();
-        List<InvoiceHasLabTest> resultEnter = new ArrayList<>();
-        List<InvoiceHasLabTest> authorized = new ArrayList<>();
-        List<InvoiceHasLabTest> printed = new ArrayList<>();
 
-        for (InvoiceHasLabTest hasLabTestList : invoiceHasLabTests) {
-
-            if (LabTestStatus.SAMPLECOLLECT.name().equals(hasLabTestList.getLabTestStatus().name()) && hasLabTestList.getLabTest().getLabtestDoneHere().name().equals(LabtestDoneHere.NO.name())) {
-                sampleCollectAndNotDone.add(hasLabTestList);
-            }
-            if (LabTestStatus.SAMPLECOLLECT.name().equals(hasLabTestList.getLabTestStatus().name())) {
-                sampleCollectLabTest.add(hasLabTestList);
-            }
-            if (LabTestStatus.WORKSHEET.name().equals(hasLabTestList.getLabTestStatus().name())) {
-                workSheetTake.add(hasLabTestList);
-            }
-            if (LabTestStatus.RESULTENTER.name().equals(hasLabTestList.getLabTestStatus().name())) {
-                resultEnter.add(hasLabTestList);
-            }
-            if (LabTestStatus.AUTHORIZED.name().equals(hasLabTestList.getLabTestStatus().name())) {
-                authorized.add(hasLabTestList);
-            }
-            if (LabTestStatus.PRINTED.name().equals(hasLabTestList.getLabTestStatus().name())) {
-                authorized.add(hasLabTestList);
-            }
-        }
+    private void commonMethodToPatientReportDetails(Model model, List<InvoiceHasLabTest> invoiceHasLabTests) {
+        List<InvoiceHasLabTest> sampleCollectAndNotDone = invoiceHasLabTests
+                .stream()
+                .filter((x) -> x.getLabTestStatus().equals(LabTestStatus.SAMPLECOLLECT) && x.getLabTest().getLabtestDoneHere().equals(LabtestDoneHere.NO))
+                .collect(Collectors.toList());
+        List<InvoiceHasLabTest> sampleCollectLabTest = invoiceHasLabTests
+                .stream()
+                .filter((x) -> x.getLabTestStatus().equals(LabTestStatus.SAMPLECOLLECT))
+                .collect(Collectors.toList());
+        List<InvoiceHasLabTest> workSheetTake = invoiceHasLabTests
+                .stream()
+                .filter((x) -> x.getLabTestStatus().equals(LabTestStatus.WORKSHEET))
+                .collect(Collectors.toList());
+        List<InvoiceHasLabTest> resultEnter = invoiceHasLabTests
+                .stream()
+                .filter((x) -> x.getLabTestStatus().equals(LabTestStatus.RESULTENTER))
+                .collect(Collectors.toList());
+        List<InvoiceHasLabTest> authorized = invoiceHasLabTests
+                .stream()
+                .filter((x) -> x.getLabTestStatus().equals(LabTestStatus.AUTHORIZED))
+                .collect(Collectors.toList());
+        List<InvoiceHasLabTest> printed = invoiceHasLabTests
+                .stream()
+                .filter((x) -> x.getLabTestStatus().equals(LabTestStatus.PRINTED))
+                .collect(Collectors.toList());
 
         model.addAttribute("invoiceHasLabTest", invoiceHasLabTests);
-        model.addAttribute("invoice", invoiceService.findById(id));
-        model.addAttribute("invoice1", true);
         model.addAttribute("sampleCollectAndNotDone", sampleCollectAndNotDone);
         model.addAttribute("sampleCollectLabTest", sampleCollectLabTest);
         model.addAttribute("workSheetTake", workSheetTake);
         model.addAttribute("resultEnter", resultEnter);
         model.addAttribute("authorized", authorized);
         model.addAttribute("printed", printed);
+    }
 
+    @RequestMapping(value = "/lab/labTestPrintForm/{id}", method = RequestMethod.GET)
+    public String labTestPrintFrom(@PathVariable("id") Integer id, Model model) {
+//only display within three months report summary
+        List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByInvoiceAndCreatedAtIsBetween(dateTimeAgeService.getPastDateByMonth(3), dateTimeAgeService.getCurrentDate(), invoiceService.findById(id));
+
+        commonMethodToPatientReportDetails(model, invoiceHasLabTests);
+
+        model.addAttribute("invoice", invoiceService.findById(id));
+        model.addAttribute("invoice1", true);
+        model.addAttribute("toPrint", true);
         return "/labTest/printReport";
     }
 
     //need to show printed list with need to re print button
     @RequestMapping(value = "/lab/print/{id}", method = RequestMethod.GET)
     public String reportPrint(@PathVariable("id") Integer id, HttpServletRequest request, HttpServletResponse response) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findById(id);
         invoiceHasLabTest.setReportPrintedDateTime(dateTimeAgeService.getCurrentDateTime());
-        invoiceHasLabTest.setReportPrintedUser(userService.findByUserName(authentication.getName()));
+        invoiceHasLabTest.setReportPrintedUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
         invoiceHasLabTestService.persist(invoiceHasLabTest);
 
 /*        boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context, request, response);
@@ -361,25 +348,19 @@ public class LabProcessController {
     public String labTestDetailsFind(@ModelAttribute SearchProcess searchProcess, Model model, RedirectAttributes redirectAttributes) {
         String pNic = searchProcess.getNic();
         String pNumber = searchProcess.getNumber();
-        String invoiceId = searchProcess.getCode();
 
         List<InvoiceHasLabTest> invoiceHasLabTests = new ArrayList<>();
-        String message = "You did not enter any search criteria. Do not Jok with me.";
-
+        String message;
+        Patient patient;
         //search by patient NIc
         if (!pNic.isEmpty() || !pNumber.isEmpty()) {
-            Patient patient = null;
             if (!pNic.isEmpty()) {
                 patient = patientService.findByNIC(pNic);
                 message = "There is no any report given NIC number: " + pNic + ".";
-                pNumber = "";
-                invoiceId = "";
 
             } else {
-                //search by patient's Number
+                patient = patientService.findByNumber(pNumber);
                 message = "There is no any report given Patient's number: " + pNumber + ".";
-                pNic = "";
-                invoiceId = "";
 
             }
             if (patient == null) {
@@ -393,62 +374,51 @@ public class LabProcessController {
                 invoiceHasLabTests.addAll(invoiceHasLabTestService.findByInvoice(invoice));
             }
 
-
         } else {
-            Integer billedNumber = Integer.parseInt(invoiceId);
             //search invoice id
-            message = "There is no any report given invoice number: " + invoiceId + ".";
-            invoiceHasLabTests = invoiceHasLabTestService.findByInvoice(invoiceService.findById(billedNumber));
+            message = "There is no any report given invoice number: " + searchProcess.getId() + ".";
+            invoiceHasLabTests = invoiceHasLabTestService.findByInvoice(invoiceService.findByNumber(searchProcess.getId()));
         }
 
-
         // if there is any lab test on given details following method give alert to front
-        if (invoiceHasLabTests.isEmpty() || pNumber.isEmpty() && pNic.isEmpty() && invoiceId.isEmpty()) {
+        if (invoiceHasLabTests.isEmpty()) {
             redirectAttributes.addFlashAttribute("searchLab", true);
             redirectAttributes.addFlashAttribute("searchText", message);
             return "redirect:/lab/searchReportFrom";
         }
 
-
-        List<InvoiceHasLabTest> sampleCollectAndNotDone = new ArrayList<>();
-        List<InvoiceHasLabTest> sampleCollectLabTest = new ArrayList<>();
-        List<InvoiceHasLabTest> workSheetTake = new ArrayList<>();
-        List<InvoiceHasLabTest> resultEnter = new ArrayList<>();
-        List<InvoiceHasLabTest> authorized = new ArrayList<>();
-        List<InvoiceHasLabTest> printed = new ArrayList<>();
-
-        for (InvoiceHasLabTest hasLabTestList : invoiceHasLabTests) {
-
-            if (LabTestStatus.SAMPLECOLLECT.name().equals(hasLabTestList.getLabTestStatus().name()) && hasLabTestList.getLabTest().getLabtestDoneHere().name().equals(LabtestDoneHere.NO.name())) {
-                sampleCollectAndNotDone.add(hasLabTestList);
-            }
-            if (LabTestStatus.SAMPLECOLLECT.name().equals(hasLabTestList.getLabTestStatus().name())) {
-                sampleCollectLabTest.add(hasLabTestList);
-            }
-            if (LabTestStatus.WORKSHEET.name().equals(hasLabTestList.getLabTestStatus().name())) {
-                workSheetTake.add(hasLabTestList);
-            }
-            if (LabTestStatus.RESULTENTER.name().equals(hasLabTestList.getLabTestStatus().name())) {
-                resultEnter.add(hasLabTestList);
-            }
-            if (LabTestStatus.AUTHORIZED.name().equals(hasLabTestList.getLabTestStatus().name())) {
-                authorized.add(hasLabTestList);
-            }
-            if (LabTestStatus.PRINTED.name().equals(hasLabTestList.getLabTestStatus().name())) {
-                authorized.add(hasLabTestList);
-            }
-        }
-
-        model.addAttribute("invoiceHasLabTest", invoiceHasLabTests);
-        model.addAttribute("invoice1", false);
-        model.addAttribute("sampleCollectAndNotDone", sampleCollectAndNotDone);
-        model.addAttribute("sampleCollectLabTest", sampleCollectLabTest);
-        model.addAttribute("workSheetTake", workSheetTake);
-        model.addAttribute("resultEnter", resultEnter);
-        model.addAttribute("authorized", authorized);
-        model.addAttribute("printed", printed);
+        commonMethodToPatientReportDetails(model, invoiceHasLabTests);
 
         return "/labTest/printReport";
     }
 
+
+    // give authority to make refund form
+    @RequestMapping(value = "/lab/authorize/refund", method = RequestMethod.GET)
+    public String giveAuthorityRefund() {
+        return "/labTest/refundForm";
+    }
+
+    // give authority to make refund save
+    @RequestMapping(value = "/lab/authorize/refund/save", method = RequestMethod.POST)
+    public String giveAuthoritiesRefundSave(SearchProcess searchProcess, Model model) {
+        System.out.println(searchProcess.toString());
+        InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findByNumber(Integer.parseInt(searchProcess.getNumber()));
+
+        if (!invoiceHasLabTest.getLabTestStatus().equals(LabTestStatus.WORKSHEET)) {
+            //redirectAttributes.addFlashAttribute("unableMLT1", true);
+            model.addAttribute("unableMLT1",true);
+            return "/labTest/refundForm";
+        }
+
+        invoiceHasLabTest.setResultEnteredDateTime(null);
+        invoiceHasLabTest.setResultEnteredUser(null);
+        invoiceHasLabTest.setLabTestStatus(LabTestStatus.NOSAMPLE);
+        invoiceHasLabTest.setComment(searchProcess.getComment());
+// this may help to find at what time mlt 1 give authority to refund
+        invoiceHasLabTest.setReportAuthorizeDateTime(dateTimeAgeService.getCurrentDateTime());
+        invoiceHasLabTestService.persist(invoiceHasLabTest);
+
+        return "redirect:/";
+    }
 }

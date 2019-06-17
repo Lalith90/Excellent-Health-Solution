@@ -1,4 +1,7 @@
-
+/**
+ * @author <Mirosław Dróżdż> <miroslaw.drozdz@vert.pl/www.vert.info.pl>
+ * @license [MIT](http://www.opensource.org/licenses/mit-license.php)
+ */
 (function () {
 	'use strict';
 

@@ -1,4 +1,7 @@
-
+/**
+ * @author Atramez_Zeton http://onyx-sy.net
+ * @license [MIT](http://www.opensource.org/licenses/mit-license.php)
+ */
 (function () {
 	'use strict';
 

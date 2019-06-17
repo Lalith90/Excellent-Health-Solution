@@ -1,4 +1,6 @@
-
+/**
+ * @author Nikos Aggelis nikosaggelis@hotmail.gr
+ */
 (function () {
 	'use strict';
 

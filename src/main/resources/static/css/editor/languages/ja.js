@@ -1,4 +1,7 @@
-
+/**
+ * @author <Yoshihiro Misawa> <myoshi321go@gmail.com>
+ * @license [MIT](http://www.opensource.org/licenses/mit-license.php)
+ */
 (function () {
 	'use strict';
 

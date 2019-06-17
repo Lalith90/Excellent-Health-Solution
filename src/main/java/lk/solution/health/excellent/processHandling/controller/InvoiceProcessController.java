@@ -211,10 +211,8 @@ public class InvoiceProcessController {
                             "\n\n\n\n\n Please inform us to if there is any changes on your details" +
                             "\n Kindly request keep your data up to date with us. so we can provide better service for you." +
                             "\n \n \n   Thank You" +
-                            "\n Excellent Health Solution" +
-                            "\n\n\n\n" +
-                            "This is a one way communication email service \n please dont reply";
-                    boolean isFlag = emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution ", message);
+                            "\n Excellent Health Solution";
+                    boolean isFlag = emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution (don not reply)", message);
 
 
                 }
@@ -343,9 +341,7 @@ public class InvoiceProcessController {
                     "\n Cashier(" + currentUser.getEmployee().getCallingName() + ")" +
                     "\n\n\n\n\n Please inform us to if there is any changes on this bill" +
                     "\n \n \n   \t\t Thank You" +
-                    "\n \t Excellent Health Solution" +
-                    "\n\n\n\n\nThis is a one way communication email service hence please do not reply if you need to further details regarding anything take call to hot line  " +
-                    "\n\n\n\n\nWe will not responsible for reports not collected within 30 days.   ";
+                    "\n \t Excellent Health Solution";
 
             boolean isFlag = emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution ", message);
         } else {

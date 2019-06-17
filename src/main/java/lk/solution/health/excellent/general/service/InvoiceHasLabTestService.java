@@ -2,7 +2,6 @@ package lk.solution.health.excellent.general.service;
 
 import lk.solution.health.excellent.general.dao.InvoiceHasLabTestDao;
 import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
-import lk.solution.health.excellent.lab.dao.LabTestDao;
 import lk.solution.health.excellent.lab.entity.Enum.LabTestStatus;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.resource.entity.User;
@@ -24,7 +23,7 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
 
 
     @Autowired
-    public InvoiceHasLabTestService(InvoiceHasLabTestDao invoiceHasLabTestDao, LabTestDao labTestDao) {
+    public InvoiceHasLabTestService(InvoiceHasLabTestDao invoiceHasLabTestDao) {
         this.invoiceHasLabTestDao = invoiceHasLabTestDao;
     }
 
@@ -106,6 +105,10 @@ public class InvoiceHasLabTestService implements AbstractService<InvoiceHasLabTe
 
     public List<InvoiceHasLabTest> findByDateAndUser(LocalDate date, User user) {
         return invoiceHasLabTestDao.findByCreatedAtAndUser(date, user);
+    }
+
+    public List<InvoiceHasLabTest> findByInvoiceAndCreatedAtIsBetween(LocalDate from, LocalDate to,Invoice invoice){
+        return invoiceHasLabTestDao.findByCreatedAtIsBetweenAndInvoice(from,to,invoice);
     }
 }
 

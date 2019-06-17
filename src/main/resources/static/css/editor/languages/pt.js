@@ -1,4 +1,7 @@
-
+/**
+* @author brunoais
+* @license [MIT](http://www.opensource.org/licenses/mit-license.php)
+*/
 (function () {
 	'use strict';
 

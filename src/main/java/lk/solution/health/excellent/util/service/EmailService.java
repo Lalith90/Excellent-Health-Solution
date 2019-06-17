@@ -1,5 +1,7 @@
 package lk.solution.health.excellent.util.service;
 
+import lk.solution.health.excellent.resource.entity.CollectingCenter;
+import lk.solution.health.excellent.resource.service.CollectingCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -19,22 +21,31 @@ import java.util.Properties;
 @Service
 public class EmailService {
     private final JavaMailSender javaMailSender;
+    private final CollectingCenterService collectingCenterService;
 
     @Autowired
-    public EmailService(JavaMailSender javaMailSender) {
+    public EmailService(JavaMailSender javaMailSender, CollectingCenterService collectingCenterService) {
         this.javaMailSender = javaMailSender;
+        this.collectingCenterService = collectingCenterService;
     }
 
+    public boolean sendPatientRegistrationEmail(String receiverEmail, String subject, String message) throws MailException {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        CollectingCenter collectingCenter = collectingCenterService.findById(1);
+        String messageText = message +
+                collectingCenter.getAddress()+"\n"+
+                collectingCenter.getLand()+" (Hot line) \n"+
+                collectingCenter.getMobile()+"\n"+
+                collectingCenter.getEmail()+
+                "\n\n\n\n\nThis is a one way communication email service hence please do not reply if you need to further details regarding anything take call to hot line which mentioned above " +
+                "\n\n\n\n\nWe will not responsible for reports not collected within 30 days.   ";
+        try {
+            mailMessage.setTo(receiverEmail);
+            mailMessage.setFrom("Excellent_Health_Solution (not reply)");
+            mailMessage.setSubject(subject);
+            mailMessage.setText(messageText);
 
-    public boolean sendPatientRegistrationEmail(String receiverEmail,String subject, String messageText) throws MailException {
-               SimpleMailMessage mailMessage = new SimpleMailMessage();
-     try {
-         mailMessage.setTo(receiverEmail);
-         mailMessage.setFrom("Excellent_Health_Solution");
-         mailMessage.setSubject(subject);
-         mailMessage.setText(messageText);
-
-         javaMailSender.send(mailMessage);
+            javaMailSender.send(mailMessage);
         } catch (Exception e) {
             return false;
         }

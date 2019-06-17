@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8"/>
-<title th:text="${addStatus?'EHSL - Create Laboratory Test Page': 'EHSL - Update Laboratory Test Page'}">- Add Laboratory Test</title>
-<style th:replace="fragments/style"></style>
+    <meta charset="UTF-8"/>
+    <title th:text="${addStatus?'EHSL - Create Laboratory Test Page': 'EHSL - Update Laboratory Test Page'}">- Add
+        Laboratory Test</title>
+    <style th:replace="fragments/style"></style>
 </head>
 <body>
 <nav th:replace="fragments/header :: header"></nav>
 <div class="container-fluid" style="margin-top: 50px">
     <div class="panel panel-primary ">
         <div class="panel panel-heading text-center">
-            <h4><b><span th:text="${addStatus==true?'New Laboratory Test Add':'Update Laboratory Test'}"></span></b></h4>
+            <h4><b><span th:text="${addStatus==true?'New Laboratory Test Add':'Update Laboratory Test'}"></span></b>
+            </h4>
         </div>
         <div class="panel-body">
             <div class="row">
                 <div class="col-sm-4 ">
                     <a class="btn btn-primary" href="/home"> Return Home</a>
                 </div>
-                <div style="text-align: center;" class="col-sm-4">
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${addStatus==true}">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <div class="col-sm-4" style="text-align: center;">
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert"
+                         th:if="${addStatus==true}">
+                        <button aria-label="Close" class="close" data-dismiss="alert" type="button">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <strong>Please Create Lab Test Code without conflict already created one</strong>
@@ -30,103 +33,119 @@
                     </script>
                 </div>
                 <div class="col-sm-4 text-right">
-                    <a href="/labTest"><button class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-list">&nbsp; View List </span></button> </a>
+                    <a href="/labTest">
+                        <button class="btn btn-sm btn-primary"><span
+                                class="glyphicon glyphicon-list">&nbsp; View List </span></button>
+                    </a>
                 </div>
             </div>
             <!-- /.row -->
             <div class="row">
                 <div class="container-fluid">
-                    <form class="form-horizontal"  th:action="${addStatus==true?'/labTest/add':'/labTest/update'}" th:object="${labTest}" th:method="POST">
+                    <form class="form-horizontal" th:action="${addStatus==true?'/labTest/add':'/labTest/update'}"
+                          th:method="POST" th:object="${labTest}">
                         <label th:if="${#fields.hasErrors('*')}" th:text="'Errors: '">Errors: </label>
                         <ul>
                             <li th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
                         </ul>
-                        <div class="col-sm-6">
-                            <div class="form-group" th:if="${addStatus==false}">
-                                <label class="control-label col-md-4" for="id">ID :</label>
-                                <div class="col-md-8">
-                                    <input type="text" id="id" placeholder="Enter ID Here" class="form-control" name="id" th:field="*{id}"/>
-                                    <span class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}">Error ID</span>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group" th:if="${addStatus==false}">
+                                    <label class="control-label col-md-4" for="id">ID :</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="id" name="id" placeholder="Enter ID Here"
+                                               th:field="*{id}" type="text"/>
+                                        <span class="error" th:errors="*{id}"
+                                              th:if="${#fields.hasErrors('id')}">Error ID</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Test Code</label>
+                                    <div class="col-md-8">
+                                        <input autofocus class="form-control"
+                                               name="code" placeholder="Enter Unic Test Code for Test" required
+                                               th:field="*{code}" th:if="${addStatus==true}" type="text"/>
+                                        <input class="form-control" name="code" readonly="readonly" th:field="*{code}"
+                                               th:if="${addStatus==false}" type="text"/>
+                                        <span class="error" th:errors="*{code}" th:if="${#fields.hasErrors('code')}">Error Test Code</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="name">Name</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="name" name="name"
+                                               placeholder="Enter Test Name Here"
+                                               required th:field="*{name}" type="text"/>
+                                        <span class="error" th:errors="*{amount}" th:if="${#fields.hasErrors('name')}">Error Test Name</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" th:for="title">Department</label>
+                                    <div class="col-md-4">
+                                        <select class="form-control" th:field="*{department}">
+                                            <option th:each="departments : ${department}"
+                                                    th:text="${departments.department}"
+                                                    th:value="${departments}"></option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-4">Test Code</label>
-                                <div class="col-md-8">
-                                    <input th:if="${addStatus==true}" type="text"  placeholder="Enter Unic Test Code for Test" class="form-control" name="code" th:field="*{code}" required autofocus/>
-                                    <input th:if="${addStatus==false}" type="text"   class="form-control" name="code" th:field="*{code}" readonly="readonly"/>
-                                    <span class="error" th:if="${#fields.hasErrors('code')}" th:errors="*{code}">Error Test Code</span>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" th:for="title">Test Done Place</label>
+                                    <div class="col-md-4">
+                                        <select class="form-control" th:field="*{labtestDoneHere}">
+                                            <option th:each="labTestDoneHeres : ${labTestDoneHere}"
+                                                    th:text="${labTestDoneHeres.labtestDoneHere}"
+                                                    th:value="${labTestDoneHeres}"></option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-4" for="name">Name</label>
-                                <div class="col-md-8">
-                                    <input type="text" id="name" placeholder="Enter Test Name Here" class="form-control" name="name" th:field="*{name}" required/>
-                                    <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{amount}">Error Test Name</span>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="price">Price</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="price" name="price"
+                                               placeholder="Enter Test Price Here" required th:field="*{price}"
+                                               type="text"/>
+                                        <span class="error" th:errors="*{price}" th:if="${#fields.hasErrors('price')}">Error Price</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div  class="form-group">
-                                <label class="control-label col-md-4" th:for="title">Department</label>
-                                <div class="col-md-4">
-                                    <select th:field="*{department}" class="form-control">
-                                        <option th:each="departments : ${department}"
-                                                th:text="${departments.department}"
-                                                th:value="${departments}"></option>
-                                    </select>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="sampleCollectingTube">Sample Collecting
+                                        Tube</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="sampleCollectingTube"
+                                               name="sampleCollectingTube"
+                                               placeholder="Enter Sample Collecting Tube" required
+                                               th:field="*{sampleCollectingTube}" type="text"/>
+                                        <span class="error" th:errors="*{sampleCollectingTube}"
+                                              th:if="${#fields.hasErrors('sampleCollectingTube')}">Sample Collecting Tube Error</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div  class="form-group">
-                                <label class="control-label col-md-4" th:for="title">Test Done Place</label>
-                                <div class="col-md-4">
-                                    <select th:field="*{labtestDoneHere}" class="form-control">
-                                        <option th:each="labTestDoneHeres : ${labTestDoneHere}"
-                                                th:text="${labTestDoneHeres.labtestDoneHere}"
-                                                th:value="${labTestDoneHeres}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-4" for="price">Price</label>
-                                <div class="col-md-8">
-                                    <input type="text" id="price" placeholder="Enter Test Price Here" class="form-control" name="price" th:field="*{price}" required/>
-                                    <span class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Error Price</span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-4" for="sampleCollectingTube">Sample Collecting Tube</label>
-                                <div class="col-md-8">
-                                    <input type="text"  id="sampleCollectingTube" class="form-control" name="sampleCollectingTube" placeholder="Enter Sample Collecting Tube"  th:field="*{sampleCollectingTube}" required/>
-                                    <span class="error" th:if="${#fields.hasErrors('sampleCollectingTube')}" th:errors="*{sampleCollectingTube}">Sample Collecting Tube Error</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6" th:if="${addStatus==false}">
-                            <div class="container-fluid">
-                                <label class="control-label col-md-6" >Included Parameter :</label>
-                            </div>
-                            <div class="container-fluid">
-                                <ol>
-                                    <li th:each="labTestParameters : ${labTest.labTestParameters}" th:text="${labTestParameters.name}" ></li>
-                                </ol>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2" for="description">Description</label>
-                                    <div class="col-sm-8">
-                                        <textarea id="description" class="form-control" name="description" placeholder="Enter Descrition"  th:field="*{description}"></textarea>
-                                        <span class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</span>
-                                    </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="description">Description</label>
+                                <div class="col-sm-8">
+                                        <textarea class="form-control" id="description" name="description"
+                                                  placeholder="Enter Descrition" th:field="*{description}"></textarea>
+                                    <span class="error" th:errors="*{description}"
+                                          th:if="${#fields.hasErrors('description')}">Description Error</span>
                                 </div>
-                                <!--labtest parameter table - start-->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!--labtest parameter table - start-->
+                            <div class="col-sm-7">
                                 <div class="table-responsive">
-                                    <table class="table table-condensed text-center" id="myTable">
+                                    <table class="table table-hover table-condensed" id="myTable">
                                         <thead>
                                         <tr>
                                             <th>Index</th>
                                             <th>Lab Test Parameter Name</th>
-                                            <th> Unit </th>
-                                            <th> Reference Range </th>
+                                            <th> Unit</th>
+                                            <th> Reference Range</th>
                                             <th class="text-center">Add Parameter</th>
                                         </tr>
                                         </thead>
@@ -135,29 +154,43 @@
                                             <th th:text="${rowCount.count}"></th>
                                             <th th:text="${labTestParameter.name}"></th>
                                             <th th:text="${labTestParameter.unit}"></th>
-                                            <th class="text-center"> <span th:text="${labTestParameter.min}"></span>&nbsp;- &nbsp;<span th:text="${labTestParameter.max}"></span></th>
+                                            <th class="text-center"><span th:text="${labTestParameter.min}"></span>&nbsp;-
+                                                &nbsp;<span th:text="${labTestParameter.max}"></span></th>
                                             <th class="text-center">
-                                                    <input type="checkbox" th:value="${labTestParameter.id}" name="labTestParameters"/>
-                                                    <!--<span th:text="${labTest.labTestParameters.isEmpty()}"></span>
-                                                    <span th:text="${labTest.id}"></span>
-                                                    <span th:text="${labTest.labTestParameters.stream()}"></span>-->
-
+                                                <input name="labTestParameters" th:value="${labTestParameter.id}"
+                                                       type="checkbox"/>
                                             </th>
                                         </tr>
-                                        </tbody><!--th:each="labTestParameters : ${labTest.labTestParameters}"-->
+                                        </tbody>
                                     </table>
                                 </div>
-                                <div class="alert alert-warning alert-dismissable fade in" th:if="${addStatus==false}">
-                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                    <br>
-                                    <h4 class="text-center"> If you are edit some thing on this lab test !!! <br/>
-                                        &nbsp;<span class="glyphicon glyphicon-warning-sign"></span> Please set all parameter/s which is/are belonged this test, before click the update button. </h4>
+                            </div>
+                            <div class="col-sm-5" th:if="${addStatus==false}">
+                                <div class="container-fluid">
+                                    <label class="control-label">Included Parameter :</label>
                                 </div>
-                               <!-- labtest parameter table - end-->
-                                <div class="text-center row" >
-                                    <button class="btn btn-success" type="submit" > <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp; &nbsp;<span th:text="${addStatus==true?'Save': 'Update'}" ></span></button>
+                                <div class="container-fluid">
+                                    <ol>
+                                        <li th:each="labTestParameters : ${labTest.labTestParameters}"
+                                            th:text="${labTestParameters.name}"></li>
+                                    </ol>
+                                </div>
+                                <div class="row">
+                                    <div class="alert alert-warning alert-dismissable fade in" th:if="${addStatus==false}">
+                                        <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
+                                        <br>
+                                        <h4 class="text-center"> If you are edit some thing on this lab test !!! <br/>
+                                            &nbsp;<span class="glyphicon glyphicon-warning-sign"></span> Please set all
+                                            parameter/s which is/are belonged this test, before click the update button.
+                                        </h4>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="text-center row">
+                            <button class="btn btn-success" type="submit"><span
+                                    class="glyphicon glyphicon-thumbs-up"></span>&nbsp; &nbsp;<span
+                                    th:text="${addStatus==true?'Save': 'Update'}"></span></button>
                         </div>
                     </form>
                 </div>
@@ -166,6 +199,15 @@
     </div>
 </div>
 <footer class="page-footer" th:replace="fragments/footer"></footer>
+<script>
+    //WYSIWYG add to text area
+    let textarea = document.getElementById('description');
+    sceditor.create(textarea, {
+        format: 'bbcode',
+        icons: 'monocons',
+        style: '../minified/themes/content/default.min.css'
+    });
+</script>
 <script th:replace="fragments/script"></script>
 </body>
 </html>

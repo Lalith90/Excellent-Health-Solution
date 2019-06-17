@@ -288,28 +288,32 @@ button .btn {
     color: #f0ad4e;
     font-weight: lighter;
 }
-.addLabTest{
+
+.addLabTest {
     color: #000000;
     background-color: #00FFFF;
 }
+
 /*remove lab test from selected table - end*/
 
 /*all lable fonts size increase - start*/
-label{
+label {
     font-size: 18px !important;
     font-max-size: 20px;
     font-min-size: 12px;
 }
+
 /*all lable fonts size increase - end*/
 
 /*Table show and hide - start*/
-.display{
+.display {
     display: none;
 }
+
 /*Table show and hide - end*/
 /*medical Package show area - start*/
-#medicalPackage{
-    border: 2px solid blue ;
+#medicalPackage {
+    border: 2px solid blue;
     border-radius: 5px;
 }
 
@@ -317,38 +321,74 @@ label{
     margin-top: 3px;
 }
 
-#medicalPackageDetails{
+#medicalPackageDetails {
     margin-top: 5px;
 }
-#btnRegisteredPatient{
+
+#btnRegisteredPatient {
     margin-bottom: 5px;
 }
+
 /*medical Package show area - end*/
 /* enter filed validation - start*/
-.valid{
+.valid {
     background-color: #7ae899;
 }
-.invalid{
+
+.invalid {
     background-color: #ff88b3;
 }
+
 /* enter filed validation - end*/
 
 /*table cell */
-.tableCell{
+.tableCell {
     border: none;
     padding: 5px;
     width: 1%;
 }
 
-input{
+input {
     font-size: 16px !important;
 }
 
-input[type=checkbox]{
+input[type=checkbox] {
     size: 16px !important;
-    border-radius:5px !important;
+    border-radius: 5px !important;
 }
-.borderNull{
+
+.borderNull {
     border: none !important;
     background: white !important;
+}
+
+/*text area editor - stat*/
+code:before {
+    position: absolute;
+    content: 'Code:';
+    top: -1.35em;
+    left: 0;
+}
+
+code {
+    margin-top: 1.5em;
+    position: relative;
+    background: #eee;
+    border: 1px solid #aaa;
+    white-space: pre;
+    padding: .25em;
+    min-height: 1.25em;
+}
+
+code:before, code {
+    display: block;
+    text-align: left;
+}
+
+/*text area editor - end*/
+
+/*textarea size modeification*/
+#description {
+    height: 300px;
+    width: 800px;
 }

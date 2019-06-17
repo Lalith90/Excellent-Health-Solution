@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>EHSL - List</title>
+    <style th:replace="fragments/style"></style>
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
+<div class="container-fluid" style="margin-top: 60px">
+    <div class="panel panel-primary">
+        <div class="panel panel-heading">
+            <h4> Give Authority To Make Refund</h4>
+        </div>
+        <div class="panel panel-body">
+            <div class="alert alert-warning text-center" role="alert" th:if="${unableMLT1==true}">
+                <strong> Sorry !<br>you have no permission to do this process. please contact manager</strong>
+            </div>
+            <div class="container-fluid text-center">
+                <form class="form-inline" method="POST" th:action="@{/lab/authorize/refund/save}">
+                    <div class="form-group">
+                        <label for="number">Lab Reference Number : </label>
+                        <input aria-describedby="helpId" autocomplete="off" class="form-control" id="number"
+                               name="number" placeholder="Enter Number"
+                               type="text">
+                        <br>
+                        <small class="text-muted" id="helpId">Enter lab Reference Number</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment">Reason : </label>
+                        <textarea aria-describedby="helpId1" autocomplete="off" class="form-control" id="comment"
+                                  name="comment" required
+                        ></textarea>
+                        <br>
+                        <small class="text-muted" id="helpId1">Provide valid reason to do this</small>
+                    </div>
+                    <div class="row text-center">
+                        <button class="btn btn-success" th:type="submit" type="button"><span
+                                class="glyphicon glyphicon-ok-circle"></span>&nbsp; Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="page-footer" th:replace="fragments/footer"></footer>
+<script th:replace="fragments/script"></script>
+<script th:src="@{/js/invoice.js}"></script>
+</body>
+</html>
