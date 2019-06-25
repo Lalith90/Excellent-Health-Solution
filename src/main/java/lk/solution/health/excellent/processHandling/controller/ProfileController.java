@@ -2,10 +2,8 @@ package lk.solution.health.excellent.processHandling.controller;
 
 import lk.solution.health.excellent.processHandling.helpingClass.PasswordChange;
 import lk.solution.health.excellent.resource.entity.User;
-import lk.solution.health.excellent.resource.service.EmployeeService;
 import lk.solution.health.excellent.resource.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -41,7 +39,7 @@ public class ProfileController {
         model.addAttribute("pswChange", new PasswordChange());
         return "login/passwordChange";
     }
-    @RequestMapping(value = "/user/passwordChange", method = RequestMethod.POST)
+    @RequestMapping(value = "/passwordChange", method = RequestMethod.POST)
     public String passwordChange(@Valid @ModelAttribute PasswordChange passwordChange, Model model, BindingResult result){
         User user = userService.findById(userService.findByUserIdByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
 

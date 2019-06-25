@@ -5,7 +5,6 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import lk.solution.health.excellent.util.interfaces.AbstractService;
 import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
 import lk.solution.health.excellent.general.service.InvoiceHasLabTestService;
 import lk.solution.health.excellent.lab.entity.LabTest;
@@ -17,6 +16,7 @@ import lk.solution.health.excellent.resource.service.CollectingCenterService;
 import lk.solution.health.excellent.transaction.dao.InvoiceDao;
 import lk.solution.health.excellent.transaction.entity.Enum.PaymentMethod;
 import lk.solution.health.excellent.transaction.entity.Invoice;
+import lk.solution.health.excellent.util.interfaces.AbstractService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,12 +66,12 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
         return invoiceDao.getOne(id);
     }
 
-    @CachePut(value = "invoice" )
+    @CachePut(value = "invoice")
     public Invoice persist(Invoice invoice) {
         return invoiceDao.save(invoice);
     }
 
-    @CacheEvict(value="invoice", allEntries=true)
+    @CacheEvict(value = "invoice", allEntries = true)
     public boolean delete(Integer id) {
         invoiceDao.deleteById(id);
         return false;
@@ -111,15 +111,16 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
         return invoiceDao.findByCreatedAtIsBetween(from, to);
     }
 
-    public Invoice findByNumber(int number){
+    public Invoice findByNumber(int number) {
         return invoiceDao.findByNumber(number);
     }
 
     public Integer countByCreatedAtIsBetween(LocalDate from, LocalDate to) {
         return invoiceDao.countByCreatedAtIsBetween(from, to);
     }
+
     public int countByDateAndUser(LocalDate date, User user) {
-        return invoiceDao.countByCreatedAtAndUser(date,user);
+        return invoiceDao.countByCreatedAtAndUser(date, user);
     }
     /* Pdf processing start */
 
@@ -149,12 +150,13 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
         pdfPCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         pdfPCell.setBorderColor(BaseColor.WHITE);
     }
-//all lab test gather to table and show
+
+    //all lab test gather to table and show
     private PdfPTable labTestToTable(List<LabTest> labTests, boolean medicalPackage) {
         //Font
         Font secondaryFont = FontFactory.getFont(FontFactory.TIMES_BOLDITALIC, 9, BaseColor.BLACK);
         //create a table
-        float[] columnWidth = {10f, 240f, 150f};//column amount{column 1 , column 2 , column 3}
+        float[] columnWidth = {20f, 240f, 150f};//column amount{column 1 , column 2 , column 3}
         PdfPTable labTestTable = new PdfPTable(columnWidth);
 
         int labTestCount = 1;
@@ -191,13 +193,13 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             File file = new File(filePath);
             boolean exists = new File(filePath).exists();
             if (!exists) {
-                new File(filePath);
-               // new File(filePath).mkdirs(); // this is the actual code place on here but i removed .mkdirs()
+                // new File(filePath);
+                new File(filePath).mkdirs(); // this is the actual code place on here but i removed .mkdirs()
             }
 
-            Document document = new Document(PageSize.LETTER, 15, 15, 15, 0);
+            Document document = new Document(PageSize.A5, 15, 15, 15, 0);
 
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file + "/" + invoice.getPatient().getTitle().getTitle() + " " + invoice.getPatient().getName() + "invoice" + ".pdf"));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file + "/" + invoice.getPatient().getTitle().getTitle() + "" + invoice.getPatient().getName() + "_invoice" + ".pdf"));
 
             document.open();
             //All front
@@ -254,16 +256,16 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             commonStyleForPdfPCell(cell4);
             mainTable.addCell(cell4);
 
-            PdfPCell cell5 = new PdfPCell(new Phrase("Consultation : "+invoice.getDoctor().getConsultation().getName(), secondaryFont));
+            PdfPCell cell5 = new PdfPCell(new Phrase("Consultation : " + invoice.getDoctor().getConsultation().getName(), secondaryFont));
             commonStyleForPdfPCell(cell5);
             mainTable.addCell(cell5);
 
             document.add(mainTable);
 
-//space taken adding pharagraph
-            Paragraph takeSpaceLabtestShowTable  = new Paragraph("\n", secondaryFont);
-            commonStyleForParagraphTwo(takeSpaceLabtestShowTable);
-            document.add(takeSpaceLabtestShowTable);
+//space taken adding paragraph
+            Paragraph takeSpaceLabTestShowTable = new Paragraph("\n", secondaryFont);
+            commonStyleForParagraphTwo(takeSpaceLabTestShowTable);
+            document.add(takeSpaceLabTestShowTable);
 
 //Lab Test and Medical Package details
             if (invoice.getMedicalPackage() == null && invoice.getInvoiceHasLabTests() != null) {
@@ -292,21 +294,24 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
 
 // remove medical package is included in all lab test array
                 List<LabTest> labTests = invoiceHasLabTestService.findLabTestByInvoice(invoice);
-                List<LabTest> labTests2 = labTests.stream().filter(labTest -> !labTests1.contains(labTest)).collect(Collectors.toList());
+                List<LabTest> labTests2 = labTests
+                        .stream()
+                        .filter(labTest -> !labTests1.contains(labTest))
+                        .collect(Collectors.toList());
                 document.add(labTestToTable(labTests2, false)); // only selected lab test
             }
 // according to payment method bill should be change
             PaymentMethod paymentMethod = invoice.getPaymentMethod();
 
 // invoice details table
-      //Create a Table (Patient Details)
+            //Create a Table (Patient Details)
             PdfPTable invoiceTable = new PdfPTable(new float[]{3f, 1f});
 
             PdfPCell totalAmount = new PdfPCell(new Phrase("\nTotal Amount(Rs.) : ", secondaryFont));
             commonStyleForPdfPCellLastOne(totalAmount);
             invoiceTable.addCell(totalAmount);
 
-            PdfPCell totalAmountRs = new PdfPCell(new Phrase("---------------\n"+invoice.getTotalprice().setScale(2, BigDecimal.ROUND_CEILING).toString(), secondaryFont));
+            PdfPCell totalAmountRs = new PdfPCell(new Phrase("---------------\n" + invoice.getTotalprice().setScale(2, BigDecimal.ROUND_CEILING).toString(), secondaryFont));
             commonStyleForPdfPCellLastOne(totalAmountRs);
             invoiceTable.addCell(totalAmountRs);
 
@@ -314,7 +319,7 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             commonStyleForPdfPCellLastOne(paymentMethodOnBill);
             invoiceTable.addCell(paymentMethodOnBill);
 
-            PdfPCell paymentMethodOnBillState = new PdfPCell(new Phrase("========\n"+paymentMethod.getPaymentMethod(), secondaryFont));
+            PdfPCell paymentMethodOnBillState = new PdfPCell(new Phrase("========\n" + paymentMethod.getPaymentMethod(), secondaryFont));
             commonStyleForPdfPCellLastOne(paymentMethodOnBillState);
             invoiceTable.addCell(paymentMethodOnBillState);
 
@@ -326,7 +331,7 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             commonStyleForPdfPCellLastOne(discountRadioAndAmountRs);
             invoiceTable.addCell(discountRadioAndAmountRs);
 
-            PdfPCell amount = new PdfPCell(new Phrase("Amount (Rs.) : ",highLiltedFont ));
+            PdfPCell amount = new PdfPCell(new Phrase("Amount (Rs.) : ", highLiltedFont));
             commonStyleForPdfPCellLastOne(amount);
             invoiceTable.addCell(amount);
 
@@ -374,11 +379,10 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
 
             document.close();
             writer.close();
+            System.out.println("successfully created");
             return true;
-
-
         } catch (Exception e) {
-            logger.error(e.toString());
+            logger.error("error in voice service" + e.toString());
             return false;
         }
     }

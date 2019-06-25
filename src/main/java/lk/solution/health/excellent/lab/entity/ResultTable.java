@@ -11,7 +11,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString
 public class ResultTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

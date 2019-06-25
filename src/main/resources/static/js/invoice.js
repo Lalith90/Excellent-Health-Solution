@@ -285,29 +285,37 @@ $("#patientFindValue").on("keyup", function () {
         case ("name"):
             if (nameRegex.test(selectedValue)) {
                 document.getElementById("patientFindValue").style.setProperty('background-color', '#7ae899', 'important');
+                contentShow(document.getElementById("patientSearch"));
             } else {
                 document.getElementById("patientFindValue").style.setProperty('background-color', '#ff88b3', 'important');
+                contentHide(document.getElementById("patientSearch"));
             }
             break;
         case ("nic"):
             if (nicRegex.test(selectedValue)) {
                 document.getElementById("patientFindValue").style.setProperty('background-color', '#7ae899', 'important');
+                contentShow(document.getElementById("patientSearch"));
             } else {
                 document.getElementById("patientFindValue").style.setProperty('background-color', '#ff88b3', 'important');
+                contentHide(document.getElementById("patientSearch"));
             }
             break;
         case ("number"):
             if (numberRegex.test(selectedValue)) {
                 document.getElementById("patientFindValue").style.setProperty('background-color', '#7ae899', 'important');
+                contentShow(document.getElementById("patientSearch"));
             } else {
                 document.getElementById("patientFindValue").style.setProperty('background-color', '#ff88b3', 'important');
+                contentHide(document.getElementById("patientSearch"));
             }
             break;
         case ("mobile"):
             if (mobileRegex.test(selectedValue)) {
                 document.getElementById("patientFindValue").style.setProperty('background-color', '#7ae899', 'important');
+                contentShow(document.getElementById("patientSearch"));
             } else {
                 document.getElementById("patientFindValue").style.setProperty('background-color', '#ff88b3', 'important');
+                contentHide(document.getElementById("patientSearch"));
             }
             break;
 

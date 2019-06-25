@@ -2,6 +2,7 @@ package lk.solution.health.excellent.transaction.controller;
 
 import lk.solution.health.excellent.general.service.InvoiceHasLabTestService;
 import lk.solution.health.excellent.lab.entity.LabTest;
+import lk.solution.health.excellent.processHandling.helpingClass.SearchProcess;
 import lk.solution.health.excellent.transaction.entity.Invoice;
 import lk.solution.health.excellent.transaction.service.InvoiceService;
 import lk.solution.health.excellent.util.service.DateTimeAgeService;
@@ -32,8 +33,20 @@ public class InvoiceController {
 
 
     @RequestMapping
-    public String invoicePage(Model model) {
-        model.addAttribute("invoices", invoiceService.findByDate(dateTimeAgeService.getCurrentDate()));
+    public String invoicePageThreeMonths(Model model) {
+        List<Invoice> invoices = invoiceService.findByCreatedAtIsBetween(dateTimeAgeService.getPastDateByMonth(3),dateTimeAgeService.getCurrentDate());
+       //~ invoices.forEach(System.out::println);
+        for (Invoice invoice : invoices){
+            System.out.println(invoice.getPatient());
+        }
+        model.addAttribute("invoices", invoices);
+        return "invoice/invoice";
+    }
+
+
+    @RequestMapping(value = "/customInvoice", method = RequestMethod.POST)
+    public String invoicePage(@ModelAttribute SearchProcess searchProcess,Model model) {
+        model.addAttribute("invoices", invoiceService.findByCreatedAtIsBetween(searchProcess.getStartDate(),searchProcess.getEndDate()));
         return "invoice/invoice";
     }
 

@@ -49,9 +49,10 @@ public class LabProcessController {
     private final ResultTableService resultTableService;
     private final ServletContext context;
     private final EmailService emailService;
+    private final LabTestService labTestService;
 
     @Autowired
-    public LabProcessController(InvoiceHasLabTestService invoiceHasLabTestService, UserService userService, InvoiceService invoiceService, DateTimeAgeService dateTimeAgeService, LabTestService labTestService, LabTestParameterService labTestParameterService, PatientService patientService, FileHandelService fileHandelService, ResultTableService resultTableService, ServletContext context, EmailService emailService) {
+    public LabProcessController(InvoiceHasLabTestService invoiceHasLabTestService, UserService userService, InvoiceService invoiceService, DateTimeAgeService dateTimeAgeService, LabTestService labTestService, LabTestParameterService labTestParameterService, PatientService patientService, FileHandelService fileHandelService, ResultTableService resultTableService, ServletContext context, EmailService emailService, LabTestService labTestService1) {
         this.invoiceHasLabTestService = invoiceHasLabTestService;
         this.userService = userService;
         this.invoiceService = invoiceService;
@@ -61,6 +62,7 @@ public class LabProcessController {
         this.resultTableService = resultTableService;
         this.context = context;
         this.emailService = emailService;
+        this.labTestService = labTestService1;
     }
 
     //Sample Collected Investigation List for taken work sheet
@@ -82,20 +84,36 @@ public class LabProcessController {
 
     //save Worksheet printed lab test
     @RequestMapping(value = "/lab/saveWorkSheetPatient", method = RequestMethod.POST)
-    public String saveWorksheetTakenPatient(@ModelAttribute SearchProcess searchProcess) {
-
+    public String saveWorksheetTakenPatient(@ModelAttribute SearchProcess searchProcess, HttpServletRequest request, HttpServletResponse response) {
         List<InvoiceHasLabTest> invoiceHasLabTests = searchProcess.getInvoiceHasLabTests();
-        //TODO
-        // any how need to find how to print pdf through web browser using java servlet
-        // NEED TO CREATE WORK SHEET USING I-TEXT BUDDY --> //USING INVOICE NUMBER AND LAB TEST LIST
 
         //all work sheet taken test add to list
-        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
+        for (InvoiceHasLabTest invoiceHasLabTest :invoiceHasLabTests ) {
             invoiceHasLabTest.setLabTestStatus(LabTestStatus.WORKSHEET);
             invoiceHasLabTest.setWorkSheetTakenUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
             invoiceHasLabTest.setWorkSheetTakenDateTime(dateTimeAgeService.getCurrentDateTime());
         }
+        //save all lab test list as bulk
         invoiceHasLabTestService.persistBulk(invoiceHasLabTests);
+
+//this for multiple worksheet print
+        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
+
+            boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context, request, response);
+
+            if (isFlag) {
+                String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf");
+                //  boolean download = fileHandelService.fileDownload(fullPath, response, invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf");
+      /*      if (download){
+                System.out.println("download is done");
+                return "redirect:/lab/afterResultAuthorizeList";
+            }else {
+                System.out.println(" file download fail");
+                return "redirect:/lab/afterResultAuthorizeList";
+            }*/
+
+            }
+        }
         return "redirect:/lab/sampleCollect";
     }
 
@@ -266,27 +284,27 @@ public class LabProcessController {
     private void commonMethodToPatientReportDetails(Model model, List<InvoiceHasLabTest> invoiceHasLabTests) {
         List<InvoiceHasLabTest> sampleCollectAndNotDone = invoiceHasLabTests
                 .stream()
-                .filter((x) -> x.getLabTestStatus().equals(LabTestStatus.SAMPLECOLLECT) && x.getLabTest().getLabtestDoneHere().equals(LabtestDoneHere.NO))
+                .filter(x -> x.getLabTestStatus().equals(LabTestStatus.SAMPLECOLLECT) && x.getLabTest().getLabtestDoneHere().equals(LabtestDoneHere.NO))
                 .collect(Collectors.toList());
         List<InvoiceHasLabTest> sampleCollectLabTest = invoiceHasLabTests
                 .stream()
-                .filter((x) -> x.getLabTestStatus().equals(LabTestStatus.SAMPLECOLLECT))
+                .filter(x -> x.getLabTestStatus().equals(LabTestStatus.SAMPLECOLLECT))
                 .collect(Collectors.toList());
         List<InvoiceHasLabTest> workSheetTake = invoiceHasLabTests
                 .stream()
-                .filter((x) -> x.getLabTestStatus().equals(LabTestStatus.WORKSHEET))
+                .filter(x -> x.getLabTestStatus().equals(LabTestStatus.WORKSHEET))
                 .collect(Collectors.toList());
         List<InvoiceHasLabTest> resultEnter = invoiceHasLabTests
                 .stream()
-                .filter((x) -> x.getLabTestStatus().equals(LabTestStatus.RESULTENTER))
+                .filter(x -> x.getLabTestStatus().equals(LabTestStatus.RESULTENTER))
                 .collect(Collectors.toList());
         List<InvoiceHasLabTest> authorized = invoiceHasLabTests
                 .stream()
-                .filter((x) -> x.getLabTestStatus().equals(LabTestStatus.AUTHORIZED))
+                .filter(x -> x.getLabTestStatus().equals(LabTestStatus.AUTHORIZED))
                 .collect(Collectors.toList());
         List<InvoiceHasLabTest> printed = invoiceHasLabTests
                 .stream()
-                .filter((x) -> x.getLabTestStatus().equals(LabTestStatus.PRINTED))
+                .filter(x -> x.getLabTestStatus().equals(LabTestStatus.PRINTED))
                 .collect(Collectors.toList());
 
         model.addAttribute("invoiceHasLabTest", invoiceHasLabTests);
@@ -319,20 +337,20 @@ public class LabProcessController {
         invoiceHasLabTest.setReportPrintedUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
         invoiceHasLabTestService.persist(invoiceHasLabTest);
 
-/*        boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context, request, response);
-        System.out.println(isFlag);
+        boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context, request, response);
+
         if (isFlag) {
             String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf");
-            boolean download = fileHandelService.fileDownload(fullPath, response, invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf");
-            if (download){
+            //  boolean download = fileHandelService.fileDownload(fullPath, response, invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf");
+      /*      if (download){
                 System.out.println("download is done");
                 return "redirect:/lab/afterResultAuthorizeList";
             }else {
                 System.out.println(" file download fail");
                 return "redirect:/lab/afterResultAuthorizeList";
-            }
+            }*/
 
-        }*/
+        }
         return "redirect:/lab/afterResultAuthorizeList";
     }
 
@@ -407,7 +425,7 @@ public class LabProcessController {
 
         if (!invoiceHasLabTest.getLabTestStatus().equals(LabTestStatus.WORKSHEET)) {
             //redirectAttributes.addFlashAttribute("unableMLT1", true);
-            model.addAttribute("unableMLT1",true);
+            model.addAttribute("unableMLT1", true);
             return "/labTest/refundForm";
         }
 

@@ -57,6 +57,7 @@
                     <!--CACHIER NAV BAR CONTENT -->
                     <ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_CASHIER'')')}">
                         <li><a href="/invoiceProcess">Make Invoice</a></li>
+                        <li><a href="/invoice">Invoice</a></li>
                         <li><a href="/patient">Search Patient</a></li>
                         <!--<li><a href="#" >Search Invoice</a></li>-->
                         <li><a href="/labTest">Search Lab Test</a></li>
@@ -131,7 +132,7 @@
                     </ul>
                     <!--MANAGER NAV BAR CONTENT -->
                     <ul class="dropdown-menu" th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}">
-                        <li><a href="/sammary">Summary </a></li>
+                        <li><a href="process/summary">Summary </a></li>
                         <li><a href="#">Medical Center </a></li>
                         <li><a href="#">Referral Doctor </a></li>
                     </ul>

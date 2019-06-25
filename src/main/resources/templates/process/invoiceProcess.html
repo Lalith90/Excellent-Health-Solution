@@ -12,7 +12,7 @@
 
 <div class="container-fluid" style="margin-top: 60px">
     <div class="alert alert-warning alert-dismissable fade in" th:if="${patientDetailsChange==true}">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
         <p>Ohh...! you change some details of patient. <br> please re-enter patient details correctly if there is not
             way to do it <br> click below button to add patient after be able to process invoice. <br> <a
                     href="/patient/add"></a>
@@ -81,25 +81,27 @@
                                 <div class="container-fluid">
                                     <!--lab tests-->
                                     <div class="row">
-                                        <table class="table table-striped table-condensed"
-                                               id="myTable">
-                                            <thead>
-                                            <tr>
-                                                <th>Index</th>
-                                                <th>Code</th>
-                                                <th>Test Name</th>
-                                                <th> Price (Rs.)</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr th:each="labTest: ${labTests}">
-                                                <th th:text="${labTest.id}"></th>
-                                                <th th:text="${labTest.code}"></th>
-                                                <th th:text="${labTest.name}"></th>
-                                                <th th:text="${labTest.price}"></th>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-condensed"
+                                                   id="myTable">
+                                                <thead>
+                                                <tr>
+                                                    <th>Index</th>
+                                                    <th>Code</th>
+                                                    <th>Test Name</th>
+                                                    <th> Price (Rs.)</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="labTest: ${labTests}">
+                                                    <th th:text="${labTest.id}"></th>
+                                                    <th th:text="${labTest.code}"></th>
+                                                    <th th:text="${labTest.name}"></th>
+                                                    <th th:text="${labTest.price}"></th>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                                 <!--selected lab test show-->
@@ -155,7 +157,7 @@
                                 <!--medical package included lab test-->
                                 <div class="row" id="medicalPackageDetails">
                                     <div class="alert alert-warning alert-dismissable fade in">
-                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                        <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
                                         <strong>Alert!</strong>
                                         <p><i>CHECK SELECTED LAB TEST AND MEDICAL PACKAGE INCLUDED LAB TEST</i></p>
                                     </div>
@@ -230,8 +232,8 @@
                                                                type="text"/>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-2 text-center">
-                                                    <br/>
+                                                <div class="col-sm-2 text-center" id="patientSearch">
+                                                    <br/>&nbsp;&nbsp;
                                                     <button class="btn btn-info" id="btnSearchPatient">
                                                         <span class="glyphicon glyphicon-search"></span>&nbsp;Search
                                                     </button>
@@ -460,10 +462,10 @@
                                         Tendered
                                         (Rs.) :</label>
                                     <div class="col-md-6">
-                                        <input class="form-control" id="amountTendered"
+                                        <input autocomplete="off" class="form-control"
+                                               id="amountTendered"
                                                name="amountTendered"
                                                placeholder="Enter Amount Here"
-                                               autocomplete="off"
                                                type="text"/>
                                     </div>
                                 </div>

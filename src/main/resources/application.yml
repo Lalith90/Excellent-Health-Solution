@@ -1,9 +1,4 @@
 
-logging:
-  level:
-    org:
-      springframework: ERROR
-
 spring:
   port: 8090
   datasource:

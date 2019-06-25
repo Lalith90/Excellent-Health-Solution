@@ -108,6 +108,9 @@ public class InvoiceProcessController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String newInvoice(@Valid @ModelAttribute InvoiceProcess invoiceProcess, BindingResult result, Model model, RedirectAttributes attributes,
                              HttpServletRequest request, HttpServletResponse response) {
+        //To take user
+        User currentUser = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+
         // Second value is greater than one {< 0}, Both are equal { = 0}, First value is greater {>0}
         //boolean value = invoiceProcess.getAmount().compareTo(invoiceProcess.getAmountTendered()) < 0;
         if (result.hasErrors()) {
@@ -178,43 +181,51 @@ public class InvoiceProcessController {
         //find patient already in or not in system
         if (patientService.search(invoiceProcess.getPatient()).isEmpty()) {
             // new patient registered  with email and send email with his details
-            if (invoiceProcess.getPatient().getEmail() != null) {
+            if (invoiceProcess.getPatient().getEmail() != null && invoiceProcess.getPatient().getId() == null) {
                 String message = "Welcome to Excellent Health Solution \n " +
-                        "Your registration number is " + invoiceProcess.getPatient().getNumber() +
-                        "\nYour Details are" +
-                        "\n " + invoiceProcess.getPatient().getTitle().getTitle() + " " + invoiceProcess.getPatient().getName() +
-                        "\n " + invoiceProcess.getPatient().getNic() +
-                        "\n " + invoiceProcess.getPatient().getDateOfBirth() +
-                        "\n " + invoiceProcess.getPatient().getMobile() +
-                        "\n " + invoiceProcess.getPatient().getLand() +
-                        "\n\n\n\n\n Please inform us to if there is any changes on your details" +
+                        "Your registration number : " + invoiceProcess.getPatient().getNumber() +
+                        "\n\tYour Details are" +
+                        "\n Name : " + invoiceProcess.getPatient().getTitle().getTitle() + " " + invoiceProcess.getPatient().getName() +
+                        "\n Nic : " + invoiceProcess.getPatient().getNic() +
+                        "\n Date of Birth : " + invoiceProcess.getPatient().getDateOfBirth() +
+                        "\n Mobile : " + invoiceProcess.getPatient().getMobile() +
+                        "\n Land : " + invoiceProcess.getPatient().getLand() +
+                        "\n\n Please inform us to if there is any changes on your details" +
                         "\n Kindly request keep your data up to date with us. so we can provide better service for you." +
-                        "\n \n \n   Thank You" +
+                        "\n \t   Thank You" +
                         "\n Excellent Health Solution" +
                         "This is a one way communication email service \n please do not reply";
                 boolean isFlag = emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution ", message);
-                invoiceProcess.getPatient().setCreatedAt(dateTimeAgeService.getCurrentDate());
 
+
+                invoiceProcess.getPatient().setCreatedAt(dateTimeAgeService.getCurrentDate());
+                invoiceProcess.getPatient().setCreatedUser(currentUser);
+
+                patientService.persist(invoiceProcess.getPatient());
+                System.out.println("new patient" + message);
             } else {
                 // if patient already in system and some changed apply to his details
                 invoiceProcess.getPatient().setUpdatedAt(dateTimeAgeService.getCurrentDate());
+                invoiceProcess.getPatient().setUpDateUser(currentUser);
+                invoiceProcess.getPatient().setCreatedUser(invoiceProcess.getPatient().getCreatedUser());
                 // if update patient details / and if patient have email send patient new detals
                 if (invoiceProcess.getPatient().getEmail() != null) {
                     String message = "Welcome to Excellent Health Solution \n " +
-                            "Your detail is updated" +
-                            "\nYour Details are" +
-                            "\n " + invoiceProcess.getPatient().getTitle().getTitle() + " " + invoiceProcess.getPatient().getName() +
-                            "\n " + invoiceProcess.getPatient().getNic() +
-                            "\n " + invoiceProcess.getPatient().getDateOfBirth() +
-                            "\n " + invoiceProcess.getPatient().getMobile() +
-                            "\n " + invoiceProcess.getPatient().getLand() +
-                            "\n\n\n\n\n Please inform us to if there is any changes on your details" +
+                            "\nYour detail is updated" +
+                            "\n\nYour Details are" +
+                            "\n Name : " + invoiceProcess.getPatient().getTitle().getTitle() + " " + invoiceProcess.getPatient().getName() +
+                            "\n Nic : " + invoiceProcess.getPatient().getNic() +
+                            "\n Date of Birth : " + invoiceProcess.getPatient().getDateOfBirth() +
+                            "\n Mobile : " + invoiceProcess.getPatient().getMobile() +
+                            "\n Land : " + invoiceProcess.getPatient().getLand() +
+                            "\n\n\n Please inform us to if there is any changes on your details" +
                             "\n Kindly request keep your data up to date with us. so we can provide better service for you." +
-                            "\n \n \n   Thank You" +
+                            "\n \t   Thank You" +
                             "\n Excellent Health Solution";
                     boolean isFlag = emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution (don not reply)", message);
 
-
+                    patientService.persist(invoiceProcess.getPatient());
+                    System.out.println(message);
                 }
             }
         }
@@ -234,8 +245,6 @@ public class InvoiceProcessController {
         }
 // to make new invoice
         Invoice invoice = new Invoice();
-//To take user
-        User currentUser = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
 
         //Payment method is CASH
         if (invoiceProcess.getPaymentMethod() != PaymentMethod.CASH) {
@@ -291,9 +300,6 @@ public class InvoiceProcessController {
             }
         }
 
-        //System.out.println(newInvoiceHasLabTestNumber+" lab test number");
-
-
         // create new object and save
         InvoiceHasLabTest invoiceHasLabTest = new InvoiceHasLabTest();
 
@@ -348,17 +354,36 @@ public class InvoiceProcessController {
             //to print invoice
             boolean isFlag = invoiceService.createPdf(invoice, context, request, response);
             if (isFlag) {
-                String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoice.getPatient().getTitle().getTitle() + "." + invoice.getPatient().getName() + "-invoice" + ".pdf");
-                System.out.println(fullPath + "this is from invoice process pdf file path");
-                boolean download = fileHandelService.fileDownload(fullPath, response, invoice.getPatient().getTitle().getTitle() + " " + invoice.getPatient().getName() + "invoice" + ".pdf");
-                if (download) {
+                String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoice.getPatient().getTitle().getTitle() + "" + invoice.getPatient().getName() + "_invoice" + ".pdf");
+                //boolean download =
+
+               // fileHandelService.fileDownload(fullPath, response, invoice.getPatient().getTitle().getTitle() + "" + invoice.getPatient().getName() + "_invoice" + ".pdf");
+
+                /* if (download) {
                     return "redirect:/invoiceProcess";
-                }
+                }*/
+               model.addAttribute("fileName",fullPath);
+                System.out.println("come to model");
+               return "index";
             }
         }
-
-
         return "redirect:/invoiceProcess";
     }
 
+
 }
+
+
+    /*@RequestMapping(value = "/pdfreport", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
+    public void citiesReport(Invoice invoice) {
+
+        ByteArrayInputStream bis =invoiceService.createPdf(invoice, context);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename="+"/resources/report/" + invoice.getPatient().getTitle().getTitle() + "." + invoice.getPatient().getName() + "-invoice" + ".pdf");
+        ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
+    }*/
+

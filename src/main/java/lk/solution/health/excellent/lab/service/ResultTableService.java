@@ -1,5 +1,6 @@
 package lk.solution.health.excellent.lab.service;
 
+import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
 import lk.solution.health.excellent.util.interfaces.AbstractService;
 import lk.solution.health.excellent.lab.dao.ResultTableDao;
 import lk.solution.health.excellent.lab.entity.ResultTable;
@@ -60,5 +61,9 @@ public class ResultTableService implements AbstractService<ResultTable, Integer>
     @Transactional
     public ResultTable findLastResult(){
         return resultTableDao.findFirstByOrderByIdDesc();
+    }
+
+    public List<ResultTable> findByInvoiceHasLabTest(InvoiceHasLabTest invoiceHasLabTest) {
+        return resultTableDao.findByInvoiceHasLabTest(invoiceHasLabTest);
     }
 }

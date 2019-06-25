@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "invoice")
@@ -22,6 +21,8 @@ import java.util.Objects;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt","balance","discountAmount","bankName","cardNumber"}, allowGetters = true)
 public class Invoice {
     @Id
@@ -98,19 +99,5 @@ public class Invoice {
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "invoice_id")
     private List<InvoiceHasLabTest> invoiceHasLabTests = new ArrayList<>();
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Invoice)) return false;
-        Invoice invoice = (Invoice) obj;
-        return Objects.equals(id, invoice.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
 
 }

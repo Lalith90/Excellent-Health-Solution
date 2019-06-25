@@ -11,8 +11,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
 
-@Configuration
-@EnableWebSecurity
+
 /*
  *
  * using this we can manage method access
@@ -20,12 +19,12 @@ import javax.sql.DataSource;
  *   @PreAuthorize("hasAnyRole('ADMIN')") ..........like
  * */
 
-
+@Configuration
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     private final DataSource dataSource;
-
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
@@ -72,11 +71,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //Need to login for access those are
                 .antMatchers("/employee/**").hasRole("MANAGER")
                 .antMatchers("/user/**").hasRole("MANAGER")
-                .antMatchers("/invoice/search").hasAnyRole("MLT1", "MLT2")
-                .antMatchers("/invoice/{id}").hasAnyRole("MLT1", "MLT2")
-                .antMatchers("/invoice/find").hasAnyRole("MLT1", "MLT2")
+                .antMatchers("/invoice/search").hasAnyRole("MLT1", "MLT2","CASHIER", "MANAGER")
+                .antMatchers("/invoice/{id}").hasAnyRole("MLT1", "MLT2","CASHIER", "MANAGER")
+                .antMatchers("/invoice/find").hasAnyRole("MLT1", "MLT2","CASHIER", "MANAGER")
                 .antMatchers("/invoiceProcess").hasAnyRole("CASHIER", "MANAGER")
-                .antMatchers("/invoice/**").hasAnyRole("CASHIER", "MANAGER")
                 .antMatchers("/doctor/**").hasAnyRole("CASHIER", "MANAGER")
                 .antMatchers("/patient/**").hasAnyRole("MANAGER", "CASHIER")
                 .antMatchers("/lab/authorize/**").hasRole("MLT1")
@@ -96,9 +94,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //Logout controlling
                 .logout()
                 .clearAuthentication(true)
+                .invalidateHttpSession(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/index")
-                .invalidateHttpSession(true)
                 .and()
                 .exceptionHandling()
                 .and()

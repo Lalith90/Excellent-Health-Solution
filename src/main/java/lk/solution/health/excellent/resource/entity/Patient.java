@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lk.solution.health.excellent.general.entity.Enum.Gender;
 import lk.solution.health.excellent.general.entity.Enum.Title;
 import lk.solution.health.excellent.transaction.entity.Invoice;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -17,13 +16,15 @@ import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "patient")
 @Getter
 @Setter
-@JsonIgnoreProperties(value = {"createdAt", "updatedAt","createdUser", "upDateUser"},allowGetters = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
+@JsonIgnoreProperties(value = {"createdAt", "updatedAt", "createdUser", "upDateUser"}, allowGetters = true)
 @JsonFilter("Patient")
 public class Patient {
     @Id
@@ -31,7 +32,6 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Basic
     @Column(name = "number", nullable = false, unique = true)
     @NotNull(message = "This code is already add or enter incorrectly")
     private String number;
@@ -41,7 +41,6 @@ public class Patient {
     @Enumerated(EnumType.STRING)
     private Title title;
 
-    @Basic
     @Column(name = "name", nullable = false, length = 45)
     @Pattern(regexp = "^([a-zA-Z\\s]{4,})$", message = " This name can not accept, Please check and try again, Name should be included more than four ccharacter")
     private String name;
@@ -51,7 +50,6 @@ public class Patient {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Basic
     @Column(name = "nic", length = 12, unique = true)
     @Pattern(regexp = "^([\\d]{9}[v|V|x|X])$|^([\\d]{12})$", message = "NIC number is contained numbers between 9 and X/V or 12 ")
     private String nic;
@@ -62,17 +60,14 @@ public class Patient {
     @NotNull(message = "Birthday should be included")
     private LocalDate dateOfBirth;
 
-    @Basic
     @Column(name = "email", length = 45)
     @Email(message = "Please provide a valid Email")
     private String email;
 
-    @Basic
     @Column(name = "mobile", length = 10)
     @Min(value = 9, message = "Should be needed to enter valid mobile number")
     private String mobile;
 
-    @Basic
     @Column(name = "land", length = 10)
     private String land;
 
@@ -88,61 +83,7 @@ public class Patient {
     @JoinColumn(name = "patient_id")
     private List<Invoice> invoices = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.MERGE,
-                    CascadeType.PERSIST,
-                    CascadeType.REFRESH,
-                    CascadeType.DETACH})
+    @ManyToOne
     private User createdUser, upDateUser;
 
-    public Patient() {
-     }
-
-    public Patient(@NotNull(message = "This code is already add or enter incorrectly") String number, Title title, @Pattern(regexp = "^([a-zA-Z\\\\s]{3,})$", message = " This name can not accept, Please check and try again") String name, Gender gender, @Pattern(regexp = "^([\\\\d]{9}[v|V|x|X])$|^([\\\\d]{12})$", message = "NIC number is contained numbers between 9 and X/V or 12 ") String nic, @NotNull(message = "Birthday should be included") LocalDate dateOfBirth, @Email(message = "Please provide a valid Email") String email, @Min(value = 9, message = "Should be needed to enter valid mobile number") String mobile, String land, LocalDate createdAt, LocalDate updatedAt, User createdUser, User upDateUser) {
-        this.number = number;
-        this.title = title;
-        this.name = name;
-        this.gender = gender;
-        this.nic = nic;
-        this.dateOfBirth = dateOfBirth;
-        this.email = email;
-        this.mobile = mobile;
-        this.land = land;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.createdUser = createdUser;
-        this.upDateUser = upDateUser;
-    }
-
-    @Override
-    public String toString() {
-        return "Patient{" +
-                "id=" + id +
-                ", number='" + number + '\'' +
-                ", title=" + title +
-                ", name='" + name + '\'' +
-                ", gender=" + gender +
-                ", nic='" + nic + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", email='" + email + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", land='" + land + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Patient)) return false;
-        Patient patient = (Patient) obj;
-        return Objects.equals(id, patient.id);
-}
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

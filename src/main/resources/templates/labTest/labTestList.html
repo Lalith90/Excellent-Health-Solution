@@ -73,6 +73,7 @@
                 <form class="form" id="workSheet" th:action="@{/lab/saveWorkSheetPatient}" th:method="POST"
                       th:object="${searchProcess}">
                     <div class="container-fluid">
+                        <div class="table-responsive">
                         <table class="table table-striped table-condensed" id="myTable">
                             <thead>
                             <tr>
@@ -135,6 +136,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        </div>
                         <div class="row text-center" th:if="${buttonStatus==true}">
                             <div class="alert alert-warning alert-dismissable fade in">
                                 <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>

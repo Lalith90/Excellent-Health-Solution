@@ -12,10 +12,16 @@ $(document).ready(function () {
     /*//Nav bar properties - end//*/
 
     /* selected field colour and add selected lab test table - start*/
-    $('#myTable tbody tr').bind('click', function (e) {
+    $('#myTable tbody tr ').bind('click', function (e) {
+
+//todo --> need to create checkbox select or notR
+
         $(e.currentTarget).children('th').css('background-color', '#00FFFF');
+
         checkLabTestInArrayOrNot($(e.currentTarget).children('th'));
     });
+
+
     /* selected field colour and add selected lab test table - end*/
     /*//--------------- data table short using - data table plugin ------- start //*/
     $("#myTable").DataTable({
@@ -50,7 +56,8 @@ $(document).ready(function () {
 // regex
 let nicRegex = /^([0-9]{9}[vV|xX])|^([0-9]{12})$/;
 let mobileRegex = /^([0][7][\d]{8}$)|^([7][\d]{8})$/;
-let nameRegex = /^[a-zA-Z]{5}[ a-zA-Z]+$/;
+let landRegex = /^([0][\d]{9}])|([\d]{9})$/;
+let nameRegex = /^[a-zA-Z]{2}[ a-zA-Z]+$/;
 let numberRegex = /^([eE][hH][sS][\d]+)$/;
 let invoiceNumberRegex = /^[0-9]{10}$/;
 
@@ -206,7 +213,7 @@ function calculateGender(nic) {
         if (nic[9] === "v" || nic[9] === "x") {
             swal({
                 title: ` Please change "v" or "x" to "V" or "X" `,
-                icon:"warning",
+                icon: "warning",
             });
         }
         if (+nic.substr(2, 3) < 500) gender = 'MALE';
@@ -232,7 +239,7 @@ $("#mobile").bind("keyup", function () {
 });
 $("#land").bind("keyup", function () {
     let land = $(this).val();
-    if (mobileRegex.test(land)) {
+    if (landRegex.test(land)) {
         backgroundColourChangeGood($(this));
     } else {
         backgroundColourChangeBad($(this));

@@ -62,17 +62,16 @@ public class InvoiceProcessRestController {
     //send patient details  send to front end
     @GetMapping("/patientFind")
     public MappingJacksonValue getPatient(@PathParam("Patient") Patient patient) {
-        //Get All Patient
-        List<Patient> patients = patientService.findAll();
 
         List<Patient> patientList = new ArrayList<>();
+
         if (patient.getNumber() != null) {
             patientList.add(patientService.findByNumber(patient.getNumber()));
         }
         if (patient.getNic() != null) {
             patientList.add(patientService.findByNIC(patient.getNic()));
         }
-        if (patient.getMobile() != null) {
+        if (patient.getMobile() != null && patient.getMobile().length() !=0) {
             patientList.addAll(patientService.findByMobile(patient.getMobile()));
         }
         if (patientList.isEmpty()) {
