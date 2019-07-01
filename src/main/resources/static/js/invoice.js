@@ -513,10 +513,10 @@ function fillPatientDetailsForm(patientInArray) {
 $("#amountTendered").on("keyup", function () {
     $("#balance").val($("#amountTendered").val() - $("#amount").val());
 
-    if ($("#balance").val() < 0) {
+    if ($("#balance").val() < 0 ) {
         backgroundColourChangeBad($(this));
         contentHide(document.getElementById("btnSubmitInvoice"));
-    } else {
+    } else{
         backgroundColourChangeGood($(this));
         contentShow(document.getElementById("btnSubmitInvoice"));
         $("#btnSubmitInvoice").attr('class', 'btn btn-success');

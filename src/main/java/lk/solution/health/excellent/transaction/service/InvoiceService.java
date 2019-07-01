@@ -184,6 +184,7 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
         return labTestTable;
     }
 
+
     public boolean createPdf(Invoice invoice, ServletContext context, HttpServletRequest request, HttpServletResponse response) {
 
         CollectingCenter collectingCenter = collectingCenterService.firstCollectingCenter();
@@ -199,7 +200,7 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
 
             Document document = new Document(PageSize.A5, 15, 15, 15, 0);
 
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file + "/" + invoice.getPatient().getTitle().getTitle() + "" + invoice.getPatient().getName() + "_invoice" + ".pdf"));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file + "/" + invoice.getNumber() + "_invoice.pdf"));
 
             document.open();
             //All front
@@ -389,30 +390,3 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
 
 
 }
-/*
-    // Creating a PdfDocument object
-    String dest = "C:/itextExamples/addingTable.pdf";
-                        PdfWriter writer = new PdfWriter(dest);
-
-    // Creating a PdfDocument object
-                        PdfDocument pdf = new PdfDocument(writer);
-
-    // Creating a Document object
-                        Document doc = new Document(pdf);
-
-    // Creating a table
-                        float [] pointColumnWidths = {150F, 150F, 150F};
-                        Table table = new Table(pointColumnWidths);
-
-// Adding cells to the table
-                      table.addCell(new Cell().add("Name"));
-                      table.addCell(new Cell().add("Raju"));
-                      table.addCell(new Cell().add("Id"));
-                      table.addCell(new Cell().add("1001"));
-                      table.addCell(new Cell().add("Designation"));
-                      table.addCell(new Cell().add("Programmer"));
-
-// Adding Table to document
-                    doc.add(table);
-// Closing the document
-                    doc.close();*/

@@ -60,6 +60,7 @@ let landRegex = /^([0][\d]{9}])|([\d]{9})$/;
 let nameRegex = /^[a-zA-Z]{2}[ a-zA-Z]+$/;
 let numberRegex = /^([eE][hH][sS][\d]+)$/;
 let invoiceNumberRegex = /^[0-9]{10}$/;
+let onlyNumberRegex = /^[0-9]*$/;
 
 
 /*//Nic - data of birth - start//*/

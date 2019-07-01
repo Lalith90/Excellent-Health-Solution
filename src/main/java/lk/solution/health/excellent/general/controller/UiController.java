@@ -12,6 +12,6 @@ public class UiController {
 
     @GetMapping("/index")
     public String index() {
-        return "index1";
+        return "index";
     }
 }

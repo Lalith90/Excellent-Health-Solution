@@ -106,7 +106,7 @@ public class InvoiceProcessController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String newInvoice(@Valid @ModelAttribute InvoiceProcess invoiceProcess, BindingResult result, Model model, RedirectAttributes attributes,
+    public String newInvoice(@Valid @ModelAttribute InvoiceProcess invoiceProcess, BindingResult result, Model model, RedirectAttributes redirectAttributes,
                              HttpServletRequest request, HttpServletResponse response) {
         //To take user
         User currentUser = userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -173,7 +173,7 @@ public class InvoiceProcessController {
         //Patient already in system check some details check to re-verify
         if (invoiceProcess.getPatient().getId() == null) {
             if (patientService.findByNIC(invoiceProcess.getPatient().getNic()) != null) {
-                attributes.addFlashAttribute("patientDetailsChange", true);
+                redirectAttributes.addFlashAttribute("patientDetailsChange", true);
                 return "redirect:/invoiceProcess";
             }
 
@@ -353,23 +353,29 @@ public class InvoiceProcessController {
         } else {
             //to print invoice
             boolean isFlag = invoiceService.createPdf(invoice, context, request, response);
-            if (isFlag) {
-                String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoice.getPatient().getTitle().getTitle() + "" + invoice.getPatient().getName() + "_invoice" + ".pdf");
-                //boolean download =
+            //invoiceService.createPdf(invoice, context);
+           // if (isFlag) {
+              //  String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoice.getNumber()+"_invoice.pdf");
+               // boolean download = fileHandelService.fileDownload(fullPath, response,invoice.getNumber()+ "_invoice.pdf");
 
-               // fileHandelService.fileDownload(fullPath, response, invoice.getPatient().getTitle().getTitle() + "" + invoice.getPatient().getName() + "_invoice" + ".pdf");
-
-                /* if (download) {
-                    return "redirect:/invoiceProcess";
+                 /*if (download) {
+                     System.out.println("download is ok");
+                    return "text";
                 }*/
-               model.addAttribute("fileName",fullPath);
-                System.out.println("come to model");
-               return "index";
-            }
+              /* model.addAttribute("fileName",invoice.getNumber());
+
+                System.out.println("come to model");*/
+              redirectAttributes.addFlashAttribute("fileName",invoice.getNumber());
+               return "redirect:/invoiceProcess/text";
+           // }
         }
         return "redirect:/invoiceProcess";
     }
 
+@GetMapping("/text")
+    public String showText(){
+        return "text";
+    }
 
 }
 
