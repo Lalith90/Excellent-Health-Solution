@@ -2,6 +2,7 @@ package lk.solution.health.excellent.transaction.service;
 
 
 import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfAction;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -29,8 +30,6 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
@@ -185,7 +184,7 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
     }
 
 
-    public boolean createPdf(Invoice invoice, ServletContext context, HttpServletRequest request, HttpServletResponse response) {
+    public boolean createPdf(Invoice invoice, ServletContext context) {
 
         CollectingCenter collectingCenter = collectingCenterService.firstCollectingCenter();
 
@@ -202,10 +201,19 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
 
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file + "/" + invoice.getNumber() + "_invoice.pdf"));
 
+            // set open action js to pdf document {when document load create print function }
+          /*  PdfAction action = new PdfAction(PdfAction.PRINTDIALOG);
+            writer.setOpenAction(action);*/
+
+            writer.setOpenAction(PdfAction.javaScript("this.print(true);\r this.onafterprint.close(true)", writer));
+
+
+           //PdfAction pdfAction = new PdfAction(PdfAction.createLaunch("","",true));
+
             document.open();
             //All front
             Font mainFont = FontFactory.getFont("Arial", 12, BaseColor.BLACK);
-            Font secondaryFont = FontFactory.getFont("Arial", 9, BaseColor.BLACK);
+            Font secondaryFont = FontFactory.getFont("Arial", 8, BaseColor.BLACK);
             Font highLiltedFont = FontFactory.getFont(FontFactory.TIMES_BOLD);
 
 
@@ -221,11 +229,11 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
             commonStyleForParagraph(paragraph2);
             document.add(paragraph2);
 
-            Paragraph paragraph3 = new Paragraph("Mobile : " + collectingCenter.getMobile() + " Land : " + collectingCenter.getLand(), secondaryFont);
+            Paragraph paragraph3 = new Paragraph("M : " + collectingCenter.getMobile() + " L : " + collectingCenter.getLand(), secondaryFont);
             commonStyleForParagraph(paragraph3);
             document.add(paragraph3);
 
-            Paragraph paragraph4 = new Paragraph("Email : " + collectingCenter.getEmail(), secondaryFont);
+            Paragraph paragraph4 = new Paragraph("E : " + collectingCenter.getEmail(), secondaryFont);
             commonStyleForParagraph(paragraph4);
             document.add(paragraph4);
 

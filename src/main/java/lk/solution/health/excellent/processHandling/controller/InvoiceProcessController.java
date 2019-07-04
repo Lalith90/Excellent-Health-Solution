@@ -352,11 +352,11 @@ public class InvoiceProcessController {
             boolean isFlag = emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution ", message);
         } else {
             //to print invoice
-            boolean isFlag = invoiceService.createPdf(invoice, context, request, response);
+            boolean isFlag = invoiceService.createPdf(invoice, context);
             //invoiceService.createPdf(invoice, context);
-           // if (isFlag) {
-              //  String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoice.getNumber()+"_invoice.pdf");
-               // boolean download = fileHandelService.fileDownload(fullPath, response,invoice.getNumber()+ "_invoice.pdf");
+            // if (isFlag) {
+            //  String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoice.getNumber()+"_invoice.pdf");
+            // boolean download = fileHandelService.fileDownload(fullPath, response,invoice.getNumber()+ "_invoice.pdf");
 
                  /*if (download) {
                      System.out.println("download is ok");
@@ -365,15 +365,17 @@ public class InvoiceProcessController {
               /* model.addAttribute("fileName",invoice.getNumber());
 
                 System.out.println("come to model");*/
-              redirectAttributes.addFlashAttribute("fileName",invoice.getNumber());
-               return "redirect:/invoiceProcess/text";
-           // }
+            // }
+            if (isFlag) {
+                redirectAttributes.addFlashAttribute("fileName", invoice.getNumber());
+                return "redirect:/invoiceProcess/text";
+            }
         }
         return "redirect:/invoiceProcess";
     }
 
-@GetMapping("/text")
-    public String showText(){
+    @GetMapping("/text")
+    public String showText() {
         return "text";
     }
 

@@ -118,6 +118,8 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
 //A4 is (595px {} -> width, 842px -> height);
         //6.5cm top ==
         //3.3cm bottom
+        // left/right margin 1.5cm
+        // { 1-> 6cm , 2-> 3cm, 3-> 2cm, 4-> , 5-> }
         Document document = new Document(PageSize.A4, 25, 25, 184, 94);
 
         try {

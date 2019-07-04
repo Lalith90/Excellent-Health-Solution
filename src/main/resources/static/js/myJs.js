@@ -302,14 +302,14 @@ function backgroundColourChangeNothingToChange(id) {
 
 // el (id of content)is variable that need to give when function call
 function printContent(el) {
-    // restorepage = current document
-    let restorepage = document.body.innerHTML;
-    // printcontent = need to print area that area must enclosed with div
+    // restore page = current document
+    let restorePage = document.body.innerHTML;
+    // print content = need to print area that area must enclosed with div
     document.body.innerHTML = document.getElementById(el).innerHTML;
     //called javascript print function
     window.print();
     //after print set current web page
-    document.body.innerHTML = restorepage;
+    document.body.innerHTML = restorePage;
 }
 
 //AJAX FUNCTION CALL

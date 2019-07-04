@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -28,12 +27,15 @@ public class FileHandelService {
     }
 
     @RequestMapping(value = "/getFile/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-    @ResponseBody
     public void fileDownload(@PathVariable("id") int id, HttpServletResponse response, HttpServletRequest request) {
+
+
+        // todo -> this is the place which I was strutted
 
         String fullPath = request.getServletContext().getRealPath("/resources/report/" + id + "_invoice.pdf");
         File file = new File(fullPath);
         final int BUFFER_SIZE = 4096;
+
         if (file.exists()) {
             try {
                 FileInputStream inputStream = new FileInputStream(file);
@@ -51,11 +53,10 @@ public class FileHandelService {
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
                     outputStream.write(buffer, 0, bytesRead);
                 }
-
-                response.setStatus(200);
-               // response.sendRedirect("/home");
                 inputStream.close();
                 outputStream.close();
+                response.setStatus(200);
+                //response.sendRedirect("/home");
                 file.delete();
 
             } catch (Exception e) {

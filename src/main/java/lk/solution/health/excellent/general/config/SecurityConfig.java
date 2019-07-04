@@ -54,9 +54,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         /* for developing easy to give permission all link*/
 
-        http.
-                authorizeRequests()
+        http
+        //To display pdf in same html page i frame
+                .headers()
+                .frameOptions()
+                .sameOrigin()
+                .and()
                 //Always users can access without login
+                .authorizeRequests()
                 .antMatchers(
                         "/index",
                         "/favicon.ico",
