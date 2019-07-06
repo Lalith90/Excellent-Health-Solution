@@ -1,0 +1,12 @@
+
+asquid:S1854ˆ"BRemove this useless assignment to local variable "highLiltedFont".(ãü¨8–³÷Ï¸-
+nsquid:UnusedPrivateMethodl"BRemove this unused private "commonStyleForPdfPCellLastOne" method.(ÅŒ‹Ó8–³÷Ï¸-
+osquid:CommentedOutCodeLineœ"<This block of commented-out lines of code should be removed.(¿“ïıÿÿÿÿ8–³÷Ï¸-
+osquid:CommentedOutCodeLineæ"<This block of commented-out lines of code should be removed.(Ö”§‡øÿÿÿÿ8–³÷Ï¸-
+Qsquid:S1135ê"2Complete the task associated to this TODO comment.(ã¼Ò‘8–³÷Ï¸-
+qsquid:S3776Ş"RRefactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.(æÉ‹ª8¦œÍĞ¸-
+nsquid:CommentedOutCodeLinev"<This block of commented-out lines of code should be removed.(Ö”§‡øÿÿÿÿ8–³÷Ï¸-
+Rsquid:S1481ˆ"3Remove this unused "highLiltedFont" local variable.(ãü¨8–³÷Ï¸-
+osquid:CommentedOutCodeLineé"<This block of commented-out lines of code should be removed.(·Ëâµøÿÿÿÿ8–³÷Ï¸-
+qsquid:S00117ğ"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(²øş8–³÷Ï¸-
+Isquid:S1172s"&Remove these unused method parameters.(ú°ğôıÿÿÿÿ8–³÷Ï¸-

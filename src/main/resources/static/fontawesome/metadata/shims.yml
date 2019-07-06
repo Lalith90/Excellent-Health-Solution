@@ -183,7 +183,7 @@ long-arrow-up:
 map-marker:
   name: map-marker-alt
 meanpath:
-  name: fonts-awesome
+  name: font-awesome
   prefix: fab
 mobile:
   name: mobile-alt

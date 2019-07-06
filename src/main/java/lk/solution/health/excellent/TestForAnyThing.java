@@ -11,10 +11,10 @@ import java.net.URI;
 
 
 @Controller
-public class TestForURL {
+public class TestForAnyThing {
     private final Environment environment;
 
-    public TestForURL(Environment environment) {
+    public TestForAnyThing(Environment environment) {
         this.environment = environment;
     }
 

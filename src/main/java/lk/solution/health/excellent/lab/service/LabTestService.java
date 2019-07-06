@@ -111,15 +111,6 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
 
 
     public boolean createPdf(InvoiceHasLabTest invoiceHasLabTest, ServletContext context) {
-//equation = inch * 72point
-        //1 inch == 2.54cm
-//A4 is (595px {} -> width, 842px -> height);
-        //6.5cm top ==
-        //3.3cm bottom
-        // left/right margin 1.5cm
-        // { 1-> 6cm , 2-> 3cm, 3-> 2cm, 4-> , 5-> }
-        Document document = new Document(PageSize.A4, 25, 25, 184, 94);
-
         try {
             String filePath = context.getRealPath("/resources/report");
             File file = new File(filePath);
@@ -127,7 +118,14 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
             if (!exists) {
                 new File(filePath).mkdirs();
             }
-
+            //equation = inch * 72point
+            //1 inch == 2.54cm
+//A4 is (595px {} -> width, 842px -> height);
+            //6.5cm top ==
+            //3.3cm bottom
+            // left/right margin 1.5cm
+            // { 1-> 6cm , 2-> 3cm, 3-> 2cm, 4-> , 5-> }
+            Document document = new Document(PageSize.A4, 25, 25, 184, 94);
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file + "/" + invoiceHasLabTest.getNumber() + ".pdf"));
             document.open();
 
@@ -214,10 +212,12 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
 
             document.close();
             writer.close();
+            System.out.println("ammo athi");
             return true;
 
 
         } catch (Exception e) {
+            System.out.println("kelawela " + e.toString());
             logger.error(e.toString());
             return false;
         }

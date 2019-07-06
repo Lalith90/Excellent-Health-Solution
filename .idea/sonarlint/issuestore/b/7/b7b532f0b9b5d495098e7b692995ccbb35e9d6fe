@@ -1,0 +1,12 @@
+
+fsquid:S4488/"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(ü½ÉÙıÿÿÿÿ
+_squid:S4488A"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ğÄâÿ
+dsquid:S4488H"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(¤¯­åÿÿÿÿÿ
+_squid:S4488N"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Ä¯×
+asquid:S4488T"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(æã—µ
+lsquid:S1192+"PDefine a constant instead of duplicating this literal "invoice/invoice" 3 times.(’Â¹úÿÿÿÿ
+`squid:S1192*"IDefine a constant instead of duplicating this literal "invoices" 3 times.(¡ŸÃ­
+bsquid:CommentedOutCodeLine&"<This block of commented-out lines of code should be removed.(Ÿ“—û
+T
+squid:S106("9Replace this use of System.out or System.err by a logger.(çäÜøÿÿÿÿ
+\squid:S4684U"@Replace this persistent entity with a simple POJO or DTO object.(’àŞĞÿÿÿÿÿ

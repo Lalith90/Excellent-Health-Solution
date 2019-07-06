@@ -213,7 +213,7 @@ $('#cmbMedicalPackage').on("change", function cmbMedicalPackageDetailGet() {
     // ajax response
     let givenData = getData(`${currentURL}/medicalPackageLabTestGet/${selectedMedicalPackageId}`).then(data => givenData = data);
 
-    selectedMedicalPackageNameAndPrice = parseFloat($("#cmbMedicalPackage option:selected").invoicePrint());
+    selectedMedicalPackageNameAndPrice = parseFloat($("#cmbMedicalPackage option:selected").text());
 
     Promise.resolve(givenData).then(function (val) {
         medicalPackageLabTestSet(val);
@@ -528,7 +528,7 @@ $("#amountTendered").on("keyup", function () {
 
 //discount ratio apply or not
 $("#cmbDiscountRatio").on("change", function () {
-    $("#amount").val($("#totalPrice").val() - ($("#totalPrice").val() * (parseFloat($("#cmbDiscountRatio option:selected").invoicePrint()) / 100)));
+    $("#amount").val($("#totalPrice").val() - ($("#totalPrice").val() * (parseFloat($("#cmbDiscountRatio option:selected").text()) / 100)));
 
     if  ($("#amountTendered").val()!==""){
 

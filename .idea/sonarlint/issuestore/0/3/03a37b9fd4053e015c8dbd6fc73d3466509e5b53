@@ -1,0 +1,35 @@
+
+fsquid:S4488¿"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(äì¢s8ú‘ˆÒ¸-
+osquid:CommentedOutCodeLine«"<This block of commented-out lines of code should be removed.(‚éîþûÿÿÿÿ8ú‘ˆÒ¸-
+vsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.(›è‰ˆøÿÿÿÿ8ú‘ˆÒ¸-
+`squid:S1854×"<Remove this useless assignment to local variable "fullPath".(–›ê¥ùÿÿÿÿ8ú‘ˆÒ¸-
+isquid:CommentedOutCodeLinej"<This block of commented-out lines of code should be removed.(™†ÿŠ8ú‘ˆÒ¸-
+nsquid:S4488Ž"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(×ü„íýÿÿÿÿ8ú‘ˆÒ¸-
+asquid:S4488V"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(ÔËÐò
+ssquid:S00100ç"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‹üÂþÿÿÿÿ8ú‘ˆÒ¸-
+gsquid:S4488‰"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ÌòËÉ8ú‘ˆÒ¸-
+lsquid:S4488ý"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(²Þ’Òüÿÿÿÿ8ú‘ˆÒ¸-
+gsquid:S4488æ"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(œÅâý8ú‘ˆÒ¸-
+gsquid:S4488Ð"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Ü£æÌ8ú‘ˆÒ¸-
+\
+squid:S106§"9Replace this use of System.out or System.err by a logger.(ÍñÌüÿÿÿÿÿ8ú‘ˆÒ¸-
+nsquid:S4488å"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(¿öõƒüÿÿÿÿ8ú‘ˆÒ¸-
+fsquid:S4488Ÿ"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(’üò8ú‘ˆÒ¸-
+Lsquid:S10680"5Remove this unused "fileHandelService" private field.(ü¯…§
+Qsquid:S1481×"-Remove this unused "fullPath" local variable.(–›ê¥ùÿÿÿÿ8ú‘ˆÒ¸-
+ksquid:S4488y"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ñ‰ üÿÿÿÿ8ú‘ˆÒ¸-
+isquid:S4488¥"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(‚üŒÛ8ú‘ˆÒ¸-
+isquid:S1192M"RDefine a constant instead of duplicating this literal "invoiceHasLabTest" 7 times.(ú­žÒ
+Psquid:S1481i"-Remove this unused "fullPath" local variable.(–›ê¥ùÿÿÿÿ8ú‘ˆÒ¸-
+nsquid:S4488í"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(éÇ¤ûÿÿÿÿ8ú‘ˆÒ¸-
+lsquid:S4488Û"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ÕÕôÄúÿÿÿÿ8ú‘ˆÒ¸-
+lsquid:S1192R"UDefine a constant instead of duplicating this literal "/labTest/labTestList" 4 times.(ŒÅïä
+csquid:S1192O"MDefine a constant instead of duplicating this literal "buttonStatus" 4 times.(ø¬¶a
+lsquid:S4488Í"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ì›…´øÿÿÿÿ8ú‘ˆÒ¸-
+Ysquid:S001077"BConstructor has 12 parameters, which is greater than 7 authorized.(Áƒd
+Ksquid:S1611J"/Remove the parentheses around the "x" parameter(ï»¾•úÿÿÿÿ
+wsquid:S00120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¥Çˆ¹øÿÿÿÿ
+gsquid:S4488ƒ"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(»­è£8ú‘ˆÒ¸-
+_squid:S4488E"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ÄÀ®¨
+_squid:S1854i"<Remove this useless assignment to local variable "fullPath".(–›ê¥ùÿÿÿÿ8ú‘ˆÒ¸-
+jsquid:CommentedOutCodeLineØ"<This block of commented-out lines of code should be removed.(™†ÿŠ8ú‘ˆÒ¸-

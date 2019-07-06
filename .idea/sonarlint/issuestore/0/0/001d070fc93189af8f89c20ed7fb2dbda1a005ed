@@ -1,0 +1,12 @@
+
+fsquid:S4488E"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(î½¾âùÿÿÿÿ
+esquid:S1192,"IDefine a constant instead of duplicating this literal "employee" 4 times.(¯á¥¿üÿÿÿÿ
+\squid:S4684F"@Replace this persistent entity with a simple POJO or DTO object.(Ìò½üÿÿÿÿ
+asquid:S11923"JDefine a constant instead of duplicating this literal "addStatus" 3 times.(›÷œ²
+_squid:S4488a"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Ä¯×
+dsquid:S44889"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Û•ôûÿÿÿÿ
+_squid:S44880"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ñ¯‡¬
+\squid:S4684b"@Replace this persistent entity with a simple POJO or DTO object.(æªÁøÿÿÿÿ
+dsquid:S4488["HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(¤¯­åÿÿÿÿÿ
+dsquid:S11926"MDefine a constant instead of duplicating this literal "user/addUser" 3 times.(ò¥ªÛ
+_squid:S4488)"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ğÄâÿ

@@ -1,0 +1,12 @@
+
+O
+squid:S106="9Replace this use of System.out or System.err by a logger.(úÎá¯
+asquid:S1192+"JDefine a constant instead of duplicating this literal "addStatus" 3 times.(›÷œ²
+\squid:S4684N"@Replace this persistent entity with a simple POJO or DTO object.(«ÒÜûÿÿÿÿ
+_squid:S4488""HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ğÄâÿ
+\squid:S4684:"@Replace this persistent entity with a simple POJO or DTO object.(ÒŠÉºüÿÿÿÿ
+_squid:S4488("HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ñ¯‡¬
+dsquid:S4488G"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(¤¯­åÿÿÿÿÿ
+_squid:S4488M"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Ä¯×
+fsquid:S44889"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(î½¾âùÿÿÿÿ
+dsquid:S4488/"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Û•ôûÿÿÿÿ

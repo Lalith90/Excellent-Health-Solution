@@ -1,0 +1,9 @@
+
+hsquid:CommentedOutCodeLineì"<This block of commented-out lines of code should be removed.(¿“ïýÿÿÿÿ
+^squid:S3457"AFormat specifiers should be used instead of string concatenation.(¢ôÂèÿÿÿÿÿ
+csquid:CommentedOutCodeLineŸ"<This block of commented-out lines of code should be removed.(ƒÍ¿
+Csquid:S1172»"&Remove these unused method parameters.(Áƒ÷ßýÿÿÿÿ
+bsquid:CommentedOutCodeLineŠ"<This block of commented-out lines of code should be removed.(¿Š³=
+U
+squid:S106þ"9Replace this use of System.out or System.err by a logger.(§ÜŠ€ûÿÿÿÿ
+hsquid:CommentedOutCodeLineÄ"<This block of commented-out lines of code should be removed.(—“‡´ùÿÿÿÿ

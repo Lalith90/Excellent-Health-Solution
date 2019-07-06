@@ -5,32 +5,29 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 @Controller
-public class FileHandelController {
-    private static Logger logger = LoggerFactory.getLogger(FileHandelController.class);
+public class MimeTypeFileHandelController {
+    private static Logger logger = LoggerFactory.getLogger(MimeTypeFileHandelController.class);
     private final ServletContext context;
 
     @Autowired
-    public FileHandelController(ServletContext context) {
+    public MimeTypeFileHandelController(ServletContext context) {
         this.context = context;
     }
 
     @RequestMapping(value = "/getFile/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
     public void fileDownload(@PathVariable("id") int id, HttpServletResponse response, HttpServletRequest request) {
 
-
-        // todo -> this is the place which I was strutted
 
         String fullPath = request.getServletContext().getRealPath("/resources/report/" + id + ".pdf");
         File file = new File(fullPath);
@@ -57,14 +54,24 @@ public class FileHandelController {
                 outputStream.close();
                 response.setStatus(200);
                 //response.sendRedirect("/home");
-                file.delete();
+                //  file.delete();
 
             } catch (Exception e) {
                 logger.error("file handler ++" + e.toString());
             }
         }
+    }
+
+    @GetMapping("/imageDisplay")
+    public void showImage(@RequestParam("id") int imageId, HttpServletResponse response)
+            throws IOException {
 
 
+        // Item item = itemService.get(itemId); --> contained class object
+        response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
+        // response.getOutputStream().write(item.getItemImage()); need to get image where store it
+
+        response.getOutputStream().close();
     }
 
 }

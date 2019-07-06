@@ -21,7 +21,6 @@ import lk.solution.health.excellent.transaction.service.InvoiceService;
 import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import lk.solution.health.excellent.util.service.EmailService;
 import lk.solution.health.excellent.util.service.ExceptionService;
-import lk.solution.health.excellent.util.Controller.FileHandelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
@@ -59,18 +59,13 @@ public class InvoiceProcessController {
     private final DiscountRatioService discountRatioService;
     private final MedicalPackageService medicalPackageService;
     private final InvoiceHasLabTestService invoiceHasLabTestService;
-    private final FileHandelService fileHandelService;
     private final ServletContext context;
     private final ConsultationService consultationService;
     private final EmailService emailService;
     private final ExceptionService exceptionService;
 
     @Autowired
-    public InvoiceProcessController(InvoiceService invoiceService, UserService userService, PatientService patientService,
-                                    DoctorService doctorService, LabTestService labTestService, DateTimeAgeService dateTimeAgeService,
-                                    CollectingCenterService collectingCenterService, DiscountRatioService discountRatioService,
-                                    MedicalPackageService medicalPackageService, InvoiceHasLabTestService invoiceHasLabTestService,
-                                    FileHandelService fileHandelService, ServletContext context, ConsultationService consultationService, EmailService emailService, ExceptionService exceptionService) {
+    public InvoiceProcessController(InvoiceService invoiceService, UserService userService, PatientService patientService, DoctorService doctorService, LabTestService labTestService, DateTimeAgeService dateTimeAgeService, CollectingCenterService collectingCenterService, DiscountRatioService discountRatioService, MedicalPackageService medicalPackageService, InvoiceHasLabTestService invoiceHasLabTestService, ServletContext context, ConsultationService consultationService, EmailService emailService, ExceptionService exceptionService) {
         this.invoiceService = invoiceService;
         this.userService = userService;
         this.patientService = patientService;
@@ -81,7 +76,6 @@ public class InvoiceProcessController {
         this.discountRatioService = discountRatioService;
         this.medicalPackageService = medicalPackageService;
         this.invoiceHasLabTestService = invoiceHasLabTestService;
-        this.fileHandelService = fileHandelService;
         this.context = context;
         this.consultationService = consultationService;
         this.emailService = emailService;
@@ -133,8 +127,8 @@ public class InvoiceProcessController {
         // new invoice number (1_900_000_000)
         int newInvoiceNumber;
         // if previous invoice number is null
-        int previousNumber = 0;
-        int newNumberFirstTwoCharacters = 0;
+        int previousNumber;
+        int newNumberFirstTwoCharacters;
         LocalDate currentDate = dateTimeAgeService.getCurrentDate();
         int currentYearLastTwoNumber = Integer.parseInt(String.valueOf(currentDate.getYear()).substring(2, 4));
         if (invoiceService.findLastInvoice() != null) {
@@ -229,13 +223,12 @@ public class InvoiceProcessController {
         }
 
 
-        BigDecimal totalPrice = invoiceProcess.getTotalprice();
-        totalPrice.setScale(2, BigDecimal.ROUND_CEILING);
+        BigDecimal totalPrice = invoiceProcess.getTotalprice().setScale(2, BigDecimal.ROUND_CEILING);
         BigDecimal backEndAmount = BigDecimal.ZERO;
         BigDecimal discountPrice = BigDecimal.ZERO;
         if (!invoiceProcess.getDiscountRatio().getAmount().equals(BigDecimal.ZERO)) {
             BigDecimal amount = totalPrice.multiply(invoiceProcess.getDiscountRatio().getAmount());
-            discountPrice = amount.divide(BigDecimal.valueOf(100));
+            discountPrice = amount.divide(BigDecimal.valueOf(100), RoundingMode.CEILING);
             backEndAmount = totalPrice.subtract(discountPrice);
         }
         if (backEndAmount.equals(invoiceProcess.getAmount())) {
@@ -320,7 +313,7 @@ public class InvoiceProcessController {
             int selectedLabTestCount = 1;
             String labTestList = "";
             for (LabTest test : invoiceProcess.getLabTests()) {
-                labTestList += selectedLabTestCount + "\t" + test.getName() + "\t\t\t" + test.getPrice() + "\n";
+                labTestList.concat(selectedLabTestCount + "\t" + test.getName() + "\t\t\t" + test.getPrice() + "\n");
                 selectedLabTestCount++;
             }
             int selectedMedicalPackageIncludedLabTestCount = 1;
@@ -328,7 +321,7 @@ public class InvoiceProcessController {
             if (invoiceProcess.getMedicalPackage() != null) {
                 medicalPackageNameAndLabTest = "Medical Package Name : \t" + invoiceProcess.getMedicalPackage().getName() + "\t Price : \t" + invoiceProcess.getMedicalPackage().getPrice() + "\n \t\tIncluded Lab test list\n";
                 for (LabTest labTest : invoiceProcess.getMedicalPackage().getLabTests()) {
-                    medicalPackageNameAndLabTest += selectedMedicalPackageIncludedLabTestCount + "\t" + labTest.getName() + "\n";
+                    medicalPackageNameAndLabTest.concat(selectedMedicalPackageIncludedLabTestCount + "\t" + labTest.getName() + "\n");
                     selectedMedicalPackageIncludedLabTestCount++;
                 }
             }

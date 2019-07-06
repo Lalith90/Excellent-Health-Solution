@@ -7,7 +7,6 @@ import lk.solution.health.excellent.lab.entity.Enum.LabtestDoneHere;
 import lk.solution.health.excellent.lab.entity.Enum.ParameterHeader;
 import lk.solution.health.excellent.lab.entity.LabTestParameter;
 import lk.solution.health.excellent.lab.entity.ResultTable;
-import lk.solution.health.excellent.lab.service.LabTestParameterService;
 import lk.solution.health.excellent.lab.service.LabTestService;
 import lk.solution.health.excellent.lab.service.ResultTableService;
 import lk.solution.health.excellent.processHandling.helpingClass.SearchProcess;
@@ -18,17 +17,17 @@ import lk.solution.health.excellent.transaction.entity.Invoice;
 import lk.solution.health.excellent.transaction.service.InvoiceService;
 import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import lk.solution.health.excellent.util.service.EmailService;
-import lk.solution.health.excellent.util.Controller.FileHandelService;
+import lk.solution.health.excellent.util.service.UrlBuilderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,25 +41,26 @@ public class LabProcessController {
     private final InvoiceService invoiceService;
     private final DateTimeAgeService dateTimeAgeService;
     private final PatientService patientService;
-    private final FileHandelService fileHandelService;
     private final ResultTableService resultTableService;
     private final ServletContext context;
     private final EmailService emailService;
     private final LabTestService labTestService;
+    private final UrlBuilderService urlBuilderService;
 
     @Autowired
-    public LabProcessController(InvoiceHasLabTestService invoiceHasLabTestService, UserService userService, InvoiceService invoiceService, DateTimeAgeService dateTimeAgeService, LabTestService labTestService, LabTestParameterService labTestParameterService, PatientService patientService, FileHandelService fileHandelService, ResultTableService resultTableService, ServletContext context, EmailService emailService, LabTestService labTestService1) {
+    public LabProcessController(InvoiceHasLabTestService invoiceHasLabTestService, UserService userService, InvoiceService invoiceService, DateTimeAgeService dateTimeAgeService, PatientService patientService, ResultTableService resultTableService, ServletContext context, EmailService emailService, LabTestService labTestService, UrlBuilderService urlBuilderService) {
         this.invoiceHasLabTestService = invoiceHasLabTestService;
         this.userService = userService;
         this.invoiceService = invoiceService;
         this.dateTimeAgeService = dateTimeAgeService;
         this.patientService = patientService;
-        this.fileHandelService = fileHandelService;
         this.resultTableService = resultTableService;
         this.context = context;
         this.emailService = emailService;
-        this.labTestService = labTestService1;
+        this.labTestService = labTestService;
+        this.urlBuilderService = urlBuilderService;
     }
+
 
     //Sample Collected Investigation List for taken work sheet
     @RequestMapping(value = "/lab/sampleCollect", method = RequestMethod.GET)
@@ -81,11 +81,11 @@ public class LabProcessController {
 
     //save Worksheet printed lab test
     @RequestMapping(value = "/lab/saveWorkSheetPatient", method = RequestMethod.POST)
-    public String saveWorksheetTakenPatient(@ModelAttribute SearchProcess searchProcess, HttpServletRequest request, HttpServletResponse response) {
+    public String saveWorksheetTakenPatient(@ModelAttribute SearchProcess searchProcess, HttpServletRequest request, RedirectAttributes redirectAttributes, UriComponentsBuilder uriComponentsBuilder) {
         List<InvoiceHasLabTest> invoiceHasLabTests = searchProcess.getInvoiceHasLabTests();
 
         //all work sheet taken test add to list
-        for (InvoiceHasLabTest invoiceHasLabTest :invoiceHasLabTests ) {
+        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
             invoiceHasLabTest.setLabTestStatus(LabTestStatus.WORKSHEET);
             invoiceHasLabTest.setWorkSheetTakenUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
             invoiceHasLabTest.setWorkSheetTakenDateTime(dateTimeAgeService.getCurrentDateTime());
@@ -94,20 +94,23 @@ public class LabProcessController {
         invoiceHasLabTestService.persistBulk(invoiceHasLabTests);
 
 //this for multiple worksheet print
+        // need to create temp variable to store array length and
+        int arrayLength = 1;
         for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
-
             boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context);
-
             if (isFlag) {
-                String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf");
-                //  boolean download = fileHandelService.fileDownload(fullPath, response, invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf");
-      /*      if (download){
-                System.out.println("download is done");
-                return "redirect:/lab/afterResultAuthorizeList";
-            }else {
-                System.out.println(" file download fail");
-                return "redirect:/lab/afterResultAuthorizeList";
-            }*/
+
+                String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoiceHasLabTest.getNumber() + ".pdf");
+                System.out.println("full path " + fullPath);
+
+                String path = "getFile/" + invoiceHasLabTest.getNumber().toString();
+                redirectAttributes.addFlashAttribute("fileName", urlBuilderService.doSomething(uriComponentsBuilder, path));
+
+                if (arrayLength == invoiceHasLabTests.size()) {
+                    redirectAttributes.addFlashAttribute("redirectPath", urlBuilderService.doSomething(uriComponentsBuilder, "lab/sampleCollect"));
+                }
+                arrayLength++;
+                return "redirect:/lab/resultPrint";
 
             }
         }
@@ -333,7 +336,7 @@ public class LabProcessController {
         InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findById(id);
         invoiceHasLabTest.setReportPrintedDateTime(dateTimeAgeService.getCurrentDateTime());
         invoiceHasLabTest.setReportPrintedUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
-      int labRef =  invoiceHasLabTestService.persist(invoiceHasLabTest).getId();
+        int labRef = invoiceHasLabTestService.persist(invoiceHasLabTest).getId();
 
         boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context);
 
@@ -342,7 +345,7 @@ public class LabProcessController {
             //redirectAttributes.addFlashAttribute("fileName", );
 
 
-            String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoiceHasLabTest.getNumber()+ ".pdf");
+            String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoiceHasLabTest.getNumber() + ".pdf");
             return "redirect:/invoiceProcess/text";
 
         }
