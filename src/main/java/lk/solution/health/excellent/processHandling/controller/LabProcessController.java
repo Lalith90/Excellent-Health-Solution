@@ -18,15 +18,12 @@ import lk.solution.health.excellent.transaction.entity.Invoice;
 import lk.solution.health.excellent.transaction.service.InvoiceService;
 import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import lk.solution.health.excellent.util.service.EmailService;
-import lk.solution.health.excellent.util.service.FileHandelService;
+import lk.solution.health.excellent.util.Controller.FileHandelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletContext;
@@ -99,7 +96,7 @@ public class LabProcessController {
 //this for multiple worksheet print
         for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
 
-            boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context, request, response);
+            boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context);
 
             if (isFlag) {
                 String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf");
@@ -200,11 +197,12 @@ public class LabProcessController {
         invoiceHasLabTest.setComment(searchProcess.getComment());
 
         invoiceHasLabTestService.persist(invoiceHasLabTest);
+
         return "redirect:/lab/worksheetPrinted";
     }
 
 
-    // need to give list of patient who is authorized their report
+    // need to give list of patient which is authorized their report
     @RequestMapping(value = "/lab/authorize/resultAuthorizeList", method = RequestMethod.GET)
     public String resultAuthorizedList(Model model) {
         List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByLabTestState(LabTestStatus.RESULTENTER);
@@ -331,24 +329,21 @@ public class LabProcessController {
 
     //need to show printed list with need to re print button
     @RequestMapping(value = "/lab/print/{id}", method = RequestMethod.GET)
-    public String reportPrint(@PathVariable("id") Integer id, HttpServletRequest request, HttpServletResponse response) {
+    public String reportPrint(@PathVariable("id") Integer id, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findById(id);
         invoiceHasLabTest.setReportPrintedDateTime(dateTimeAgeService.getCurrentDateTime());
         invoiceHasLabTest.setReportPrintedUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
-        invoiceHasLabTestService.persist(invoiceHasLabTest);
+      int labRef =  invoiceHasLabTestService.persist(invoiceHasLabTest).getId();
 
-        boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context, request, response);
+        boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context);
 
         if (isFlag) {
-            String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf");
-            //  boolean download = fileHandelService.fileDownload(fullPath, response, invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf");
-      /*      if (download){
-                System.out.println("download is done");
-                return "redirect:/lab/afterResultAuthorizeList";
-            }else {
-                System.out.println(" file download fail");
-                return "redirect:/lab/afterResultAuthorizeList";
-            }*/
+            //request.getRequestURI().toString()
+            //redirectAttributes.addFlashAttribute("fileName", );
+
+
+            String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoiceHasLabTest.getNumber()+ ".pdf");
+            return "redirect:/invoiceProcess/text";
 
         }
         return "redirect:/lab/afterResultAuthorizeList";
@@ -438,5 +433,10 @@ public class LabProcessController {
         invoiceHasLabTestService.persist(invoiceHasLabTest);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/resultPrint")
+    public String showText() {
+        return "printView/resultPrint";
     }
 }

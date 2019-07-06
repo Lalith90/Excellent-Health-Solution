@@ -24,8 +24,6 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.time.format.DateTimeFormatter;
@@ -112,7 +110,7 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
     }
 
 
-    public boolean createPdf(InvoiceHasLabTest invoiceHasLabTest, ServletContext context, HttpServletRequest request, HttpServletResponse response) {
+    public boolean createPdf(InvoiceHasLabTest invoiceHasLabTest, ServletContext context) {
 //equation = inch * 72point
         //1 inch == 2.54cm
 //A4 is (595px {} -> width, 842px -> height);
@@ -130,8 +128,12 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
                 new File(filePath).mkdirs();
             }
 
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file + "/" + invoiceHasLabTest.getInvoice().getPatient().getName() + ".pdf"));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file + "/" + invoiceHasLabTest.getNumber() + ".pdf"));
             document.open();
+
+            // write javascript to
+            writer.addJavaScript("this.print({bUI: false, bSilent: true, bShrinkToFit: true}); \r this.closeDoc();",false);
+
             //All front
             Font mainFont = FontFactory.getFont("Arial", 12, BaseColor.BLACK);
             Font secondaryFont = FontFactory.getFont("Arial", 9, BaseColor.BLACK);

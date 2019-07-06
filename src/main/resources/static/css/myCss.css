@@ -312,10 +312,7 @@ label {
 
 /*Table show and hide - end*/
 /*medical Package show area - start*/
-#medicalPackage {
-    border: 2px solid blue;
-    border-radius: 5px;
-}
+
 
 #labTestShowTable {
     margin-top: 3px;

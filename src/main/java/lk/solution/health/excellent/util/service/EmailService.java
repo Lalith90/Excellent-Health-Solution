@@ -3,6 +3,7 @@ package lk.solution.health.excellent.util.service;
 import lk.solution.health.excellent.resource.entity.CollectingCenter;
 import lk.solution.health.excellent.resource.service.CollectingCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,11 +23,14 @@ import java.util.Properties;
 public class EmailService {
     private final JavaMailSender javaMailSender;
     private final CollectingCenterService collectingCenterService;
+    // to access application properties entered details
+    private final Environment environment;
 
     @Autowired
-    public EmailService(JavaMailSender javaMailSender, CollectingCenterService collectingCenterService) {
+    public EmailService(JavaMailSender javaMailSender, CollectingCenterService collectingCenterService, Environment environment) {
         this.javaMailSender = javaMailSender;
         this.collectingCenterService = collectingCenterService;
+        this.environment = environment;
     }
 
     public boolean sendPatientRegistrationEmail(String receiverEmail, String subject, String message) throws MailException {
@@ -41,7 +45,7 @@ public class EmailService {
                 "\n\n\n\n\nWe will not responsible for reports not collected within 30 days.   ";
         try {
             mailMessage.setTo(receiverEmail);
-            mailMessage.setFrom("Excellent_Health_Solution (not reply)");
+            mailMessage.setFrom("Excellent_Health_Solution - (not reply)");
             mailMessage.setSubject(subject);
             mailMessage.setText(messageText);
 
@@ -52,14 +56,18 @@ public class EmailService {
         return true;
     }
 
-    public void sendPatientReport(String recieverEmail, String subject, String fileName) {
+    public void sendPatientReport(String receiverEmail, String subject, String fileName) {
 
-        final String username = "excellenthealthsolution@gmail.com";
-        final String password = "dinesh2018";
+        //final String username = "excellenthealthsolution@gmail.com";
+        final String username = environment.getProperty("spring.mail.username");
+        //final String password = "dinesh2018";
+        final String password = environment.getProperty("spring.mail.password");
 
         // Assuming you are sending email through gmail
-        String host = "smtp.gmail.com";
-        String port = "587";
+        String host = environment.getProperty("spring.mail.host");
+        //String host = "smtp.gmail.com";
+        String port = environment.getProperty("spring.mail.port");
+        //String port = "587";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -84,7 +92,7 @@ public class EmailService {
 
             // Set To: header field of the header.
             message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(recieverEmail));
+                    InternetAddress.parse(receiverEmail));
 
             // Set Subject: header field
             message.setSubject(subject);

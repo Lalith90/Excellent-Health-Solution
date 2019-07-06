@@ -2,7 +2,6 @@ package lk.solution.health.excellent.transaction.service;
 
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfAction;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -153,7 +152,7 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
     //all lab test gather to table and show
     private PdfPTable labTestToTable(List<LabTest> labTests, boolean medicalPackage) {
         //Font
-        Font secondaryFont = FontFactory.getFont(FontFactory.TIMES_BOLDITALIC, 9, BaseColor.BLACK);
+        Font secondaryFont = FontFactory.getFont("Arial", 8, BaseColor.BLACK);
         //create a table
         float[] columnWidth = {20f, 240f, 150f};//column amount{column 1 , column 2 , column 3}
         PdfPTable labTestTable = new PdfPTable(columnWidth);
@@ -197,20 +196,28 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
                 new File(filePath).mkdirs(); // this is the actual code place on here but i removed .mkdirs()
             }
 
-            Document document = new Document(PageSize.A5, 15, 15, 15, 0);
+            Document document = new Document(PageSize.A4, 15, 15, 15, 0);
 
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file + "/" + invoice.getNumber() + "_invoice.pdf"));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file + "/" + invoice.getNumber() + ".pdf"));
 
             // set open action js to pdf document {when document load create print function }
           /*  PdfAction action = new PdfAction(PdfAction.PRINTDIALOG);
             writer.setOpenAction(action);*/
 
-            writer.setOpenAction(PdfAction.javaScript("this.print(true);\r this.onafterprint.close(true)", writer));
+            //writer.setOpenAction(PdfAction.javaScript("this.print(true); this.onafterprint.close(true); \r", writer));
+
 
 
            //PdfAction pdfAction = new PdfAction(PdfAction.createLaunch("","",true));
 
             document.open();
+            //this.print({bUI:true,bShrinkToFit:true,nStart:1,nEnd:3,bAnnotations:false});
+
+            writer.addJavaScript("this.print({bUI: false, bSilent: true, bShrinkToFit: true}); \r this.closeDoc();",false);
+            //writer.addJavaScript("this.closeDoc();");
+
+
+
             //All front
             Font mainFont = FontFactory.getFont("Arial", 12, BaseColor.BLACK);
             Font secondaryFont = FontFactory.getFont("Arial", 8, BaseColor.BLACK);
@@ -388,7 +395,6 @@ public class InvoiceService implements AbstractService<Invoice, Integer> {
 
             document.close();
             writer.close();
-            System.out.println("successfully created");
             return true;
         } catch (Exception e) {
             logger.error("error in voice service" + e.toString());

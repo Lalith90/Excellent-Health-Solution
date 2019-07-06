@@ -30,8 +30,5 @@ public class DateTimeAgeService {
         return Period.between(dateOfBirth, today).getYears();
     }
 
-/*    public static void main(String[] args) {
-        System.out.println(getPastDateByMonth(5)+"\n");
-        System.out.println(getFutureDateByMonth(5));
-    }*/
+
 }

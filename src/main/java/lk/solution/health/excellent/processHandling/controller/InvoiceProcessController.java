@@ -21,7 +21,7 @@ import lk.solution.health.excellent.transaction.service.InvoiceService;
 import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import lk.solution.health.excellent.util.service.EmailService;
 import lk.solution.health.excellent.util.service.ExceptionService;
-import lk.solution.health.excellent.util.service.FileHandelService;
+import lk.solution.health.excellent.util.Controller.FileHandelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -202,7 +202,6 @@ public class InvoiceProcessController {
                 invoiceProcess.getPatient().setCreatedUser(currentUser);
 
                 patientService.persist(invoiceProcess.getPatient());
-                System.out.println("new patient" + message);
             } else {
                 // if patient already in system and some changed apply to his details
                 invoiceProcess.getPatient().setUpdatedAt(dateTimeAgeService.getCurrentDate());
@@ -225,7 +224,6 @@ public class InvoiceProcessController {
                     boolean isFlag = emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution (don not reply)", message);
 
                     patientService.persist(invoiceProcess.getPatient());
-                    System.out.println(message);
                 }
             }
         }
@@ -353,19 +351,7 @@ public class InvoiceProcessController {
         } else {
             //to print invoice
             boolean isFlag = invoiceService.createPdf(invoice, context);
-            //invoiceService.createPdf(invoice, context);
-            // if (isFlag) {
-            //  String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoice.getNumber()+"_invoice.pdf");
-            // boolean download = fileHandelService.fileDownload(fullPath, response,invoice.getNumber()+ "_invoice.pdf");
 
-                 /*if (download) {
-                     System.out.println("download is ok");
-                    return "text";
-                }*/
-              /* model.addAttribute("fileName",invoice.getNumber());
-
-                System.out.println("come to model");*/
-            // }
             if (isFlag) {
                 redirectAttributes.addFlashAttribute("fileName", invoice.getNumber());
                 return "redirect:/invoiceProcess/text";
@@ -376,22 +362,8 @@ public class InvoiceProcessController {
 
     @GetMapping("/text")
     public String showText() {
-        return "text";
+        return "printView/invoicePrint";
     }
 
 }
-
-
-    /*@RequestMapping(value = "/pdfreport", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-    public void citiesReport(Invoice invoice) {
-
-        ByteArrayInputStream bis =invoiceService.createPdf(invoice, context);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "inline; filename="+"/resources/report/" + invoice.getPatient().getTitle().getTitle() + "." + invoice.getPatient().getName() + "-invoice" + ".pdf");
-        ResponseEntity
-                .ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(bis));
-    }*/
 

@@ -35,11 +35,7 @@ public class InvoiceController {
     @RequestMapping
     public String invoicePageThreeMonths(Model model) {
         List<Invoice> invoices = invoiceService.findByCreatedAtIsBetween(dateTimeAgeService.getPastDateByMonth(3),dateTimeAgeService.getCurrentDate());
-       //~ invoices.forEach(System.out::println);
-        for (Invoice invoice : invoices){
-            System.out.println(invoice.getPatient());
-        }
-        model.addAttribute("invoices", invoices);
+            model.addAttribute("invoices", invoices);
         return "invoice/invoice";
     }
 

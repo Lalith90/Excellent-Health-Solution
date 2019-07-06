@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Controller
@@ -44,11 +43,12 @@ public class PhlebotomyWorkController {
     @RequestMapping(value = {"/phlaboto", "/phlaboto/getAll"}, method = RequestMethod.GET)
     public String billedPatient(Model model) {
         // create patient list those are billed but not take sample
-        HashSet<Invoice> invoices = new HashSet<>();
+        List<Invoice> invoices = new ArrayList<>();
 
         for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTestService.findByLabTestState(LabTestStatus.NOSAMPLE)) {
             invoices.add(invoiceHasLabTest.getInvoice());
         }
+        System.out.println(invoices.size());
         model.addAttribute("invoices", invoices);
         return "phlebotomyProcess/phlebotomyPatientList";
     }

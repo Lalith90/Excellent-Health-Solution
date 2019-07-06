@@ -141,7 +141,7 @@ public class SummaryController {
             commonAttributeToFontEnd(model, availableUser, invoices, invoiceHasLabTests, refunds, patientCount);
             model.addAttribute("search", new SearchProcess());
             model.addAttribute("date", dateTimeAgeService.getCurrentDate());
-            return "/process/summary";
+            return "process/summary";
         }
 
         patientCount = invoiceService.countByDateAndUser(toDay, availableUser);
@@ -154,7 +154,7 @@ public class SummaryController {
         //refundService.findByDate(toDay);
 
         commonAttributeToFontEnd(model, availableUser, invoices, invoiceHasLabTests, refunds, patientCount);
-        return "/process/summary";
+        return "process/summary";
     }
 
     @RequestMapping(value = "/searchSummary", method = RequestMethod.POST)
@@ -179,7 +179,7 @@ public class SummaryController {
         commonAttributeToFontEnd(model, availableUser, invoices, invoiceHasLabTests, refunds, patientCount);
 
         model.addAttribute("givenDate", from + " - " + to);
-        return "/process/summary";
+        return "process/summary";
     }
 
 }
