@@ -57,6 +57,44 @@ public class EmailService {
     }
 
     public void sendPatientReport(String receiverEmail, String subject, String fileName) {
+//todo send pdf as email after encryption
+        /*
+     File Encryption
+
+In order to apply permission using iText library, we need to have already created pdf document. In our example, we will use our iTextHelloWorld.pdf file generated previously.
+
+Once we load the file using PdfReader, we need to create a PdfStamper which is used to apply additional content to file like metadata, encryption etc:
+
+PdfReader pdfReader = new PdfReader("HelloWorld.pdf");
+PdfStamper pdfStamper
+  = new PdfStamper(pdfReader, new FileOutputStream("encryptedPdf.pdf"));
+
+pdfStamper.setEncryption(
+  "userpass".getBytes(),
+  ".getBytes(),
+  0,
+  PdfWriter.ENCRYPTION_AES_256
+);
+
+pdfStamper.close();
+
+In our example, we encrypted the file with two passwords. The user password (“userpass”) where a user has only read-only right with no possibility to print it, and owner password (“ownerpass”) that is used as master key allowing a person to have full access to pdf.
+
+If we want to allow the user to print pdf, instead of 0 (third parameter of setEncryption) we can pass:
+
+PdfWriter.ALLOW_PRINTING
+
+Of course, we can mix different permissions like:
+
+
+PdfWriter.ALLOW_PRINTING | PdfWriter.ALLOW_COPY
+
+Keep in mind that using iText to set access permissions, we are also creating a temporary pdf which should be deleted and if not it could be fully accessible to anybody.
+
+
+     */
+
+
 
         //final String username = "excellenthealthsolution@gmail.com";
         final String username = environment.getProperty("spring.mail.username");

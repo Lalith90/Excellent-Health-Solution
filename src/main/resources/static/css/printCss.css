@@ -30,11 +30,16 @@ svg {
     }
 }
 
-#filePath #redirect {
+.filePath {
     color: white;
     background-color: #2eabf1;
     opacity: 0;
     filter: Alpha(opacity=50); /* IE8 and earlier */
 }
-
+#redirect{
+    color: white;
+    background-color: #2eabf1;
+    opacity: 0;
+    filter: Alpha(opacity=50); /* IE8 and earlier */
+}
 /*Pre loader content - stop*/

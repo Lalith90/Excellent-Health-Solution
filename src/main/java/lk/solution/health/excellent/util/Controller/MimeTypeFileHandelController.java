@@ -50,11 +50,11 @@ public class MimeTypeFileHandelController {
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
                     outputStream.write(buffer, 0, bytesRead);
                 }
-                inputStream.close();
                 outputStream.close();
+                inputStream.close();
                 response.setStatus(200);
                 //response.sendRedirect("/home");
-                //  file.delete();
+                file.delete();
 
             } catch (Exception e) {
                 logger.error("file handler ++" + e.toString());

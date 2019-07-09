@@ -17,6 +17,7 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 public class SearchProcess {
+
     Integer id;
     String name, number, code, comment, nic;
     @DateTimeFormat(pattern = "yyyy-MM-dd")

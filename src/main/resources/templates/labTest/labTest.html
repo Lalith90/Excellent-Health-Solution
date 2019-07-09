@@ -8,17 +8,20 @@
 <nav class="navbar navbar-default" th:replace="fragments/header :: header"></nav>
 <div class="container-fluid" style="margin-top: 60px">
     <div class="panel panel-primary">
-        <div class="panel panel-heading text-center">
-            <h4><b>Laboratory Test Management</b></h4>
-        </div>
-        <div class="panel panel-body">
-            <div class="row" th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')')}">
-                <div class="col-sm-12">
+        <div class="panel panel-heading ">
+            <div class="row text-center">
+                <div class="col-sm-4" th:if="${#authorization.expression('hasRole(''ROLE_MLT1'')')}">
                     <a class="btn btn-success" th:href="${'/labTest/add'}"> <i class="fas fa-vial"></i> New Laboratory
                         Test</a>
                 </div>
+                <div class="col-sm-4">
+                    <h4><b>Laboratory Test Management</b></h4>
+                </div>
             </div>
-            <div class="container-fluid" style="margin-top: 5px;">
+
+        </div>
+        <div class="panel panel-body">
+            <div class="container">
                 <div class="table-responsive">
                     <table class="table table-striped table-condensed text-center" id="myTable">
                         <thead>

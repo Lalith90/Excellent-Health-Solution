@@ -62,7 +62,7 @@ public class RoleController {
             }
             model.addAttribute("addStatus", true);
             model.addAttribute("role", role);
-            return "/role/addRole";
+            return "role/addRole";
         }
         roleService.persist(role);
         return "redirect:/role";

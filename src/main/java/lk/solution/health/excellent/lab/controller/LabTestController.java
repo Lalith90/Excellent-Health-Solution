@@ -76,7 +76,7 @@ public class LabTestController {
             model.addAttribute("labTestDoneHere", LabtestDoneHere.values());
             model.addAttribute("department", Department.values());
             model.addAttribute("labTestParameters", labTestParameterService.findAll());
-            return "/labTest/addLabTest";
+            return "labTest/addLabTest";
         }
     if(labTest.getId() != null){
       labTestService.persist(labTest);

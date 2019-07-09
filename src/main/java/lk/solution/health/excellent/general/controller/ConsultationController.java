@@ -60,7 +60,7 @@ public class ConsultationController {
             }
             model.addAttribute("addStatus", false);
             model.addAttribute("consultation", consultation);
-            return "/consultation/addConsultation";
+            return "consultation/addConsultation";
         }
         consultationService.persist(consultation);
         return "redirect:/consultation";

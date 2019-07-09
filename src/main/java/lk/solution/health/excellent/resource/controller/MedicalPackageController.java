@@ -1,11 +1,11 @@
 package lk.solution.health.excellent.resource.controller;
 
-import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import lk.solution.health.excellent.lab.entity.LabTest;
 import lk.solution.health.excellent.lab.service.LabTestService;
 import lk.solution.health.excellent.resource.entity.Enum.MedicalPackageStatus;
 import lk.solution.health.excellent.resource.entity.MedicalPackage;
 import lk.solution.health.excellent.resource.service.MedicalPackageService;
+import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -77,7 +77,7 @@ public class MedicalPackageController {
             model.addAttribute("addStatus", true);
             model.addAttribute("medicalPackageStatus", MedicalPackageStatus.values());
             model.addAttribute("medicalPackage", new MedicalPackage());
-            return "/medicalPackage/addMedicalPackage";
+            return "medicalPackage/addMedicalPackage";
         }
         if (medicalPackage.getId() != null){
             List<LabTest> updatedList = medicalPackageService.findById(medicalPackage.getId()).getLabTests();

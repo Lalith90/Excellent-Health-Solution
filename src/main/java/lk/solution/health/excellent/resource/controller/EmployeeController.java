@@ -1,7 +1,5 @@
 package lk.solution.health.excellent.resource.controller;
 
-import lk.solution.health.excellent.util.service.DateTimeAgeService;
-import lk.solution.health.excellent.util.service.EmailService;
 import lk.solution.health.excellent.general.entity.Enum.Gender;
 import lk.solution.health.excellent.general.entity.Enum.Title;
 import lk.solution.health.excellent.resource.entity.Employee;
@@ -11,6 +9,8 @@ import lk.solution.health.excellent.resource.entity.Enum.EmployeeStatus;
 import lk.solution.health.excellent.resource.entity.User;
 import lk.solution.health.excellent.resource.service.EmployeeService;
 import lk.solution.health.excellent.resource.service.UserService;
+import lk.solution.health.excellent.util.service.DateTimeAgeService;
+import lk.solution.health.excellent.util.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -103,7 +103,7 @@ public class EmployeeController {
                 model.addAttribute("employeeStatus", EmployeeStatus.values());
                 model.addAttribute("designation", Designation.values());
                 model.addAttribute("employee", employee);
-                return "/employee/addEmployee";
+                return "employee/addEmployee";
             }
         if (employeeService.isEmployeePresent(employee)){
             User user = userService.findById(userService.findByEmployeeId(employee.getId()));

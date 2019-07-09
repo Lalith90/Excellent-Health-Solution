@@ -108,7 +108,12 @@
 
 </div>
 <div>
-    <span id="filePath" th:text="${fileName}"></span>
+    <table id="dataTable">
+        <tr th:each="fileNames : ${fileName}">
+            <td th:text="${fileNames}" class="urlList"></td>
+        </tr>
+    </table>
+    <!--<span id="filePath" th:text="${fileName}"></span>-->
     <span id="redirect" th:text="${redirectPath}"></span>
 </div>
 
@@ -117,15 +122,19 @@
 <script type="text/javascript">
     let url;
     $(document).ready(function () {
-        printPDF();
+        let urls = document.querySelectorAll(".urlList").innerHTML;
+  /*      x[1].style.backgroundColor = "red";*/
+
+        console.log(urls);
+      //  printPDF();
     });
 
-    function printPDF() {
+   /* function printPDF() {
         window.open(document.getElementById("filePath").innerText, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
         if (document.getElementById("redirect").innerText !== undefined || document.getElementById("redirect").innerText !== null) {
             window.open(document.getElementById("redirect").innerText, "_self");
         }
-    }
+    }*/
 </script>
 
 </html>

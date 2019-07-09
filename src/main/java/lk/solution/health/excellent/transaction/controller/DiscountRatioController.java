@@ -65,7 +65,7 @@ public class DiscountRatioController {
             }
             model.addAttribute("addStatus", false);
             model.addAttribute("discountRatio", discountRatio);
-            return "/discountRatio/addDiscountRatio";
+            return "discountRatio/addDiscountRatio";
         }
         discountRatioService.persist(discountRatio);
         return "redirect:/discountRatio";

@@ -5,6 +5,7 @@
     <title th:text="${addStatus?'EHSL - Create Laboratory Test Page': 'EHSL - Update Laboratory Test Page'}">- Add
         Laboratory Test</title>
     <style th:replace="fragments/style"></style>
+    <script th:src="@{/js/nicEdit-WYSIWYG_HTML.js}"></script>
 </head>
 <body>
 <nav th:replace="fragments/header :: header"></nav>
@@ -27,10 +28,6 @@
                         </button>
                         <strong>Please Create Lab Test Code without conflict already created one</strong>
                     </div>
-
-                    <script>
-                        $(".alert").alert();
-                    </script>
                 </div>
                 <div class="col-sm-4 text-right">
                     <a href="/labTest">
@@ -54,7 +51,7 @@
                                     <label class="control-label col-md-4" for="id">ID :</label>
                                     <div class="col-md-8">
                                         <input class="form-control" id="id" name="id" placeholder="Enter ID Here"
-                                               th:field="*{id}" type="text"/>
+                                               th:field="*{id}" type="text" readonly="readonly"/>
                                         <span class="error" th:errors="*{id}"
                                               th:if="${#fields.hasErrors('id')}">Error ID</span>
                                     </div>
@@ -128,8 +125,9 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="description">Description</label>
                                 <div class="col-sm-8">
-                                        <textarea class="form-control" id="description" name="description"
-                                                  placeholder="Enter Descrition" th:field="*{description}"></textarea>
+                                        <textarea class="form-control" cols="60" id="description"
+                                                  name="description" placeholder="Enter Description"
+                                                  th:field="*{description}"></textarea>
                                     <span class="error" th:errors="*{description}"
                                           th:if="${#fields.hasErrors('description')}">Description Error</span>
                                 </div>
@@ -176,9 +174,7 @@
                                     </ol>
                                 </div>
                                 <div class="row">
-                                    <div class="alert alert-warning alert-dismissable fade in" th:if="${addStatus==false}">
-                                        <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
-                                        <br>
+                                    <div class="alert alert-warning " th:if="${addStatus==false}">
                                         <h4 class="text-center"> If you are edit some thing on this lab test !!! <br/>
                                             &nbsp;<span class="glyphicon glyphicon-warning-sign"></span> Please set all
                                             parameter/s which is/are belonged this test, before click the update button.
@@ -201,11 +197,8 @@
 <footer class="page-footer" th:replace="fragments/footer"></footer>
 <script>
     //WYSIWYG add to text area
-    let textarea = document.getElementById('description');
-    sceditor.create(textarea, {
-        format: 'bbcode',
-        icons: 'monocons',
-        style: '../minified/themes/content/default.min.css'
+    bkLib.onDomLoaded(function () {
+        nicEditors.allTextAreas()
     });
 </script>
 <script th:replace="fragments/script"></script>

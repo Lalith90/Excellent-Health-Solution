@@ -1,9 +1,9 @@
 package lk.solution.health.excellent.resource.controller;
 
-import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import lk.solution.health.excellent.resource.entity.CollectingCenter;
 import lk.solution.health.excellent.resource.entity.Enum.CollectingCenterStatus;
 import lk.solution.health.excellent.resource.service.CollectingCenterService;
+import lk.solution.health.excellent.util.service.DateTimeAgeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,7 +71,7 @@ public class CollectingCenterController {
             model.addAttribute("addStatus", true);
             model.addAttribute("collectingCenterStatus", CollectingCenterStatus.values());
             model.addAttribute("collectingCenter", collectingCenter);
-            return "/collectingCenter/addCollectingCenter";
+            return "collectingCenter/addCollectingCenter";
         }
         if (collectingCenter.getId()!=null){
             collectingCenterService.persist(collectingCenter);

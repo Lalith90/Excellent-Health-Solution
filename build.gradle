@@ -1,4 +1,4 @@
-buildscript {
+	buildscript {
 	ext {
 		springBootVersion = '2.0.1.RELEASE'
 	}
@@ -53,6 +53,9 @@ dependencies {
 	compile group: 'org.apache.poi', name: 'poi', version: '3.8'
 			//================= Following jar is need to generate pdf file -https://mvnrepository.com/artifact/com.itextpdf/itextpdf =================//
 	compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.9'
+			// ==== this is need to html content convert to pdf 
+	compile group: 'com.itextpdf.tool', name: 'xmlworker', version: '5.5.9'
+
 
 	annotationProcessor('org.projectlombok:lombok')
 	compileOnly('org.projectlombok:lombok')

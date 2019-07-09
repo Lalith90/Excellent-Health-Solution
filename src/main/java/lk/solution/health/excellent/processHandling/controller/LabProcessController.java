@@ -22,13 +22,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,45 +80,30 @@ public class LabProcessController {
         model.addAttribute("buttonStatus", true);
         model.addAttribute("inputStatus", true);
 
-        return "/labTest/labTestList";
+        return "labTest/labTestList";
     }
 
     //save Worksheet printed lab test
     @RequestMapping(value = "/lab/saveWorkSheetPatient", method = RequestMethod.POST)
     public String saveWorksheetTakenPatient(@ModelAttribute SearchProcess searchProcess, HttpServletRequest request, RedirectAttributes redirectAttributes, UriComponentsBuilder uriComponentsBuilder) {
         List<InvoiceHasLabTest> invoiceHasLabTests = searchProcess.getInvoiceHasLabTests();
-
-        //all work sheet taken test add to list
-        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
-            invoiceHasLabTest.setLabTestStatus(LabTestStatus.WORKSHEET);
-            invoiceHasLabTest.setWorkSheetTakenUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
-            invoiceHasLabTest.setWorkSheetTakenDateTime(dateTimeAgeService.getCurrentDateTime());
-        }
-        //save all lab test list as bulk
-        invoiceHasLabTestService.persistBulk(invoiceHasLabTests);
-
-//this for multiple worksheet print
-        // need to create temp variable to store array length and
-        int arrayLength = 1;
-        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
-            boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context);
-            if (isFlag) {
-
-                String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoiceHasLabTest.getNumber() + ".pdf");
-                System.out.println("full path " + fullPath);
-
-                String path = "getFile/" + invoiceHasLabTest.getNumber().toString();
-                redirectAttributes.addFlashAttribute("fileName", urlBuilderService.doSomething(uriComponentsBuilder, path));
-
-                if (arrayLength == invoiceHasLabTests.size()) {
-                    redirectAttributes.addFlashAttribute("redirectPath", urlBuilderService.doSomething(uriComponentsBuilder, "lab/sampleCollect"));
-                }
-                arrayLength++;
-                return "redirect:/lab/resultPrint";
-
+        if (!invoiceHasLabTests.isEmpty()) {
+//all work sheet taken test add to list
+            for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
+                invoiceHasLabTest.setLabTestStatus(LabTestStatus.WORKSHEET);
+                invoiceHasLabTest.setWorkSheetTakenUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
+                invoiceHasLabTest.setWorkSheetTakenDateTime(dateTimeAgeService.getCurrentDateTime());
             }
+//save all lab test list as bulk
+            invoiceHasLabTestService.persistBulk(invoiceHasLabTests);
+//this for multiple worksheet print need to send work is done
+            //this for multiple worksheet print need to send work is done
+            printBulkPdf(invoiceHasLabTests, redirectAttributes, uriComponentsBuilder);
+            redirectAttributes.addFlashAttribute("redirectPath", urlBuilderService.doSomething(uriComponentsBuilder, "lab/sampleCollect"));
+            return "redirect:/lab/resultPrint";
+        } else {
+            return "redirect:/lab/sampleCollect";
         }
-        return "redirect:/lab/sampleCollect";
     }
 
     //worksheet taken list for result enter
@@ -124,7 +113,7 @@ public class LabProcessController {
         model.addAttribute("buttonStatus", false);
         model.addAttribute("invoiceHasLabTest", invoiceHasLabTests);
         model.addAttribute("addLabTestWorkStatus", true);
-        return "/labTest/labTestList";
+        return "labTest/labTestList";
     }
 
     //result enter form give to front
@@ -135,7 +124,7 @@ public class LabProcessController {
         model.addAttribute("invoiceHasLabTest", invoiceHasLabTest);
         model.addAttribute("patientAge", dateTimeAgeService.getAge(invoiceHasLabTest.getInvoice().getPatient().getDateOfBirth()));
 
-        return "/labTest/labTestResult";
+        return "labTest/labTestResult";
     }
 
     // need to save result
@@ -213,7 +202,7 @@ public class LabProcessController {
         model.addAttribute("invoiceHasLabTest", invoiceHasLabTests);
         model.addAttribute("buttonStatus", false);
 
-        return "/labTest/labTestList";
+        return "labTest/labTestList";
     }
 
     // result authorize from
@@ -223,7 +212,7 @@ public class LabProcessController {
         model.addAttribute("addStatus", false);
         model.addAttribute("invoiceHasLabTest", invoiceHasLabTest);
         model.addAttribute("patientAge", dateTimeAgeService.getAge(invoiceHasLabTest.getInvoice().getPatient().getDateOfBirth()));
-        return "/labTest/labTestResult";
+        return "labTest/labTestResult";
     }
 
     // Authorization is  ok - lab Test
@@ -238,6 +227,8 @@ public class LabProcessController {
             String message = "Following report is ready " + invoiceHasLabTest.getLabTest().getName() + ". \n available to collect ." +
                     "\n Thanks" +
                     "\n Excellent Health Solution";
+            //todo need --> to to some modification authorized email
+
             boolean authorizedEmail = emailService.sendPatientRegistrationEmail(invoiceHasLabTest.getInvoice().getPatient().getEmail(), "Your report is ready - (not reply)", message);
             if (authorizedEmail) {
                 invoiceHasLabTestService.persist(invoiceHasLabTest);
@@ -256,6 +247,8 @@ public class LabProcessController {
         InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findById(id);
         invoiceHasLabTest.setResultEnteredDateTime(null);
         invoiceHasLabTest.setResultEnteredUser(null);
+        //after reject all data need to delete belongs to the that invoiceHasLabTest
+        resultTableService.deleteAll(resultTableService.findByInvoiceHasLabTest(invoiceHasLabTest));
         invoiceHasLabTest.setLabTestStatus(LabTestStatus.WORKSHEET);
         invoiceHasLabTestService.persist(invoiceHasLabTest);
 
@@ -275,7 +268,7 @@ public class LabProcessController {
         model.addAttribute("invoiceHasLabTest", invoices);
         model.addAttribute("buttonStatus", false);
 
-        return "/labTest/labTestList";
+        return "labTest/labTestList";
     }
 
     //need to show ready to print report and also need to need to authorized, result enter, not sample collect and out side send sample report
@@ -327,36 +320,58 @@ public class LabProcessController {
         model.addAttribute("invoice", invoiceService.findById(id));
         model.addAttribute("invoice1", true);
         model.addAttribute("toPrint", true);
-        return "/labTest/printReport";
+        return "labTest/printReport";
     }
 
     //need to show printed list with need to re print button
-    @RequestMapping(value = "/lab/print/{id}", method = RequestMethod.GET)
-    public String reportPrint(@PathVariable("id") Integer id, HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findById(id);
-        invoiceHasLabTest.setReportPrintedDateTime(dateTimeAgeService.getCurrentDateTime());
-        invoiceHasLabTest.setReportPrintedUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
-        int labRef = invoiceHasLabTestService.persist(invoiceHasLabTest).getId();
-
-        boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context);
-
-        if (isFlag) {
-            //request.getRequestURI().toString()
-            //redirectAttributes.addFlashAttribute("fileName", );
-
-
-            String fullPath = request.getServletContext().getRealPath("/resources/report/" + invoiceHasLabTest.getNumber() + ".pdf");
-            return "redirect:/invoiceProcess/text";
-
+    @RequestMapping(value = "/lab/print", method = RequestMethod.GET)
+    public String reportPrint(@ModelAttribute SearchProcess searchProcess, RedirectAttributes redirectAttributes, UriComponentsBuilder uriComponentsBuilder) {
+        List<InvoiceHasLabTest> invoiceHasLabTests = searchProcess.getInvoiceHasLabTests();
+        if (!invoiceHasLabTests.isEmpty()) {
+//all work sheet taken test add to list
+            for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
+                invoiceHasLabTest.setReportPrintedDateTime(dateTimeAgeService.getCurrentDateTime());
+                invoiceHasLabTest.setReportPrintedUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
+                invoiceHasLabTest.setLabTestStatus(LabTestStatus.PRINTED);
+            }
+            invoiceHasLabTestService.persistBulk(invoiceHasLabTests);
+//this for multiple worksheet print need to send work is done
+            printBulkPdf(invoiceHasLabTests, redirectAttributes, uriComponentsBuilder);
+            redirectAttributes.addFlashAttribute("redirectPath", urlBuilderService.doSomething(uriComponentsBuilder, "lab/afterResultAuthorizeList"));
+            return "redirect:/lab/resultPrint";
+        } else {
+            return "redirect:/lab/afterResultAuthorizeList";
         }
-        return "redirect:/lab/afterResultAuthorizeList";
+    }
+
+    // to print multiple pdf at once method
+    private void printBulkPdf(List<InvoiceHasLabTest> invoiceHasLabTests, RedirectAttributes redirectAttributes, UriComponentsBuilder uriComponentsBuilder) {
+
+        String[] urlList = new String[invoiceHasLabTests.size()];
+
+        int urlListIndex = 0;
+        for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
+            boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context);
+            if (isFlag) {
+                System.out.println("before increment " + urlListIndex);
+
+                urlList[urlListIndex] = urlBuilderService.doSomething(uriComponentsBuilder, "getFile/" + invoiceHasLabTest.getNumber().toString());
+                urlListIndex++;
+                System.out.println("current array element " + urlList[urlListIndex - 1]);
+                System.out.println("after increment " + urlListIndex);
+            } else {
+                urlList = new String[0];
+            }
+        }
+        System.out.println(Arrays.toString(urlList));
+        redirectAttributes.addFlashAttribute("fileName", Arrays.asList(urlList));
     }
 
     // create search form
     @RequestMapping(value = "/lab/searchReportFrom", method = RequestMethod.GET)
     public String SearchFrom(Model model) {
         model.addAttribute("searchReport", new SearchProcess());
-        return "/labTest/searchFrom";
+        return "labTest/searchFrom";
     }
 
     // can used to find patient all report
@@ -405,14 +420,13 @@ public class LabProcessController {
 
         commonMethodToPatientReportDetails(model, invoiceHasLabTests);
 
-        return "/labTest/printReport";
+        return "labTest/printReport";
     }
-
 
     // give authority to make refund form
     @RequestMapping(value = "/lab/authorize/refund", method = RequestMethod.GET)
     public String giveAuthorityRefund() {
-        return "/labTest/refundForm";
+        return "labTest/refundForm";
     }
 
     // give authority to make refund save
@@ -424,7 +438,7 @@ public class LabProcessController {
         if (!invoiceHasLabTest.getLabTestStatus().equals(LabTestStatus.WORKSHEET)) {
             //redirectAttributes.addFlashAttribute("unableMLT1", true);
             model.addAttribute("unableMLT1", true);
-            return "/labTest/refundForm";
+            return "labTest/refundForm";
         }
 
         invoiceHasLabTest.setResultEnteredDateTime(null);
@@ -438,8 +452,10 @@ public class LabProcessController {
         return "redirect:/";
     }
 
-    @GetMapping("/resultPrint")
+    @RequestMapping(value = "/lab/resultPrint", method = RequestMethod.GET)
     public String showText() {
+        System.out.println(" im in print page");
         return "printView/resultPrint";
     }
+
 }

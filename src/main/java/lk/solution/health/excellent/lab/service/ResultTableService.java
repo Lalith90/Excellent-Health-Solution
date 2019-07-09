@@ -1,9 +1,9 @@
 package lk.solution.health.excellent.lab.service;
 
 import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
-import lk.solution.health.excellent.util.interfaces.AbstractService;
 import lk.solution.health.excellent.lab.dao.ResultTableDao;
 import lk.solution.health.excellent.lab.entity.ResultTable;
+import lk.solution.health.excellent.util.interfaces.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -40,12 +40,16 @@ public class ResultTableService implements AbstractService<ResultTable, Integer>
         return resultTableDao.save(resultTable);
     }
 
-
-    @Transactional
     @CacheEvict(value = "resultTable")
     public boolean delete(Integer id) {
         resultTableDao.deleteById(id);
         return false;
+    }
+
+
+    @CacheEvict(value = "resultTable")
+    public void deleteAll(List<ResultTable> resultTables){
+        resultTableDao.deleteAll(resultTables);
     }
 
     @CachePut(value = "resultTable")

@@ -30,5 +30,10 @@ public class DateTimeAgeService {
         return Period.between(dateOfBirth, today).getYears();
     }
 
+    public String getAgeString(LocalDate dateOfBirth) {
+        LocalDate today = LocalDate.now();
+        int year = Period.between(dateOfBirth, today).getYears();
+        return String.valueOf(year).concat(" Years");
+    }
 
 }

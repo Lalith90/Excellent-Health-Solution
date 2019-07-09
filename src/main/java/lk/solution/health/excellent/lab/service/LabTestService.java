@@ -4,6 +4,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.tool.xml.XMLWorkerHelper;
 import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
 import lk.solution.health.excellent.lab.dao.LabTestDao;
 import lk.solution.health.excellent.lab.entity.Enum.LabTestStatus;
@@ -98,23 +99,17 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
     // common style for several table cell
     private void commonStyleForPdfPCell(PdfPCell pdfPCell) {
         pdfPCell.setBorder(0);
+        pdfPCell.setPadding(5);
         pdfPCell.setHorizontalAlignment(Element.ALIGN_LEFT);
         pdfPCell.setBorderColor(BaseColor.WHITE);
     }
-
-    // common style for several table cell
-    private void commonStyleForPdfPCellLastOne(PdfPCell pdfPCell) {
-        pdfPCell.setBorder(0);
-        pdfPCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        pdfPCell.setBorderColor(BaseColor.WHITE);
-    }
-
 
     public boolean createPdf(InvoiceHasLabTest invoiceHasLabTest, ServletContext context) {
         try {
             String filePath = context.getRealPath("/resources/report");
             File file = new File(filePath);
             boolean exists = new File(filePath).exists();
+
             if (!exists) {
                 new File(filePath).mkdirs();
             }
@@ -125,90 +120,138 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
             //3.3cm bottom
             // left/right margin 1.5cm
             // { 1-> 6cm , 2-> 3cm, 3-> 2cm, 4-> , 5-> }
-            Document document = new Document(PageSize.A4, 25, 25, 184, 94);
+// if document is to worksheet need to add lab test belongs department
+            Document document;
+            if (invoiceHasLabTest.getLabTestStatus().equals(LabTestStatus.WORKSHEET)) {
+                document = new Document(PageSize.A4, 15, 15, 15, 15);
+            } else {
+                document = new Document(PageSize.A4, 15, 15, 184, 94);
+            }
+
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file + "/" + invoiceHasLabTest.getNumber() + ".pdf"));
+
             document.open();
 
             // write javascript to
-            writer.addJavaScript("this.print({bUI: false, bSilent: true, bShrinkToFit: true}); \r this.closeDoc();",false);
+            writer.addJavaScript("this.print({bUI: false, bSilent: true, bShrinkToFit: true}); \r this.closeDoc();", false);
 
             //All front
             Font mainFont = FontFactory.getFont("Arial", 12, BaseColor.BLACK);
             Font secondaryFont = FontFactory.getFont("Arial", 9, BaseColor.BLACK);
-            Font highLiltedFont = FontFactory.getFont(FontFactory.TIMES_BOLD);
-//Patient Name
-            Paragraph patientName = new Paragraph("Patient Name : " + invoiceHasLabTest.getInvoice().getPatient().getTitle()
-                    + invoiceHasLabTest.getInvoice().getPatient().getName());
-            commonStyleForParagraph(patientName);
-            document.add(patientName);
-// Ref doctor
-            Paragraph doctorDetails = new Paragraph("Ref. Doctor : " + invoiceHasLabTest.getInvoice().getDoctor().getTitle()
-                    + invoiceHasLabTest.getInvoice().getDoctor().getName());
-            commonStyleForParagraph(doctorDetails);
-            document.add(doctorDetails);
-//Medical Center
 
-//Invoice number
-            Paragraph invoiceDetails = new Paragraph("Invoiced : " +
-                    invoiceHasLabTest.getInvoice().getNumber() + "\t" + invoiceHasLabTest.getInvoice().getInvoicedAt());
-            commonStyleForParagraph(invoiceDetails);
-            document.add(invoiceDetails);
+//if document is to worksheet need to add lab test belongs department
+            if (invoiceHasLabTest.getLabTestStatus().equals(LabTestStatus.WORKSHEET)) {
+                Paragraph labTestDepartment = new Paragraph("Handover to  : " + invoiceHasLabTest.getLabTest().getDepartment().getDepartment().toUpperCase() + "\n\n");
+                commonStyleForParagraph(labTestDepartment);
+                document.add(labTestDepartment);
+            }
 
 //Create a Table (Patient Details - start)
-            float[] columnWidths = {200f, 200f};//column amount{column 1 , column 2 }
+            float[] columnWidths = {416f, 415f};//column amount{column 1 , column 2 }
             PdfPTable mainTable = new PdfPTable(columnWidths);
-            // add cell to table
-            PdfPCell cell = new PdfPCell(new Phrase("Age : \t" + dateTimeAgeService.getAge(invoiceHasLabTest.getInvoice().getPatient().getDateOfBirth()), mainFont));
-            commonStyleForPdfPCell(cell);
-            mainTable.addCell(cell);
+            // add age to table
+            PdfPCell patientName = new PdfPCell(new Phrase("Patient Name : " + invoiceHasLabTest.getInvoice().getPatient().getTitle().getTitle() + " " + invoiceHasLabTest.getInvoice().getPatient().getName(), mainFont));
+            commonStyleForPdfPCell(patientName);
+            patientName.setColspan(2);
+            mainTable.addCell(patientName);
 
-            PdfPCell cell1 = new PdfPCell(new Phrase("Lab Ref Number : " + invoiceHasLabTest.getNumber(), mainFont));
-            commonStyleForPdfPCell(cell1);
-            mainTable.addCell(cell1);
+            PdfPCell doctorName = new PdfPCell(new Phrase("Ref. Doctor : " + invoiceHasLabTest.getInvoice().getDoctor().getTitle().getTitle() + " " + invoiceHasLabTest.getInvoice().getDoctor().getName(), mainFont));
+            commonStyleForPdfPCell(doctorName);
+            doctorName.setColspan(2);
+            mainTable.addCell(doctorName);
 
-            PdfPCell cell2 = new PdfPCell(new Phrase("Sample Collected At: " + invoiceHasLabTest.getSampleCollectedDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), mainFont));
-            commonStyleForPdfPCell(cell2);
-            mainTable.addCell(cell2);
+            PdfPCell invoiceNumber = new PdfPCell(new Phrase("Invoiced : " + invoiceHasLabTest.getInvoice().getNumber() + " At. " + invoiceHasLabTest.getInvoice().getInvoicedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), mainFont));
+            commonStyleForPdfPCell(invoiceNumber);
+            invoiceNumber.setColspan(2);
+            mainTable.addCell(invoiceNumber);
 
-            PdfPCell cell3 = new PdfPCell(new Phrase("Printed At: " + invoiceHasLabTest.getReportPrintedDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), mainFont));
-            commonStyleForPdfPCell(cell3);
-            mainTable.addCell(cell3);
+            PdfPCell age = new PdfPCell(new Phrase("Age : \t" + dateTimeAgeService.getAgeString(invoiceHasLabTest.getInvoice().getPatient().getDateOfBirth()), mainFont));
+            commonStyleForPdfPCell(age);
+            mainTable.addCell(age);
+
+            PdfPCell labRefNumber = new PdfPCell(new Phrase("Lab Ref Number : " + invoiceHasLabTest.getNumber(), mainFont));
+            commonStyleForPdfPCell(labRefNumber);
+            mainTable.addCell(labRefNumber);
+
+            PdfPCell sampleCollect = new PdfPCell(new Phrase("Sample Collect At: " + invoiceHasLabTest.getSampleCollectedDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), mainFont));
+            commonStyleForPdfPCell(sampleCollect);
+            mainTable.addCell(sampleCollect);
+
+
+            PdfPCell workSheetOrPrint;
+            if (invoiceHasLabTest.getLabTestStatus().equals(LabTestStatus.WORKSHEET)) {
+                //to get work sheet
+                workSheetOrPrint = new PdfPCell(new Phrase("Work Sheet At: " + invoiceHasLabTest.getWorkSheetTakenDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), mainFont));
+            } else {
+                //to print
+                workSheetOrPrint = new PdfPCell(new Phrase("Printed At: " + invoiceHasLabTest.getReportPrintedDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), mainFont));
+            }
+            commonStyleForPdfPCell(workSheetOrPrint);
+            mainTable.addCell(workSheetOrPrint);
 
             document.add(mainTable);
 //Create a Table (Patient Details - end)
 
 //Lab Test Name add start
-            Paragraph labTestName = new Paragraph("\n" + invoiceHasLabTest.getLabTest().getName(), mainFont);
+            final Font labTestNameFont = new Font(Font.getFamily("Arial"), 11, Font.BOLD | Font.ITALIC);
+            Paragraph labTestName = new Paragraph(invoiceHasLabTest.getLabTest().getName() + "\n", labTestNameFont);
             commonStyleForParagraph(labTestName);
             document.add(labTestName);
 //Lab Test Name add end
 
 // To print with result or without result add ro document
             document.add(reportBody(invoiceHasLabTest));
-
 // if there is any lab test comment to add document
-            if (invoiceHasLabTest.getLabTest().getComment() != null) {
-                Paragraph labTestComment = new Paragraph(invoiceHasLabTest.getLabTest().getComment());
-                commonStyleForParagraphTwo(labTestComment);
-                document.add(labTestComment);
+// todo coment add discription pdf
+            PdfPTable commentAndDescriptions = new PdfPTable(columnWidths);
+
+            if (invoiceHasLabTest.getLabTest().getDescription() != null) {
+                String HTML_Description = invoiceHasLabTest.getLabTest().getDescription();
+                String HTML=HTML_Description.replace("<br>","<br/>");
+                String CSS = " ";
+                PdfPCell description = new PdfPCell();
+                description.setColspan(2);
+                for (Element e : XMLWorkerHelper.parseToElementList(HTML, CSS)) {
+                    description.addElement(e);
+                }
+                commonStyleForPdfPCell(description);
+                commentAndDescriptions.addCell(description);
+
             }
 //if there is any special comment in lab test by MLT
             if (invoiceHasLabTest.getComment() != null) {
-                Paragraph mLTComment = new Paragraph(invoiceHasLabTest.getComment());
-                commonStyleForParagraphTwo(mLTComment);
-                document.add(mLTComment);
+                PdfPCell MLT_Comment = new PdfPCell(new Phrase("Special Comment : " + invoiceHasLabTest.getComment(), mainFont));
+                MLT_Comment.setColspan(2);
+                commonStyleForPdfPCell(MLT_Comment);
+                commentAndDescriptions.addCell(MLT_Comment);
             }
-//sample collecting center details - start
 
-            Paragraph collectingCenterDetails = new Paragraph(
+
+            //todo need to mlt signature here with image
+ /*
+The iText library provides an easy way to add an image to the document. We simply need to create an Image instance and add it to the Document.
+
+Path path = Paths.get(ClassLoader.getSystemResource("Java_logo.png").toURI());
+
+Document document = new Document();
+PdfWriter.getInstance(document, new FileOutputStream("iTextImageExample.pdf"));
+document.open();
+Image img = Image.getInstance(path.toAbsolutePath().toString());
+document.add(img);
+
+document.close();
+
+ */
+            document.add(commentAndDescriptions);
+
+//sample collecting center details - start
+            Paragraph collectingCenterDetails = new Paragraph("\n Sample collected : " +
                     invoiceHasLabTest.getInvoice().getCollectingCenter().getAddress()
-                            + "\n" + "M : " + invoiceHasLabTest.getInvoice().getCollectingCenter().getMobile() + " L : " + invoiceHasLabTest.getInvoice().getCollectingCenter().getLand()
-                            + "\n" + "E : " + invoiceHasLabTest.getInvoice().getCollectingCenter().getEmail(), secondaryFont);
+                    + "\n" + "M : " + invoiceHasLabTest.getInvoice().getCollectingCenter().getMobile() + " L : " + invoiceHasLabTest.getInvoice().getCollectingCenter().getLand()
+                    + " E : " + invoiceHasLabTest.getInvoice().getCollectingCenter().getEmail(), secondaryFont);
             commonStyleForParagraphTwo(collectingCenterDetails);
             document.add(collectingCenterDetails);
-
-//sample collecting center details - start
-
+//sample collecting center details - end
 
             document.close();
             writer.close();
@@ -217,7 +260,7 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
 
 
         } catch (Exception e) {
-            System.out.println("kelawela " + e.toString());
+            System.out.println("kelawela " + e.toString()+ " \n "+invoiceHasLabTest.getLabTest().getName());
             logger.error(e.toString());
             return false;
         }
@@ -232,13 +275,14 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
         //equation = inch * 72point
         //1 inch == 2.54cm
 //A4 is (595px {} -> width, 842px -> height);
+//  8.5 inch x 72 points = 612 user units
+//  12 inch x 72 points = 861 user units
 
         //create a table
-        float[] columnWidth = {20f, 240f, 150f, 100f, 100f};//column amount{column 1 , column 2 , column 3}
+        float[] columnWidth = {300f, 150f, 130f, 80f, 200f};//column amount{column 1 , column 2 , column 3}
         //todo recalculate with actual report
 
         PdfPTable parameterWithResultOrNot = new PdfPTable(columnWidth);
-
 
 //cell 1 = Test Name
         PdfPCell test_name = new PdfPCell(new Paragraph("TEST NAME", tableHeader));
@@ -259,15 +303,23 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
             PdfPCell abCount = new PdfPCell(new Paragraph("Ab. COUNT", tableHeader));
             commonStyleForResult(abCount);
             parameterWithResultOrNot.addCell(abCount);
+        } else {
+            PdfPCell flag = new PdfPCell(new Paragraph("FLAG ", tableHeader));
+            commonStyleForResult(flag);
+            parameterWithResultOrNot.addCell(flag);
         }
 
 //cell 5 = Ref. Range
         PdfPCell refRange = new PdfPCell(new Paragraph("REF.RANGE", tableHeader));
         commonStyleForResult(refRange);
         parameterWithResultOrNot.addCell(refRange);
-//table header is end
 
-        boolean toPrint = invoiceHasLabTest.getLabTestStatus().equals(LabTestStatus.AUTHORIZED);
+
+//table header is end
+        /*
+         * to print report ========>
+         * */
+        boolean toPrint = invoiceHasLabTest.getLabTestStatus().equals(LabTestStatus.PRINTED);
         List<ResultTable> parameterWithResult;
         List<LabTestParameter> parameterWithOutResult;
         if (toPrint) {
@@ -277,13 +329,20 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
             //parameter with result body - start
             for (ResultTable resultTable : parameterWithResult) {
                 //1 parameter name
-                PdfPCell parameterName = new PdfPCell(new Phrase(resultTable.getLabTestParameter().getName(), tableBody));
-                commonStyleForResult(parameterName);
-                parameterWithResultOrNot.addCell(parameterName);
-                //if parameter is header there is no need to print other filed
+                PdfPCell parameterName;
+                //if parameter is header there is no need to print other filed but need to add
                 if (resultTable.getLabTestParameter().getParameterHeader().equals(ParameterHeader.Yes)) {
+                    parameterName = new PdfPCell(new Phrase(resultTable.getLabTestParameter().getName(), tableHeader));
+                    commonStyleForResult(parameterName);
+                    parameterName.setColspan(5);
+                    parameterWithResultOrNot.addCell(parameterName);
                     continue;
+                } else {
+                    parameterName = new PdfPCell(new Phrase(resultTable.getLabTestParameter().getName(), tableBody));
+                    commonStyleForResult(parameterName);
+                    parameterWithResultOrNot.addCell(parameterName);
                 }
+
                 //2 result
                 PdfPCell resultInTable = new PdfPCell(new Phrase(resultTable.getResult(), tableBody));
                 commonStyleForResult(resultInTable);
@@ -296,10 +355,15 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
     /*cell 4 = if="${invoiceHasLabTest.getLabTest().getCode() == 'HM21' || invoiceHasLabTest.getLabTest().getCode() == 'HM45'}"
           AB. Count
           */
-                if (invoiceHasLabTest.getLabTest().getCode() == "HM21" || invoiceHasLabTest.getLabTest().getCode() == "HM45") {
+                if (invoiceHasLabTest.getLabTest().getCode().equals("HM21") || invoiceHasLabTest.getLabTest().getCode().equals("HM45")) {
                     PdfPCell absoluteCount = new PdfPCell(new Phrase(resultTable.getAbsoluteCount(), tableBody));
                     commonStyleForResult(absoluteCount);
                     parameterWithResultOrNot.addCell(absoluteCount);
+                } else {
+                    //todo future need to add star after considering value of result
+                    PdfPCell flag = new PdfPCell(new Paragraph(" ", tableHeader));
+                    commonStyleForResult(flag);
+                    parameterWithResultOrNot.addCell(flag);
                 }
                 //5 Ref Range
                 PdfPCell referenceRange = new PdfPCell(new Phrase(resultTable.getLabTestParameter().getMin() + " - " + resultTable.getLabTestParameter().getMax(), tableBody));
@@ -309,21 +373,31 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
             //parameter with result body - end
 
         } else {
+/*
+this content belongs to work sheet
+* */
             //if need to get work sheet
             parameterWithOutResult = invoiceHasLabTest.getLabTest().getLabTestParameters();
 
             //parameter with out result body - start
             for (LabTestParameter labTestParameter : parameterWithOutResult) {
                 //1 parameter name
-                PdfPCell parameterName = new PdfPCell(new Phrase(labTestParameter.getName(), tableBody));
-                commonStyleForResult(parameterName);
-                parameterWithResultOrNot.addCell(parameterName);
-                //if parameter is header there is no need to print other filed
+                PdfPCell parameterName;
+                //if parameter is header there is no need to print other filed but need to add
                 if (labTestParameter.getParameterHeader().equals(ParameterHeader.Yes)) {
+                    parameterName = new PdfPCell(new Phrase(labTestParameter.getName(), tableHeader));
+                    parameterName.setColspan(5);
+                    commonStyleForResult(parameterName);
+                    parameterWithResultOrNot.addCell(parameterName);
                     continue;
+                } else {
+                    parameterName = new PdfPCell(new Phrase(labTestParameter.getName(), tableBody));
+                    commonStyleForResult(parameterName);
+                    parameterWithResultOrNot.addCell(parameterName);
                 }
+
                 //2 result
-                PdfPCell resultInTable = new PdfPCell(new Phrase("\t\t\t\t\t", tableBody));
+                PdfPCell resultInTable = new PdfPCell(new Phrase("___________", tableBody));
                 commonStyleForResult(resultInTable);
                 parameterWithResultOrNot.addCell(resultInTable);
 
@@ -346,9 +420,6 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
 
         }
 
-        //table body need to create out side method and add to this area
-
-
         return parameterWithResultOrNot;
     }
 
@@ -356,7 +427,7 @@ public class LabTestService implements AbstractService<LabTest, Integer> {
     private void commonStyleForResult(PdfPCell pdfPCell) {
         pdfPCell.setBorder(0);
         pdfPCell.setPaddingLeft(10);
-        pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        pdfPCell.setHorizontalAlignment(Element.ALIGN_LEFT);
         pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
         pdfPCell.setExtraParagraphSpace(5f);
     }

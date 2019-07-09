@@ -94,7 +94,7 @@ public class RefundController {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());
             }
             commonModel(model);
-            return "/refund/addRefund";
+            return "refund/addRefund";
         }
 
         boolean workSheetTakenOrNot = false;
@@ -124,7 +124,7 @@ public class RefundController {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());
             }
             commonModel(model);
-            return "/refund/addRefund";
+            return "refund/addRefund";
         }
         commonRefundSave(refund);
         return "redirect:/refund";

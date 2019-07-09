@@ -67,7 +67,7 @@ public class LabTestParameterController {
             model.addAttribute("addStatus", true);
             model.addAttribute("parameterHeader", ParameterHeader.values());
             model.addAttribute("labTestParameter", labTestParameter);
-            return "/labTestParameter/addLabTestParameter";
+            return "labTestParameter/addLabTestParameter";
         }
         labTestParameterService.persist(labTestParameter);
         return "redirect:/labTestParameter";
