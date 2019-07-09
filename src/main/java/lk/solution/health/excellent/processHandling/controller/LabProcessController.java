@@ -353,12 +353,8 @@ public class LabProcessController {
         for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
             boolean isFlag = labTestService.createPdf(invoiceHasLabTest, context);
             if (isFlag) {
-                System.out.println("before increment " + urlListIndex);
-
                 urlList[urlListIndex] = urlBuilderService.doSomething(uriComponentsBuilder, "getFile/" + invoiceHasLabTest.getNumber().toString());
                 urlListIndex++;
-                System.out.println("current array element " + urlList[urlListIndex - 1]);
-                System.out.println("after increment " + urlListIndex);
             } else {
                 urlList = new String[0];
             }
@@ -454,7 +450,6 @@ public class LabProcessController {
 
     @RequestMapping(value = "/lab/resultPrint", method = RequestMethod.GET)
     public String showText() {
-        System.out.println(" im in print page");
         return "printView/resultPrint";
     }
 

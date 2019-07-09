@@ -30,13 +30,13 @@ svg {
     }
 }
 
-.filePath {
+table {
     color: white;
     background-color: #2eabf1;
     opacity: 0;
     filter: Alpha(opacity=50); /* IE8 and earlier */
 }
-#redirect{
+span{
     color: white;
     background-color: #2eabf1;
     opacity: 0;
