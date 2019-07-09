@@ -126,7 +126,15 @@
         console.log(urlListLength);
         let i;
         for (i = 0; i < urlListLength; i++) {
-            window.open(urlArray[i].innerHTML, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+            //window.open(urlArray[i].innerHTML, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=600,height=600");
+
+            let myWindow=window.open('','_blank','width=200,height=100');
+            myWindow.document.write(`<embed src="${urlArray[i].innerHTML}" type="application/pdf">>`);
+
+            myWindow.document.close();
+            myWindow.focus();
+            myWindow.print();
+            myWindow.close();
         }
 
         window.open(document.getElementById("redirect").innerText, "_self");
