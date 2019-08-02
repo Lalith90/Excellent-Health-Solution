@@ -96,7 +96,7 @@
                 <div class="row">
                     <form class="form" id="workSheet" th:action="@{/lab/saveWorkSheetPatient}" th:method="POST"
                           th:object="${searchProcess}">
-                        <div class="container">
+                        <div class="container-fluid">
                             <div class="table-responsive">
                                 <table class="table table-striped table-condensed" id="myTable">
                                     <thead>
@@ -172,8 +172,9 @@
                                             class="glyphicon glyphicon-warning-sign"></span>
                                         Select ALL check box which is needed to work sheet. </h5>
                                 </div>
-                                <button class="btn btn-success" id="btnSubmit" type="submit"> Click to &nbsp;&nbsp;<span
-                                        class="glyphicon glyphicon-print"></span></button>
+                                <button class="btn btn-success text-center" id="btnSubmit" type="submit"> Click to
+                                    &nbsp;&nbsp;<span
+                                            class="glyphicon glyphicon-print"></span></button>
                             </div>
                         </div>
                     </form>

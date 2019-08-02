@@ -5,7 +5,10 @@ import lk.solution.health.excellent.general.entity.InvoiceHasLabTest;
 import lk.solution.health.excellent.lab.entity.Enum.Department;
 import lk.solution.health.excellent.lab.entity.Enum.LabtestDoneHere;
 import lk.solution.health.excellent.resource.entity.MedicalPackage;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -48,8 +51,6 @@ public class LabTest {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "comment")
-    private String comment;
 
     @OneToMany(mappedBy = "labTest", fetch = FetchType.EAGER)
     private List<InvoiceHasLabTest>  invoiceHasLabTests= new ArrayList<>();

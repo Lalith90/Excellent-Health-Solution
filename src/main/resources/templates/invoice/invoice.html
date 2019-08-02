@@ -53,38 +53,40 @@
                     </div>
                 </div>
             </div>
-            <div class="table-responsive">
-                <table class="table table-hover" id="myTable">
-                    <thead>
-                    <tr>
-                        <th>Index</th>
-                        <th>Number</th>
-                        <th>Patient Name</th>
-                        <th> Amount</th>
-                        <th> Created By</th>
-                        <th> Date of Invoice</th>
-                        <th>View</th>
-                        <th th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}"> Delete Invoice
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="invoice, rowCount : ${invoices}">
-                        <th th:text="${rowCount.count}"></th>
-                        <th th:text="${invoice.number}"></th>
-                        <th th:text="${invoice.patient.title.title}+${invoice.patient.name}"></th>
-                        <th th:text="${invoice.amount}"></th>
-                        <th th:text="${invoice.user.username}"></th>
-                        <th th:text="${{invoice.createdAt}}"></th>
-                        <th><a class="btn btn-success" th:href="${'/invoice/'+ invoice.id}"><i
-                                class="fa fa-folder-open"></i>&nbsp;View</a>&nbsp;
-                        </th>
-                        <th th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}"><a
-                                class="btn btn-danger" th:href="${'/invoice/remove/' + invoice.id}">Delete</a>
-                        </th>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class="container">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="myTable">
+                        <thead>
+                        <tr>
+                            <th>Index</th>
+                            <th>Number</th>
+                            <th>Patient Name</th>
+                            <th> Amount</th>
+                            <th> Created By</th>
+                            <th> Date of Invoice</th>
+                            <th>View</th>
+                            <th th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}"> Delete Invoice
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="invoice, rowCount : ${invoices}">
+                            <th th:text="${rowCount.count}"></th>
+                            <th th:text="${invoice.number}"></th>
+                            <th th:text="${invoice.patient.title.title}+${invoice.patient.name}"></th>
+                            <th th:text="${invoice.amount}"></th>
+                            <th th:text="${invoice.user.username}"></th>
+                            <th th:text="${{invoice.createdAt}}"></th>
+                            <th><a class="btn btn-success" th:href="${'/invoice/'+ invoice.id}"><i
+                                    class="fa fa-folder-open"></i>&nbsp;View</a>&nbsp;
+                            </th>
+                            <th th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}"><a
+                                    class="btn btn-danger" th:href="${'/invoice/remove/' + invoice.id}">Delete</a>
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

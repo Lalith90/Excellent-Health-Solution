@@ -38,7 +38,7 @@
                             </div>
                             <div  class="form-group">
                                 <label class="control-label col-md-4" th:for="name">Employee Name</label>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <select id="name" th:field="*{employee.id}" name="employee.id" class="form-control">
                                         <option th:each="employees : ${employee}"
                                                 th:text="${employees.name}+ ${' '} + ${employees.number}"
@@ -63,7 +63,7 @@
                             </div>
                             <div  class="form-group">
                                 <label class="control-label col-md-4"  for="role">Role</label>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <select id="role" th:field="*{role}" name="role" class="form-control">
                                         <option th:each="roles : ${role}"
                                                 th:text="${roles.name}"

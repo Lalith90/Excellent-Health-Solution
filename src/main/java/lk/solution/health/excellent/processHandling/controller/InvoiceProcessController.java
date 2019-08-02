@@ -189,7 +189,7 @@ public class InvoiceProcessController {
                         "\n \t   Thank You" +
                         "\n Excellent Health Solution" +
                         "This is a one way communication email service \n please do not reply";
-                boolean isFlag = emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution ", message);
+                emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution ", message);
 
 
                 invoiceProcess.getPatient().setCreatedAt(dateTimeAgeService.getCurrentDate());
@@ -215,7 +215,7 @@ public class InvoiceProcessController {
                             "\n Kindly request keep your data up to date with us. so we can provide better service for you." +
                             "\n \t   Thank You" +
                             "\n Excellent Health Solution";
-                    boolean isFlag = emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution (don not reply)", message);
+                    emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution (don not reply)", message);
 
                     patientService.persist(invoiceProcess.getPatient());
                 }
@@ -340,7 +340,7 @@ public class InvoiceProcessController {
                     "\n \n \n   \t\t Thank You" +
                     "\n \t Excellent Health Solution";
 
-            boolean isFlag = emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution ", message);
+             emailService.sendPatientRegistrationEmail(invoiceProcess.getPatient().getEmail(), "Welcome to Excellent Health Solution ", message);
         } else {
             //to print invoice
             boolean isFlag = invoiceService.createPdf(invoice, context);

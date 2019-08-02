@@ -30,7 +30,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -85,7 +84,8 @@ public class LabProcessController {
 
     //save Worksheet printed lab test
     @RequestMapping(value = "/lab/saveWorkSheetPatient", method = RequestMethod.POST)
-    public String saveWorksheetTakenPatient(@ModelAttribute SearchProcess searchProcess, HttpServletRequest request, RedirectAttributes redirectAttributes, UriComponentsBuilder uriComponentsBuilder) {
+    public String saveWorksheetTakenPatient(@ModelAttribute SearchProcess searchProcess, RedirectAttributes redirectAttributes, UriComponentsBuilder uriComponentsBuilder) {
+
         List<InvoiceHasLabTest> invoiceHasLabTests = searchProcess.getInvoiceHasLabTests();
         if (!invoiceHasLabTests.isEmpty()) {
 //all work sheet taken test add to list
@@ -316,7 +316,7 @@ public class LabProcessController {
         List<InvoiceHasLabTest> invoiceHasLabTests = invoiceHasLabTestService.findByInvoiceAndCreatedAtIsBetween(dateTimeAgeService.getPastDateByMonth(3), dateTimeAgeService.getCurrentDate(), invoiceService.findById(id));
 
         commonMethodToPatientReportDetails(model, invoiceHasLabTests);
-
+        model.addAttribute("searchProcess", new SearchProcess());
         model.addAttribute("invoice", invoiceService.findById(id));
         model.addAttribute("invoice1", true);
         model.addAttribute("toPrint", true);
@@ -324,24 +324,26 @@ public class LabProcessController {
     }
 
     //need to show printed list with need to re print button
-    @RequestMapping(value = "/lab/print", method = RequestMethod.GET)
+    @RequestMapping(value = "/lab/print", method = RequestMethod.POST)
     public String reportPrint(@ModelAttribute SearchProcess searchProcess, RedirectAttributes redirectAttributes, UriComponentsBuilder uriComponentsBuilder) {
-        List<InvoiceHasLabTest> invoiceHasLabTests = searchProcess.getInvoiceHasLabTests();
+        String[] numbers = searchProcess.getNumber().split(",");
+        List<InvoiceHasLabTest> invoiceHasLabTests = new ArrayList<>();
+        for (int i = 0; i < numbers.length; i++) {
+            InvoiceHasLabTest invoiceHasLabTest = invoiceHasLabTestService.findByNumber(Integer.parseInt(numbers[i]));
+            invoiceHasLabTest.setReportPrintedDateTime(dateTimeAgeService.getCurrentDateTime());
+            invoiceHasLabTest.setReportPrintedUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
+            invoiceHasLabTest.setLabTestStatus(LabTestStatus.PRINTED);
+            invoiceHasLabTests.add(invoiceHasLabTest);
+        }
         if (!invoiceHasLabTests.isEmpty()) {
 //all work sheet taken test add to list
-            for (InvoiceHasLabTest invoiceHasLabTest : invoiceHasLabTests) {
-                invoiceHasLabTest.setReportPrintedDateTime(dateTimeAgeService.getCurrentDateTime());
-                invoiceHasLabTest.setReportPrintedUser(userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
-                invoiceHasLabTest.setLabTestStatus(LabTestStatus.PRINTED);
-            }
-            invoiceHasLabTestService.persistBulk(invoiceHasLabTests);
-//this for multiple worksheet print need to send work is done
+           invoiceHasLabTestService.persistBulk(invoiceHasLabTests);
+//this for multiple patient report print need to send work is done
             printBulkPdf(invoiceHasLabTests, redirectAttributes, uriComponentsBuilder);
             redirectAttributes.addFlashAttribute("redirectPath", urlBuilderService.doSomething(uriComponentsBuilder, "lab/afterResultAuthorizeList"));
             return "redirect:/lab/resultPrint";
-        } else {
-            return "redirect:/lab/afterResultAuthorizeList";
         }
+        return "redirect:/lab/afterResultAuthorizeList";
     }
 
     // to print multiple pdf at once method
@@ -359,7 +361,6 @@ public class LabProcessController {
                 urlList = new String[0];
             }
         }
-        System.out.println(Arrays.toString(urlList));
         redirectAttributes.addFlashAttribute("fileName", Arrays.asList(urlList));
     }
 

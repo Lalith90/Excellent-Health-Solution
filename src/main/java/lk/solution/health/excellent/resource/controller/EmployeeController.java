@@ -45,6 +45,7 @@ public class EmployeeController {
     @RequestMapping
     public String employeePage(Model model) {
         model.addAttribute("employees", employeeService.findAll());
+        model.addAttribute("alertStatus", false);
         return "employee/employee";
     }
 
@@ -58,7 +59,7 @@ public class EmployeeController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String editEmployeeFrom(@PathVariable("id") Integer id, Model model) {
         model.addAttribute("employee", employeeService.findById(id));
-        model.addAttribute("newEmployee",employeeService.findById(id).getNumber());
+        model.addAttribute("newEmployee", employeeService.findById(id).getNumber());
         model.addAttribute("addStatus", false);
         model.addAttribute("title", Title.values());
         model.addAttribute("gender", Gender.values());
@@ -70,13 +71,13 @@ public class EmployeeController {
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String employeeAddFrom(Model model) {
-        String input =  employeeService.lastEmployee().getNumber();
-        String employeeNumber1= input.replaceAll("[^0-9]+", "");
+        String input = employeeService.lastEmployee().getNumber();
+        String employeeNumber1 = input.replaceAll("[^0-9]+", "");
         Integer employeeNumber = Integer.valueOf(employeeNumber1);
-        int newEmployeeNumber = employeeNumber+1;
+        int newEmployeeNumber = employeeNumber + 1;
         model.addAttribute("addStatus", true);
         model.addAttribute("lastEmployee", input);
-        model.addAttribute("newEmployee", "EHL"+newEmployeeNumber);
+        model.addAttribute("newEmployee", "EHL" + newEmployeeNumber);
         model.addAttribute("title", Title.values());
         model.addAttribute("gender", Gender.values());
         model.addAttribute("civilStatus", CivilStatus.values());
@@ -89,25 +90,26 @@ public class EmployeeController {
     // Above method support to send data to front end - All List, update, edit
     //Bellow method support to do back end function save, delete, update, search
 
-    @RequestMapping(value = {"/add","/update"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/add", "/update"}, method = RequestMethod.POST)
     public String addEmployee(@Valid @ModelAttribute Employee employee, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (dateTimeAgeService.getAge(employee.getDateOfBirth()) < 18) {
             ObjectError error = new ObjectError("dateOfBirth", "Employee must be 18 old ");
             result.addError(error);
-        }if (result.hasErrors()) {
-                model.addAttribute("addStatus", true);
-                model.addAttribute("lastEmployee", employeeService.lastEmployee().getNumber());
-                model.addAttribute("title", Title.values());
-                model.addAttribute("gender", Gender.values());
-                model.addAttribute("civilStatus", CivilStatus.values());
-                model.addAttribute("employeeStatus", EmployeeStatus.values());
-                model.addAttribute("designation", Designation.values());
-                model.addAttribute("employee", employee);
-                return "employee/addEmployee";
-            }
-        if (employeeService.isEmployeePresent(employee)){
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("addStatus", true);
+            model.addAttribute("lastEmployee", employeeService.lastEmployee().getNumber());
+            model.addAttribute("title", Title.values());
+            model.addAttribute("gender", Gender.values());
+            model.addAttribute("civilStatus", CivilStatus.values());
+            model.addAttribute("employeeStatus", EmployeeStatus.values());
+            model.addAttribute("designation", Designation.values());
+            model.addAttribute("employee", employee);
+            return "employee/addEmployee";
+        }
+        if (employeeService.isEmployeePresent(employee)) {
             User user = userService.findById(userService.findByEmployeeId(employee.getId()));
-            if(employee.getEmployeeStatus() != EmployeeStatus.WORKING){
+            if (employee.getEmployeeStatus() != EmployeeStatus.WORKING) {
                 user.setEnabled(false);
                 employee.setUpdatedAt(dateTimeAgeService.getCurrentDate());
                 employeeService.persist(employee);
@@ -117,65 +119,56 @@ public class EmployeeController {
             employeeService.persist(employee);
             return "redirect:/employee";
         }
-        if (employee.getId() != null){
-            String message = "Welcome to Excellent Health Solution \n " +
-                    "Your registration number is "+employee.getNumber()+
-                    "\nYour Details are " +
-                    "\n "+employee.getTitle().getTitle()+" "+employee.getName()+
-                    "\n "+employee.getNic()+
-                    "\n "+employee.getDateOfBirth()+
-                    "\n "+employee.getMobile()+
-                    "\n "+employee.getLand()+
-                    "\n "+employee.getAddress()+
-                    "\n "+employee.getDoassignment()+
-                    "\n\n\n\n\n Highly advice you, if there is any changes on your details, Please informed the management" +
-                    "\n If you update your date up to date with us, otherwise we will not have to provide better service to you." +
-                    "\n \n \n   Thank You" +
-                    "\n Excellent Health Solution";
-            boolean isFlag = emailService.sendPatientRegistrationEmail(employee.getEmail(),"Welcome to Excellent Health Solution ", message);
-            if(isFlag){
+        if (employee.getId() != null) {
+            boolean isFlag = emailService.sendPatientRegistrationEmail(employee.getEmail(), "Welcome to Excellent Health Solution ", commonMassage(employee));
+            if (isFlag) {
                 redirectAttributes.addFlashAttribute("message", "Successfully Update and Email was sent.");
-                redirectAttributes.addFlashAttribute("alertStatus",true);
+                redirectAttributes.addFlashAttribute("alertStatus", true);
                 employee.setUpdatedAt(dateTimeAgeService.getCurrentDate());
                 employeeService.persist(employee);
-            }else{
+            } else {
                 redirectAttributes.addFlashAttribute("message", "Successfully Add but Email was not sent.");
-                redirectAttributes.addFlashAttribute("alertStatus",false);
+                redirectAttributes.addFlashAttribute("alertStatus", false);
                 employee.setUpdatedAt(dateTimeAgeService.getCurrentDate());
                 employeeService.persist(employee);
             }
         }
-        if (employee.getEmail()!=null){
-            String message = "Welcome to Excellent Health Solution \n " +
-                    "Your registration number is "+employee.getNumber()+
-                    "\nYour Details are " +
-                    "\n "+employee.getTitle().getTitle()+" "+employee.getName()+
-                    "\n "+employee.getNic()+
-                    "\n "+employee.getDateOfBirth()+
-                    "\n "+employee.getMobile()+
-                    "\n "+employee.getLand()+
-                    "\n "+employee.getAddress()+
-                    "\n "+employee.getDoassignment()+
-                    "\n\n\n\n\n Highly advice you, if there is any changes on your details, Please informed the management" +
-                    "\n If you update your date up to date with us, otherwise we will not have to provide better service to you." +
-                    "\n \n \n   Thank You" +
-                    "\n Excellent Health Solution";
-            boolean isFlag = emailService.sendPatientRegistrationEmail(employee.getEmail(),"Welcome to Excellent Health Solution ", message);
-            if(isFlag){
+        if (employee.getEmail() != null) {
+
+            boolean isFlag = emailService.sendPatientRegistrationEmail(employee.getEmail(), "Welcome to Excellent Health Solution ", commonMassage(employee));
+            if (isFlag) {
                 redirectAttributes.addFlashAttribute("message", "Successfully Update and Email was sent.");
-                redirectAttributes.addFlashAttribute("alertStatus",true);
+                redirectAttributes.addFlashAttribute("alertStatus", true);
                 employee.setCreatedAt(dateTimeAgeService.getCurrentDate());
                 employeeService.persist(employee);
-            }else{
+            } else {
                 redirectAttributes.addFlashAttribute("message", "Successfully Add but Email was not sent.");
-                redirectAttributes.addFlashAttribute("alertStatus",false);
+                redirectAttributes.addFlashAttribute("alertStatus", false);
                 employee.setCreatedAt(dateTimeAgeService.getCurrentDate());
                 employeeService.persist(employee);
             }
         }
-            employee.setCreatedAt(dateTimeAgeService.getCurrentDate());
-            employeeService.persist(employee);
-                return "redirect:/employee";
+        employee.setCreatedAt(dateTimeAgeService.getCurrentDate());
+        employeeService.persist(employee);
+        return "redirect:/employee";
+    }
+
+    private String commonMassage(Employee employee) {
+        String message = "Welcome to Excellent Health Solution \n " +
+                "Your registration number is " + employee.getNumber() +
+                "\nYour Details are " +
+                "\n " + employee.getTitle().getTitle() + " " + employee.getName() +
+                "\n " + employee.getNic() +
+                "\n " + employee.getDateOfBirth() +
+                "\n " + employee.getMobile() +
+                "\n " + employee.getLand() +
+                "\n " + employee.getAddress() +
+                "\n " + employee.getDoassignment() +
+                "\n\n\n\n\n Highly advice you, if there is any changes on your details, Please informed the management" +
+                "\n If you update your date up to date with us, otherwise we will not have to provide better service to you." +
+                "\n \n \n   Thank You" +
+                "\n Excellent Health Solution";
+        return message;
     }
 
     @RequestMapping(value = "/remove/{id}", method = RequestMethod.GET)

@@ -26,7 +26,7 @@ public class User {
     private Employee employee;
 
     @Basic
-    @Column(name = "username", nullable = false, length = 45)
+    @Column(name = "username", nullable = false, length = 45, unique = true)
     @Size(min = 5, message = "user name should include at least five characters")
     private String username;
 

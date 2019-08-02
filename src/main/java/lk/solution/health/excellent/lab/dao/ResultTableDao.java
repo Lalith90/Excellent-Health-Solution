@@ -12,4 +12,5 @@ public interface ResultTableDao extends JpaRepository<ResultTable, Integer> {
     ResultTable findFirstByOrderByIdDesc();
 
     List<ResultTable> findByInvoiceHasLabTest(InvoiceHasLabTest invoiceHasLabTest);
+
 }
